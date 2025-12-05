@@ -50,7 +50,7 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             display: grid;
-            grid-template-columns: 48px 1fr 48px; /* 保持左右平衡 */
+            grid-template-columns: 48px 1fr 48px;
             align-items: center;
             border-bottom: 1px solid #f3f4f6;
             z-index: 50;
@@ -100,7 +100,7 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             display: flex; align-items: center; justify-content: center;
             border: 2px solid white;
-            transition: all 0.2s; /* Marker 動畫也加快 */
+            transition: all 0.2s;
             margin-top: -16px; margin-left: -16px;
         }
         .pin-icon { transform: rotate(45deg); color: white; font-size: 14px; }
@@ -119,9 +119,9 @@
         }
         .map-label::before { display: none; }
 
-        /* --- Cards Section (正方形比例調整) --- */
+        /* --- Cards Section --- */
         #cards-container {
-            height: 130px; /* 縮減高度適配正方形 */
+            height: 130px; 
             flex-shrink: 0;
             display: flex; align-items: center;
             overflow-x: auto; overflow-y: hidden;
@@ -133,8 +133,8 @@
         #cards-container::-webkit-scrollbar { display: none; }
 
         .day-card {
-            flex: 0 0 100px; /* 寬度 100 */
-            height: 100px;   /* 高度 100 -> 正方形 */
+            flex: 0 0 100px;
+            height: 100px; 
             border-radius: 16px; 
             position: relative; overflow: hidden;
             cursor: pointer; background: #f3f4f6;
@@ -161,10 +161,10 @@
         .card-content {
             position: relative; z-index: 2; height: 100%;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 10px; /* 稍微縮小內距 */
+            padding: 10px;
         }
 
-        /* --- Details Section --- */
+        /* --- Details Section (修正版) --- */
         #details-container {
             flex: 1;
             background: white;
@@ -183,7 +183,70 @@
             padding-bottom: calc(40px + env(safe-area-inset-bottom));
         }
 
-        /* Overview Page Styles */
+        /* Weather & Info Blocks */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .info-box { 
+            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; 
+            padding: 10px 14px; display: flex; flex-direction: column; 
+        }
+        
+        /* Timeline Hierarchy (核心修正) */
+        .timeline-container { 
+            position: relative; 
+            padding-left: 0;
+        }
+        
+        .timeline-line {
+            position: absolute; 
+            left: 60px; /* 線條位置 */
+            top: 8px; 
+            bottom: 0;
+            width: 2px; 
+            background: #e5e7eb; 
+            z-index: 0;
+        }
+        
+        .timeline-row { 
+            position: relative; 
+            display: flex; 
+            align-items: flex-start; 
+            margin-bottom: 24px; 
+            z-index: 1; 
+        }
+        .timeline-row:last-child { margin-bottom: 0; }
+        
+        .time-col {
+            flex: 0 0 48px; 
+            text-align: right; 
+            font-family: 'Roboto Mono', monospace;
+            font-size: 13px; 
+            color: #6b7280; 
+            padding-top: 2px; 
+            font-weight: 500;
+            margin-right: 28px; /* 推開圓點空間 */
+        }
+        
+        .dot-marker {
+            position: absolute; 
+            left: 56px; /* 60 - 4 (圓點半徑+微調) */
+            top: 7px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: white; border: 2px solid #d1d5db; 
+            z-index: 2;
+        }
+        
+        .timeline-row.highlight .dot-marker {
+            background: #ef4444; border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        .content-col { 
+            flex: 1; 
+            background: white; 
+            padding-bottom: 4px; 
+        }
+
+        /* Overview Hint */
         .overview-hint {
             margin-top: 30px;
             text-align: center;
@@ -197,38 +260,7 @@
             60% {transform: translateY(-3px);}
         }
 
-        /* Timeline & Info */
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
-        .info-box { 
-            background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; 
-            padding: 10px 14px; display: flex; flex-direction: column; 
-        }
-        
-        .timeline-container { position: relative; padding-left: 16px; }
-        .timeline-line {
-            position: absolute; left: 24px; top: 12px; bottom: 0;
-            width: 2px; background: #e5e7eb; z-index: 0;
-        }
-        .timeline-row { position: relative; display: flex; gap: 16px; margin-bottom: 24px; z-index: 1; }
-        .timeline-row:last-child { margin-bottom: 0; }
-        
-        .time-col {
-            flex: 0 0 48px; text-align: right; font-family: 'Roboto Mono', monospace;
-            font-size: 13px; color: #6b7280; padding-top: 2px; font-weight: 500;
-        }
-        .content-col { flex: 1; background: white; padding-bottom: 4px; }
-        
-        .dot-marker {
-            position: absolute; left: 20px; top: 6px;
-            width: 10px; height: 10px; border-radius: 50%;
-            background: white; border: 2px solid #d1d5db; z-index: 2;
-        }
-        .timeline-row.highlight .dot-marker {
-            background: #ef4444; border-color: #ef4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-        }
-
-        .animate-fade { animation: fadeIn 0.4s ease-out; } /* 動畫也稍微加快 */
+        .animate-fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { 
             from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
@@ -430,7 +462,6 @@
             });
 
             if(allPoints.length > 0) {
-                 // Speed adjusted: duration 1.0s, easeLinearity 0.25 (Snappier)
                  map.flyToBounds(allPoints, { 
                      padding: [50, 50], 
                      duration: 1.0, 
@@ -442,7 +473,6 @@
 
         function focusOnLocation(lat, lng) {
             if (!lat || !lng) return;
-            // Speed adjusted for focus
             map.flyTo([lat, lng], 14, { 
                 duration: 0.8, 
                 easeLinearity: 0.25 
