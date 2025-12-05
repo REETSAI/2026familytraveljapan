@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>2026 東京親子行</title>
+
+    <!-- --- PWA 設定 --- -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Google Fonts -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #faf9f6; /* 日系米白 */
+            color: #374151;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* --- 1. Header (日系單排配置) --- */
+        .app-header {
+            height: 60px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            display: grid;
+            grid-template-columns: 40px 1fr 80px; /* 左圖示 中標題 右日期 */
+            align-items: center;
+            padding: 0 16px;
+            padding-top: env(safe-area-inset-top);
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 50;
+            cursor: pointer;
+        }
+        
+        .header-icon {
+            font-size: 1.1rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        .header-date {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* --- 2. Map Section (1/5 Height) --- */
+        #map-wrapper {
+            padding: 10px 10px 0 10px;
+            height: 20vh; /* 縮小至 1/5 */
+            width: 100%;
+            z-index: 10;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #d1d5db; /* 細緻邊框 */
+            position: relative;
+            background: #e5e7eb;
+        }
+
+        #map { width: 100%; height: 100%; }
+
+        /* 地圖標籤樣式 */
+        .map-label {
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 11px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .map-label::before { display: none; }
+
+        /* --- 3. Cards Section (1/8 Height) --- */
+        #cards-container {
+            height: 12.5vh; /* 縮小至 1/8 */
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            padding: 0 10px;
+            gap: 8px;
+            margin-top: 8px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        #cards-container::-webkit-scrollbar { display: none; }
+
+        .day-card {
+            flex: 0 0 110px;
+            height: 90%;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            background: #e2e8f0;
+        }
+
+        .card-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            filter: brightness(0.95);
+        }
+        
+        .card-content {
+            position: relative; z-index: 2; height: 100%;
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 5px 8px;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+        }
+
+        .day-card.active {
+            border-color: #3b82f6; /* Japan Blue */
+            transform: translateY(-2px);
+        }
+
+        /* --- 4. Details Section (Expanded List) --- */
+        #details-container {
+            flex: 1; /* 佔滿剩餘空間 */
+            background: white;
+            border-top: 1px solid #e5e5e5;
+            overflow-y: auto;
+            padding: 0;
+            -webkit-overflow-scrolling: touch; 
+        }
+
+        .details-wrapper { padding: 20px 20px 40px 20px; }
+
+        /* 縮小版的天氣資訊 */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;
+        }
+        .info-box {
+            background: #f9fafb; border: 1px solid #f3f4f6;
+            border-radius: 6px; padding: 6px 10px;
+            display: flex; flex-direction: column;
+        }
+
+        /* 行程列表 */
+        .timeline-item {
+            position: relative; padding-left: 24px; padding-bottom: 20px;
+            border-left: 1px solid #e5e5e5;
+            transition: background 0.1s;
+            border-radius: 4px;
+        }
+        .timeline-item:active { background-color: #f3f4f6; }
+        .timeline-item:last-child { border-left: 1px solid transparent; padding-bottom: 0; }
+        
+        .timeline-dot {
+            position: absolute; left: -5px; top: 6px;
+            width: 9px; height: 9px; border-radius: 50%;
+            background: white; border: 2px solid #9ca3af;
+        }
+        .timeline-item.highlight .timeline-dot {
+            background: #ef4444; border-color: #ef4444;
+        }
+
+        /* Map Pins */
+        .map-pin { background: none; border: none; }
+        .pin-inner {
+            width: 24px; height: 24px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-size: 10px; border: 2px solid white;
+        }
+        .pin-start { background-color: #10b981; }
+        .pin-end { background-color: #ef4444; }
+        .pin-mid { background-color: #3b82f6; }
+
+        .animate-fade { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Overview Page */
+        .overview-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;
+        }
+        .overview-box {
+            background: white; border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse-ring { 0% { transform: scale(0.33); opacity: 1; } 80%, 100% { transform: scale(1.5); opacity: 0; } }
+        .marker-pulse { position: relative; width: 20px; height: 20px; }
+        .marker-pulse::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 100%; background-color: #ef4444; border-radius: 50%; z-index: 2; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
+        .marker-pulse::after { content: ''; position: absolute; left: -10px; top: -10px; height: 40px; width: 40px; background-color: rgba(239, 68, 68, 0.4); border-radius: 50%; animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="app-header" onclick="resetView()">
+        <div class="header-icon"><i class="fas fa-home"></i></div>
+        <h1 class="header-title">2026 東京親子行</h1>
+        <div class="header-date">1/2 - 1/7</div>
+    </header>
+
+    <!-- Map -->
+    <div id="map-wrapper">
+        <div id="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <!-- Cards -->
+    <div id="cards-container"></div>
+
+    <!-- Details -->
+    <div id="details-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // --- Data ---
+        const locations = {
+            nrt: { lat: 35.7719, lng: 140.3929, title: "成田" },
+            shinjuku: { lat: 35.6896, lng: 139.7005, title: "新宿" },
+            fuji: { lat: 35.5011, lng: 138.7688, title: "河口湖" },
+            ueno: { lat: 35.7141, lng: 139.7741, title: "上野" },
+            disney: { lat: 35.6329, lng: 139.8804, title: "迪士尼" },
+            asakusa: { lat: 35.7147, lng: 139.7967, title: "淺草" },
+            tpe: { lat: 25.0797, lng: 121.2342, title: "台北" }, // For concept
+            ropeway: { lat: 35.5069, lng: 138.7725, title: "纜車" },
+            oishi: { lat: 35.5229, lng: 138.7456, title: "大石公園" }
+        };
+
+        const schedule = [
+            {
+                id: 1,
+                date: "1/2",
+                title: "新宿之夜",
+                bg: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=300&q=80",
+                route: [locations.nrt, locations.shinjuku],
+                temp: "5°C ~ 12°C",
+                wear: "洋蔥式 | 舒適",
+                events: [
+                    { time: "10:40", title: "MM626 起飛 (TPE)", sub: "免早起，睡飽出發" },
+                    { time: "14:55", title: "抵達成田機場 T1", sub: "出關約 60 分鐘", loc: locations.nrt },
+                    { time: "16:00", title: "搭乘 N'EX 直達車", sub: "車上休息", highlight: true },
+                    { time: "17:30", title: "新宿飯店 Check-in", sub: "小田急世紀南悅", loc: locations.shinjuku },
+                    { time: "18:30", title: "高島屋晚餐/逛街", loc: locations.shinjuku }
+                ]
+            },
+            {
+                id: 2,
+                date: "1/3",
+                title: "富士山鐵道",
+                bg: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=300&q=80",
+                route: [locations.shinjuku, locations.fuji],
+                temp: "-2°C ~ 6°C",
+                wear: "極凍 | 羽絨帽手套",
+                events: [
+                    { time: "09:00", title: "大行李寄出", sub: "宅配到1/4上野飯店" },
+                    { time: "09:30", title: "富士回遊號 (新宿發)", sub: "需搶票! 9/10月台", highlight: true, loc: locations.shinjuku },
+                    { time: "11:25", title: "抵達河口湖站", loc: locations.fuji },
+                    { time: "12:00", title: "午餐：不動茶屋", sub: "餺飥麵" },
+                    { time: "14:00", title: "音樂盒之森美術館", loc: locations.fuji },
+                    { time: "16:30", title: "入住 湖南莊/Kukuna", sub: "享受溫泉" }
+                ]
+            },
+            {
+                id: 3,
+                date: "1/4",
+                title: "逆富士",
+                bg: "https://images.unsplash.com/photo-1578271887552-5ac3a72752bc?auto=format&fit=crop&w=300&q=80",
+                route: [locations.fuji, locations.ueno],
+                temp: "-5°C ~ 8°C",
+                wear: "晨寒 | 防風保暖",
+                events: [
+                    { time: "07:00", title: "起床看逆富士", sub: "冬季清晨限定", highlight: true, loc: locations.fuji },
+                    { time: "10:00", title: "天上山纜車", loc: locations.ropeway },
+                    { time: "12:00", title: "大石公園散步", loc: locations.oishi },
+                    { time: "15:03", title: "富士回遊號 (返程)", sub: "回新宿轉車", highlight: true, loc: locations.fuji },
+                    { time: "18:00", title: "上野 MIMARU 入住", sub: "領回大行李", loc: locations.ueno },
+                    { time: "19:00", title: "晚餐：敘敘苑燒肉", loc: locations.ueno }
+                ]
+            },
+            {
+                id: 4,
+                date: "1/5",
+                title: "迪士尼",
+                bg: "https://images.unsplash.com/photo-1597466599360-3b9775841aec?auto=format&fit=crop&w=400&q=80",
+                route: [locations.ueno, locations.disney],
+                temp: "3°C ~ 10°C",
+                wear: "海風強 | 貼暖暖包",
+                events: [
+                    { time: "08:30", title: "上野出發", sub: "日比谷線->京葉線", loc: locations.ueno },
+                    { time: "09:30", title: "入園 Disneyland", loc: locations.disney },
+                    { time: "09:40", title: "搶 DPA 美女與野獸", highlight: true },
+                    { time: "14:00", title: "日間遊行 Harmony", loc: locations.disney },
+                    { time: "19:30", title: "夜間電子大遊行", loc: locations.disney },
+                    { time: "20:30", title: "煙火秀 & 返回上野", loc: locations.disney }
+                ]
+            },
+            {
+                id: 5,
+                date: "1/6",
+                title: "淺草返台",
+                bg: "https://images.unsplash.com/photo-1763774978899-74480eee6ff9?auto=format&fit=crop&w=400&q=80",
+                route: [locations.ueno, locations.nrt],
+                temp: "舒適 | 機上",
+                wear: "輕鬆 | 便於穿脫",
+                events: [
+                    { time: "09:30", title: "淺草寺雷門", sub: "最後採買", loc: locations.asakusa },
+                    { time: "11:00", title: "晴空塔/水族館", sub: "小孩放電", loc: locations.skytree },
+                    { time: "13:30", title: "回飯店拿行李", loc: locations.ueno },
+                    { time: "14:20", title: "Skyliner (上野發)", highlight: true, loc: locations.ueno },
+                    { time: "16:35", title: "MM625 起飛", sub: "返抵 TPE 20:00", loc: locations.nrt },
+                    { time: "21:30", title: "台灣休息", sub: "準備明日轉機" }
+                ]
+            }
+        ];
+
+        // --- Map Init ---
+        const map = L.map('map', { zoomControl: false, attributionControl: false }).setView([35.65, 139.75], 9);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 18, attribution: ''
+        }).addTo(map);
+
+        let currentLayerGroup = L.layerGroup().addTo(map);
+        let tempMarker = null;
+
+        // --- Logic ---
+        function selectDay(index) {
+            const data = schedule[index];
+            const card = document.getElementById(`card-${index}`);
+
+            document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+            if(card) {
+                card.classList.add('active');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+
+            renderDetails(data);
+            updateMapRoute(data);
+        }
+
+        function resetView() {
+            document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+            if(tempMarker) map.removeLayer(tempMarker);
+            currentLayerGroup.clearLayers();
+            
+            const allPoints = [];
+            Object.values(locations).forEach(loc => {
+                // Skip Taipei for map fit
+                if(loc.title === "台北") return;
+
+                const icon = L.divIcon({
+                    className: 'map-pin',
+                    html: `<div class="pin-inner" style="background-color: #8b5cf6; border-color:white;"></div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
+                });
+                
+                const marker = L.marker([loc.lat, loc.lng], { icon: icon }).addTo(currentLayerGroup)
+                 .on('click', (e) => {
+                     L.DomEvent.stopPropagation(e);
+                     if (loc.linkDay !== undefined) selectDay(loc.linkDay);
+                 });
+
+                 marker.bindTooltip(loc.title, {
+                     permanent: true, direction: 'top', className: 'map-label', offset: [0, -14]
+                 }).openTooltip();
+                
+                allPoints.push([loc.lat, loc.lng]);
+            });
+
+            if(allPoints.length > 0) {
+                 map.invalidateSize();
+                 setTimeout(() => map.flyToBounds(allPoints, { padding: [30, 30], duration: 1.2 }), 200);
+            }
+            renderOverviewDetails();
+        }
+
+        function focusOnLocation(lat, lng) {
+            if (!lat || !lng) return;
+            if(tempMarker) map.removeLayer(tempMarker);
+            map.flyTo([lat, lng], 14, { duration: 1.2, easeLinearity: 0.25 });
+            
+            const pulseIcon = L.divIcon({
+                className: 'pulse-icon',
+                html: '<div class="marker-pulse"></div>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+            tempMarker = L.marker([lat, lng], { icon: pulseIcon }).addTo(map);
+        }
+
+        // --- Render ---
+        const cardsContainer = document.getElementById('cards-container');
+        const detailsContainer = document.getElementById('details-container');
+
+        schedule.forEach((day, index) => {
+            const card = document.createElement('div');
+            card.className = 'day-card';
+            card.id = `card-${index}`;
+            card.innerHTML = `
+                <div class="card-bg" style="background-image: url('${day.bg}')"></div>
+                <div class="card-content">
+                    <div class="text-[10px] font-medium text-white/90">${day.date}</div>
+                    <div class="text-xs font-bold text-white shadow-sm truncate">${day.title}</div>
+                </div>
+            `;
+            card.onclick = () => selectDay(index);
+            cardsContainer.appendChild(card);
+        });
+
+        function renderOverviewDetails() {
+            detailsContainer.innerHTML = `
+                <div class="animate-fade bg-white h-full">
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-lg font-bold text-gray-800">行程重點摘要</h2>
+                            <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">6天5夜</span>
+                        </div>
+
+                        <!-- 滿版資訊卡 -->
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg p-4 mb-4">
+                            <div class="flex items-start gap-3">
+                                <div class="bg-white p-2 rounded-full shadow-sm text-blue-500"><i class="fas fa-plane"></i></div>
+                                <div>
+                                    <div class="text-xs font-bold text-blue-400 uppercase">Final Flight</div>
+                                    <div class="font-bold text-gray-800">1/7 CI35 (16:30 TPE)</div>
+                                    <div class="text-xs text-gray-600 mt-1">隔日轉機，體力充沛</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="overview-grid">
+                            <div class="overview-box">
+                                <i class="fas fa-moon text-indigo-500 text-xl mb-1"></i>
+                                <div class="font-bold text-sm text-gray-700">晚起去程</div>
+                                <div class="text-[10px] text-gray-400">MM626 (10:40)</div>
+                            </div>
+                            <div class="overview-box">
+                                <i class="fas fa-train text-green-500 text-xl mb-1"></i>
+                                <div class="font-bold text-sm text-gray-700">富士回遊</div>
+                                <div class="text-[10px] text-gray-400">新宿直達免轉車</div>
+                            </div>
+                            <div class="overview-box">
+                                <i class="fas fa-bed text-orange-500 text-xl mb-1"></i>
+                                <div class="font-bold text-sm text-gray-700">新宿/上野</div>
+                                <div class="text-[10px] text-gray-400">三段式住宿策略</div>
+                            </div>
+                            <div class="overview-box">
+                                <i class="fas fa-magic text-pink-500 text-xl mb-1"></i>
+                                <div class="font-bold text-sm text-gray-700">平日迪士尼</div>
+                                <div class="text-[10px] text-gray-400">1/5 週一入園</div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-6 text-xs text-gray-400">
+                            <i class="fas fa-arrow-up animate-bounce mr-1"></i> 請選擇上方卡片
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderDetails(data) {
+            detailsContainer.innerHTML = `
+                <div class="animate-fade details-wrapper">
+                    <div class="flex justify-between items-baseline mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">${data.title}</h2>
+                        <span class="text-sm text-gray-400 font-medium">${data.date}</span>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-box">
+                            <div class="text-[10px] text-gray-400 font-bold mb-1"><i class="fas fa-temperature-low mr-1"></i>氣溫</div>
+                            <div class="text-xs font-bold text-gray-700">${data.temp}</div>
+                        </div>
+                        <div class="info-box">
+                            <div class="text-[10px] text-gray-400 font-bold mb-1"><i class="fas fa-tshirt mr-1"></i>建議</div>
+                            <div class="text-xs font-bold text-gray-700 truncate">${data.wear}</div>
+                        </div>
+                    </div>
+
+                    <div class="pl-1 pb-10">
+                        ${data.events.map(e => `
+                            <div class="timeline-item ${e.highlight ? 'highlight' : ''}" 
+                                 onclick="${e.loc ? `focusOnLocation(${e.loc.lat}, ${e.loc.lng})` : ''}">
+                                <div class="timeline-dot"></div>
+                                <div class="flex justify-between items-start pr-1">
+                                    <div class="flex-1">
+                                        <div class="flex items-baseline gap-2">
+                                            <span class="font-bold text-gray-800 text-sm w-10 flex-shrink-0">${e.time}</span>
+                                            <span class="text-sm text-gray-700 font-bold">${e.title}</span>
+                                        </div>
+                                        ${e.sub ? `<div class="text-xs text-gray-500 mt-1 ml-[48px]">${e.sub}</div>` : ''}
+                                    </div>
+                                    ${e.loc ? '<i class="fas fa-map-marker-alt text-[10px] text-blue-300 mt-1"></i>' : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateMapRoute(data) {
+            currentLayerGroup.clearLayers();
+            if(tempMarker) map.removeLayer(tempMarker);
+            map.invalidateSize();
+
+            if (data.route) {
+                const points = data.route.map(p => [p.lat, p.lng]);
+                
+                L.polyline(points, {
+                    color: '#fbbf24',
+                    weight: 4,
+                    opacity: 0.9,
+                    dashArray: '5, 8'
+                }).addTo(currentLayerGroup);
+
+                data.route.forEach((pt, i) => {
+                    let pinClass = 'pin-mid';
+                    let labelText = '';
+                    
+                    if (i === 0) { 
+                        pinClass = 'pin-start'; 
+                        Object.values(locations).forEach(l => { if(l.lat==pt.lat) labelText=l.title; });
+                    }
+                    else if (i === data.route.length - 1) { 
+                        pinClass = 'pin-end';
+                        Object.values(locations).forEach(l => { if(l.lat==pt.lat) labelText=l.title; });
+                    }
+
+                    const icon = L.divIcon({
+                        className: 'map-pin',
+                        html: `<div class="pin-inner ${pinClass}"></div>`,
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    });
+                    
+                    const marker = L.marker([pt.lat, pt.lng], { icon: icon }).addTo(currentLayerGroup);
+
+                    if (labelText) {
+                        marker.bindTooltip(labelText, {
+                            permanent: true, direction: 'top', className: 'map-label', offset: [0, -14]
+                        }).openTooltip();
+                    }
+                });
+
+                setTimeout(() => {
+                    try { map.flyToBounds(points, { padding: [40, 40], duration: 1.0 }); } catch(e) {}
+                }, 100);
+            }
+        }
+
+        // Service Worker Safe Check
+        if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+            navigator.serviceWorker.register('./sw.js');
+        }
+
+        window.onload = () => setTimeout(resetView, 300);
+
+    </script>
+</body>
+</html>
+
