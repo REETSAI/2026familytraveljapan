@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>2026 東京親子行</title>
 
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#ffffff">
+    <meta name="mobile-web-app-capable" content="yes">
+    
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     
@@ -20,44 +20,68 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
         
+        /* --- 全域設定 --- */
+        * {
+            /* 禁止長按選取文字 (更像 App) */
+            -webkit-user-select: none;
+            user-select: none;
+            /* 禁止圖片長按跳出選單 */
+            -webkit-touch-callout: none; 
+        }
+
         body {
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #faf9f6;
             color: #374151;
-            height: 100vh;
+            /* 使用 dvh (Dynamic Viewport Height) 解決 iOS 網址列伸縮問題 */
+            height: 100dvh; 
+            width: 100vw;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            /* 禁止整頁橡皮筋回彈效果 */
+            overscroll-behavior-y: none;
             -webkit-tap-highlight-color: transparent;
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        /* --- Header --- */
+        /* --- Header (PWA 安全區域修正) --- */
         .app-header {
-            height: 60px;
+            /* 高度改為 auto，由 padding 撐開 */
+            height: auto;
+            min-height: 60px;
             flex-shrink: 0;
-            background: rgba(255, 255, 255, 0.98);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
             display: grid;
             grid-template-columns: 48px 1fr 48px;
             align-items: center;
-            padding-top: env(safe-area-inset-top);
             border-bottom: 1px solid #f3f4f6;
             z-index: 50;
+            
+            /* --- 關鍵修正 --- */
+            /* 上方內距：基本 10px + 手機劉海高度 */
+            padding-top: calc(10px + env(safe-area-inset-top));
+            /* 左右內距：確保橫式時不貼邊 */
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            /* 下方稍微留白讓垂直置中更好看 */
+            padding-bottom: 10px;
         }
         
         .header-btn {
             display: flex; align-items: center; justify-content: center;
-            height: 100%; color: #6b7280; font-size: 1.1rem; cursor: pointer;
-            transition: color 0.2s;
+            height: 40px; /* 固定按鈕觸控區高度 */
+            color: #6b7280; font-size: 1.1rem; cursor: pointer;
         }
-        .header-btn:active { color: #111827; }
-        .header-title { font-size: 1rem; font-weight: 700; color: #111827; text-align: center; letter-spacing: 0.05em; }
+        .header-title { font-size: 1rem; font-weight: 700; color: #111827; text-align: center; }
 
         /* --- Map Section --- */
         #map-wrapper {
-            padding: 12px 12px 0 12px;
-            height: 28vh; /* 視覺比例調整 */
+            padding: 12px;
+            /* 確保橫向也不貼邊 */
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right));
+            height: 28vh; 
             width: 100%;
             z-index: 10;
             box-sizing: border-box;
@@ -69,9 +93,7 @@
             border-radius: 16px; 
             overflow: hidden;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            position: relative;
             background: #e5e7eb;
-            /* 修正 Safari 圓角溢出問題 */
             transform: translateZ(0); 
         }
 
@@ -85,80 +107,68 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             display: flex; align-items: center; justify-content: center;
             border: 2px solid white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-top: -16px; margin-left: -16px;
         }
-        
         .pin-icon { transform: rotate(45deg); color: white; font-size: 14px; }
-        
-        .pin-start { background-color: #10b981; } /* Green */
-        .pin-dest { background-color: #ef4444; } /* Red */
-        .pin-mid { background-color: #3b82f6; } /* Blue */
-        .pin-normal { background-color: #8b5cf6; } /* Purple */
+        .pin-start { background-color: #10b981; } 
+        .pin-dest { background-color: #ef4444; } 
+        .pin-mid { background-color: #3b82f6; } 
+        .pin-normal { background-color: #8b5cf6; } 
 
         .map-label {
             background: rgba(255,255,255,0.95);
-            border: none;
-            border-radius: 6px;
+            border: none; border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            color: #1f2937;
-            font-weight: 700;
-            font-size: 11px;
-            text-align: center;
-            padding: 4px 8px;
+            color: #1f2937; font-weight: 700; font-size: 11px;
+            text-align: center; padding: 4px 8px;
             font-family: 'Noto Sans TC', sans-serif;
         }
         .map-label::before { display: none; }
 
         /* --- Cards Section --- */
         #cards-container {
-            height: 140px;
+            height: 160px; 
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            padding: 0 16px;
-            gap: 12px;
-            margin-top: 12px;
+            display: flex; align-items: center;
+            overflow-x: auto; overflow-y: hidden;
+            
+            /* 修正 PWA 左右滑動邊距 */
+            padding: 0 max(16px, env(safe-area-inset-right));
+            padding-left: max(16px, env(safe-area-inset-left));
+            
+            gap: 12px; margin-top: 4px;
             -ms-overflow-style: none; scrollbar-width: none;
         }
         #cards-container::-webkit-scrollbar { display: none; }
 
         .day-card {
-            flex: 0 0 100px;
-            height: 120px;
-            border-radius: 14px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            background: #f3f4f6;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border: 2px solid transparent;
+            flex: 0 0 100px; height: 125px;
+            border-radius: 14px; position: relative; overflow: hidden;
+            cursor: pointer; background: #f3f4f6;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 2px solid transparent; transform: translateZ(0); 
         }
         
-        /* Consistent Overlay */
         .card-bg { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background-size: cover; background-position: center; 
-            transition: transform 0.5s ease;
+            background-size: cover; background-position: center; transition: transform 0.5s ease;
         }
         .card-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
+            z-index: 1;
         }
-
         .day-card.active { 
-            border-color: #3b82f6; 
-            transform: translateY(-4px); 
-            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6; transform: translateY(-5px); 
+            box-shadow: 0 12px 20px -8px rgba(59, 130, 246, 0.4);
         }
         .day-card.active .card-bg { transform: scale(1.1); }
 
         .card-content {
             position: relative; z-index: 2; height: 100%;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 10px;
+            padding: 12px 10px;
         }
 
         /* --- Details Section --- */
@@ -168,13 +178,21 @@
             border-top: 1px solid #f3f4f6;
             overflow-y: auto;
             padding: 0;
-            -webkit-overflow-scrolling: touch; 
+            -webkit-overflow-scrolling: touch; /* 讓 iOS 捲動更順暢 */
             margin-top: 8px;
-            border-radius: 20px 20px 0 0; /* 圓潤的頂部 */
+            border-radius: 20px 20px 0 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
+            
+            /* --- PWA 底部修正 --- */
+            /* 讓最後一個項目不會被 Home Bar (底部黑條) 擋住 */
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
-        .details-wrapper { padding: 24px 20px 40px 20px; }
+        .details-wrapper { 
+            padding: 24px 20px 40px 20px; 
+            /* 額外加一點底部空間，確保滑到底時很舒適 */
+            padding-bottom: calc(40px + env(safe-area-inset-bottom));
+        }
 
         /* Weather & Info Blocks */
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
@@ -183,49 +201,24 @@
             padding: 10px 14px; display: flex; flex-direction: column; 
         }
 
-        /* Timeline Hierarchy */
+        /* Timeline */
         .timeline-container { position: relative; padding-left: 16px; }
-        /* 左側線條 */
         .timeline-line {
             position: absolute; left: 24px; top: 12px; bottom: 0;
             width: 2px; background: #e5e7eb; z-index: 0;
         }
-        
-        .timeline-row {
-            position: relative;
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px; /* 增加間距 */
-            z-index: 1;
-        }
+        .timeline-row { position: relative; display: flex; gap: 16px; margin-bottom: 24px; z-index: 1; }
         .timeline-row:last-child { margin-bottom: 0; }
-
-        /* 時間欄位 */
         .time-col {
-            flex: 0 0 48px;
-            text-align: right;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 13px;
-            color: #6b7280;
-            padding-top: 2px;
-            font-weight: 500;
+            flex: 0 0 48px; text-align: right; font-family: 'Roboto Mono', monospace;
+            font-size: 13px; color: #6b7280; padding-top: 2px; font-weight: 500;
         }
-        
-        /* 內容欄位 */
-        .content-col {
-            flex: 1;
-            background: white;
-            /* 讓點擊區域大一點 */
-            padding-bottom: 4px; 
-        }
-
+        .content-col { flex: 1; background: white; padding-bottom: 4px; }
         .dot-marker {
             position: absolute; left: 20px; top: 6px;
             width: 10px; height: 10px; border-radius: 50%;
-            background: white; border: 2px solid #d1d5db;
-            z-index: 2;
+            background: white; border: 2px solid #d1d5db; z-index: 2;
         }
-        
         .timeline-row.highlight .dot-marker {
             background: #ef4444; border-color: #ef4444;
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
@@ -237,393 +230,5 @@
             from { opacity: 0; transform: translateY(15px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
-
     </style>
 </head>
-<body>
-
-    <header class="app-header">
-        <div class="header-btn" onclick="resetView()"><i class="fas fa-home"></i></div>
-        <h1 class="header-title">2026 東京親子行</h1>
-        <div class="header-btn"><i class="fas fa-calendar-alt text-sm"></i></div>
-    </header>
-
-    <div id="map-wrapper">
-        <div id="map-container">
-            <div id="map"></div>
-        </div>
-    </div>
-
-    <div id="cards-container"></div>
-
-    <div id="details-container"></div>
-
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script>
-        // --- Data ---
-        const locations = {
-            nrt: { lat: 35.7719, lng: 140.3929, title: "成田機場" },
-            ueno: { lat: 35.7141, lng: 139.7741, title: "上野" },
-            asakusa: { lat: 35.7147, lng: 139.7967, title: "淺草" },
-            skytree: { lat: 35.7100, lng: 139.8107, title: "晴空塔" },
-            disney: { lat: 35.6329, lng: 139.8804, title: "迪士尼" },
-            fuji: { lat: 35.5011, lng: 138.7688, title: "河口湖" },
-            ropeway: { lat: 35.5069, lng: 138.7725, title: "纜車" },
-            shinjuku: { lat: 35.6896, lng: 139.7005, title: "新宿" }
-        };
-
-        const schedule = [
-            {
-                id: 1,
-                date: "1/2",
-                week: "週五",
-                title: "抵達 & 上野",
-                locName: "上野 Ueno",
-                bg: "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=400&q=80",
-                route: [locations.nrt, locations.ueno],
-                temp: "6°C ~ 12°C",
-                wear: "洋蔥式 | 舒適",
-                events: [
-                    { time: "10:40", title: "起飛 (TPE)", sub: "MM626 預定", highlight: true },
-                    { time: "14:55", title: "抵達成田機場 T1", sub: "入境手續約 60 分鐘", loc: locations.nrt },
-                    { time: "16:20", title: "Skyliner 京成電鐵", sub: "直達上野 (40分鐘)", highlight: true },
-                    { time: "17:10", title: "上野飯店 Check-in", sub: "MIMARU / 三井花園", loc: locations.ueno },
-                    { time: "18:00", title: "阿美橫丁晚餐", sub: "OS Drug 採買藥妝" },
-                    { time: "20:00", title: "多慶屋/超市", sub: "買隔日早餐" }
-                ]
-            },
-            {
-                id: 2,
-                date: "1/3",
-                week: "週六",
-                title: "淺草晴空塔",
-                locName: "淺草 Asakusa",
-                bg: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=400&q=80",
-                route: [locations.ueno, locations.asakusa, locations.skytree],
-                temp: "5°C ~ 11°C",
-                wear: "好走鞋 | 保暖",
-                events: [
-                    { time: "09:00", title: "前往淺草", sub: "地鐵銀座線 5分鐘", loc: locations.ueno },
-                    { time: "09:30", title: "雷門 & 仲見世通", sub: "人形燒、炸肉餅", loc: locations.asakusa },
-                    { time: "10:30", title: "淺草寺參拜", sub: "抽籤祈福", highlight: true },
-                    { time: "12:00", title: "隅田公園散步", sub: "前往晴空塔方向" },
-                    { time: "13:30", title: "晴空塔 Solamachi", sub: "水族館/寶可夢中心", loc: locations.skytree },
-                    { time: "18:00", title: "返回上野晚餐", sub: "一蘭/燒肉", loc: locations.ueno }
-                ]
-            },
-            {
-                id: 3,
-                date: "1/4",
-                week: "週日",
-                title: "迪士尼樂園",
-                locName: "舞濱 Disney",
-                bg: "https://images.unsplash.com/photo-1597466599360-3b9775841aec?auto=format&fit=crop&w=400&q=80",
-                route: [locations.ueno, locations.disney],
-                temp: "3°C ~ 10°C",
-                wear: "極暖 | 貼暖暖包",
-                events: [
-                    { time: "07:30", title: "上野出發", sub: "日比谷線->京葉線 (八丁堀轉)", loc: locations.ueno },
-                    { time: "08:30", title: "舞濱站抵達", sub: "排隊安檢入園" },
-                    { time: "09:00", title: "迪士尼入園", sub: "抽 DPA / PP", highlight: true, loc: locations.disney },
-                    { time: "12:00", title: "園區午餐", sub: "避開尖峰時段" },
-                    { time: "14:00", title: "日間遊行", loc: locations.disney },
-                    { time: "19:00", title: "夜間夢之光遊行", sub: "視體力提早撤退" },
-                    { time: "20:30", title: "返回上野休息", loc: locations.ueno }
-                ]
-            },
-            {
-                id: 4,
-                date: "1/5",
-                week: "週一",
-                title: "河口湖",
-                locName: "富士 Fuji",
-                bg: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=400&q=80",
-                route: [locations.ueno, locations.shinjuku, locations.fuji],
-                temp: "-3°C ~ 5°C",
-                wear: "羽絨 | 毛帽手套",
-                events: [
-                    { time: "08:00", title: "行李寄放/寄送", sub: "輕裝前往河口湖", loc: locations.ueno },
-                    { time: "09:30", title: "富士回遊號", sub: "新宿發車 (需預約)", highlight: true, loc: locations.shinjuku },
-                    { time: "11:25", title: "抵達河口湖站", loc: locations.fuji },
-                    { time: "12:30", title: "午餐：餺飥麵", sub: "不動茶屋" },
-                    { time: "14:00", title: "天上山纜車", sub: "俯瞰河口湖", loc: locations.ropeway },
-                    { time: "16:00", title: "飯店 Check-in", sub: "湖南莊 / 產屋 (溫泉)", loc: locations.fuji },
-                    { time: "18:00", title: "懷石料理晚餐", sub: "享受飯店設施" }
-                ]
-            },
-            {
-                id: 5,
-                date: "1/6",
-                week: "週二",
-                title: "富士返台",
-                locName: "成田 Airport",
-                bg: "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?auto=format&fit=crop&w=400&q=80",
-                route: [locations.fuji, locations.nrt],
-                temp: "舒適 | 機上",
-                wear: "輕鬆 | 好穿脫",
-                events: [
-                    { time: "07:00", title: "逆富士時光", sub: "清晨限定美景", highlight: true, loc: locations.fuji },
-                    { time: "10:00", title: "河口湖遊船", sub: "或車站周邊伴手禮" },
-                    { time: "12:00", title: "搭車前往機場", sub: "高速巴士 直達 NRT", loc: locations.fuji },
-                    { time: "15:30", title: "抵達成田 T1", sub: "最後採買/報到", loc: locations.nrt },
-                    { time: "17:45", title: "起飛返台", sub: "預計 21:00 抵達 TPE" }
-                ]
-            }
-        ];
-
-        // --- Map Init ---
-        const map = L.map('map', { 
-            zoomControl: false, 
-            attributionControl: false,
-            zoomAnimation: true,
-            fadeAnimation: true,
-            markerZoomAnimation: true
-        }).setView([35.69, 139.75], 10);
-
-        L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-            maxZoom: 18, attribution: 'Google'
-        }).addTo(map);
-
-        let currentLayerGroup = L.layerGroup().addTo(map);
-
-        // --- Logic ---
-        function selectDay(index) {
-            const data = schedule[index];
-            const card = document.getElementById(`card-${index}`);
-
-            document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
-            if(card) {
-                card.classList.add('active');
-                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-            }
-
-            renderDetails(data);
-            updateMapRoute(data);
-        }
-
-        function createPinIcon(type) {
-            let colorClass = 'pin-normal';
-            if (type === 'start') colorClass = 'pin-start';
-            if (type === 'dest') colorClass = 'pin-dest';
-            if (type === 'mid') colorClass = 'pin-mid';
-
-            return L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div class="pin-drop ${colorClass}"><i class="fas fa-map-marker-alt pin-icon"></i></div>`,
-                iconSize: [32, 48],
-                iconAnchor: [16, 48]
-            });
-        }
-
-        function resetView() {
-            document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
-            currentLayerGroup.clearLayers();
-            
-            const allPoints = [];
-            const mainSpots = [locations.ueno, locations.disney, locations.fuji, locations.nrt, locations.asakusa];
-            
-            mainSpots.forEach(loc => {
-                const marker = L.marker([loc.lat, loc.lng], { 
-                    icon: createPinIcon('normal') 
-                }).addTo(currentLayerGroup);
-                
-                marker.bindTooltip(loc.title, {
-                    permanent: true, direction: 'bottom', className: 'map-label', offset: [0, 8]
-                });
-                
-                allPoints.push([loc.lat, loc.lng]);
-            });
-
-            if(allPoints.length > 0) {
-                 // Slower, smoother fly
-                 map.flyToBounds(allPoints, { 
-                     padding: [50, 50], 
-                     duration: 2.5, // 變慢
-                     easeLinearity: 0.1 // 變滑順
-                 });
-            }
-            renderOverviewDetails();
-        }
-
-        function focusOnLocation(lat, lng) {
-            if (!lat || !lng) return;
-            map.flyTo([lat, lng], 14, { 
-                duration: 2.0, 
-                easeLinearity: 0.1 
-            });
-        }
-
-        // --- Render ---
-        const cardsContainer = document.getElementById('cards-container');
-        const detailsContainer = document.getElementById('details-container');
-
-        // Render Cards
-        schedule.forEach((day, index) => {
-            const card = document.createElement('div');
-            card.className = 'day-card';
-            card.id = `card-${index}`;
-            card.innerHTML = `
-                <div class="card-bg" style="background-image: url('${day.bg}')"></div>
-                <div class="card-overlay"></div>
-                <div class="card-content">
-                    <div class="flex justify-between items-center text-white">
-                        <span class="font-bold text-lg">${day.date.split('/')[1]}<span class="text-xs font-normal opacity-80 ml-1">日</span></span>
-                        <span class="text-[10px] font-medium opacity-90">${day.week}</span>
-                    </div>
-                    <div>
-                        <div class="text-[10px] text-white/80 font-medium mb-0.5 truncate">${day.title}</div>
-                        <div class="text-xs font-bold text-white truncate flex items-center">
-                            <i class="fas fa-map-pin mr-1 text-[10px] opacity-80"></i>${day.locName.split(' ')[0]}
-                        </div>
-                    </div>
-                </div>
-            `;
-            card.onclick = () => selectDay(index);
-            cardsContainer.appendChild(card);
-        });
-
-        function renderOverviewDetails() {
-            detailsContainer.innerHTML = `
-                <div class="animate-fade bg-white h-full p-6">
-                    <div class="flex items-center gap-4 mb-8">
-                        <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
-                            <i class="fas fa-plane-arrival text-xl"></i>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-800 tracking-wide">行程總覽</h2>
-                            <p class="text-sm text-gray-400 mt-0.5">5天4夜 • 親子漫遊</p>
-                        </div>
-                    </div>
-
-                    <div class="space-y-4">
-                        <div class="group p-4 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/30 transition-all cursor-pointer" onclick="selectDay(0)">
-                            <div class="flex gap-4 items-center">
-                                <div class="font-mono text-sm text-gray-400 font-medium">Day 1-3</div>
-                                <div class="h-8 w-px bg-gray-200"></div>
-                                <div>
-                                    <div class="font-bold text-gray-700 group-hover:text-blue-600 transition-colors">上野基地</div>
-                                    <div class="text-xs text-gray-500 mt-1">淺草、晴空塔、迪士尼</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="group p-4 rounded-2xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50/30 transition-all cursor-pointer" onclick="selectDay(3)">
-                            <div class="flex gap-4 items-center">
-                                <div class="font-mono text-sm text-gray-400 font-medium">Day 4-5</div>
-                                <div class="h-8 w-px bg-gray-200"></div>
-                                <div>
-                                    <div class="font-bold text-gray-700 group-hover:text-orange-600 transition-colors">河口湖溫泉</div>
-                                    <div class="text-xs text-gray-500 mt-1">富士回遊號、逆富士</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function renderDetails(data) {
-            detailsContainer.innerHTML = `
-                <div class="animate-fade details-wrapper">
-                    <div class="flex justify-between items-end mb-6">
-                        <div>
-                            <div class="text-sm text-blue-600 font-bold mb-1 tracking-wider uppercase">Day ${data.id}</div>
-                            <h2 class="text-2xl font-bold text-gray-800 tracking-tight">${data.title}</h2>
-                        </div>
-                        <div class="text-right">
-                            <span class="text-3xl font-bold text-gray-200 font-mono">${data.date.split('/')[1]}</span>
-                        </div>
-                    </div>
-
-                    <div class="info-grid">
-                        <div class="info-box">
-                            <div class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wide">Weather</div>
-                            <div class="text-sm font-bold text-gray-700"><i class="fas fa-temperature-high text-gray-400 mr-2"></i>${data.temp}</div>
-                        </div>
-                        <div class="info-box">
-                            <div class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wide">Wear</div>
-                            <div class="text-sm font-bold text-gray-700 truncate"><i class="fas fa-tshirt text-gray-400 mr-2"></i>${data.wear}</div>
-                        </div>
-                    </div>
-
-                    <div class="timeline-container">
-                        <div class="timeline-line"></div>
-                        
-                        ${data.events.map(e => `
-                            <div class="timeline-row ${e.highlight ? 'highlight' : ''}" 
-                                 onclick="${e.loc ? `focusOnLocation(${e.loc.lat}, ${e.loc.lng})` : ''}">
-                                <div class="dot-marker"></div>
-                                
-                                <div class="time-col">
-                                    ${e.time}
-                                </div>
-                                
-                                <div class="content-col ${e.loc ? 'cursor-pointer' : ''}">
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <div class="text-[15px] font-bold text-gray-800 leading-snug">${e.title}</div>
-                                            ${e.sub ? `<div class="text-xs text-gray-500 mt-1 leading-relaxed">${e.sub}</div>` : ''}
-                                        </div>
-                                        ${e.loc ? `<div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-[10px] ml-2 flex-shrink-0"><i class="fas fa-location-arrow"></i></div>` : ''}
-                                    </div>
-                                    
-                                    ${e.highlight ? `<div class="mt-2 inline-block px-2 py-0.5 bg-red-50 text-red-500 text-[10px] font-bold rounded">重點行程</div>` : ''}
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function updateMapRoute(data) {
-            currentLayerGroup.clearLayers();
-
-            if (data.route && data.route.length > 0) {
-                const points = data.route.map(p => [p.lat, p.lng]);
-                
-                L.polyline(points, {
-                    color: '#60a5fa',
-                    weight: 4,
-                    opacity: 0.6,
-                    dashArray: '8, 8',
-                    lineCap: 'round'
-                }).addTo(currentLayerGroup);
-
-                data.route.forEach((pt, i) => {
-                    let type = 'mid';
-                    // Determine Type
-                    if (i === 0) type = 'start';
-                    else if (i === data.route.length - 1) type = 'dest';
-                    
-                    const marker = L.marker([pt.lat, pt.lng], { 
-                        icon: createPinIcon(type),
-                        zIndexOffset: type === 'dest' ? 1000 : 0
-                    }).addTo(currentLayerGroup);
-
-                    // Show Label only for Start/End to reduce clutter
-                    if(i === 0 || i === data.route.length - 1) {
-                         marker.bindTooltip(pt.title, {
-                            permanent: true, direction: 'bottom', className: 'map-label', offset: [0, 8]
-                        });
-                    }
-                });
-
-                // Smooth Fly
-                map.flyToBounds(points, { 
-                    padding: [60, 60], 
-                    duration: 2.0, 
-                    easeLinearity: 0.2 
-                });
-            }
-        }
-
-        if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
-            navigator.serviceWorker.register('./sw.js');
-        }
-
-        window.onload = () => setTimeout(resetView, 500);
-
-    </script>
-</body>
-</html>
