@@ -24,10 +24,8 @@
         
         /* --- 全域設定 --- */
         * {
-            /* 禁止長按選取文字 (更像 App) */
             -webkit-user-select: none;
             user-select: none;
-            /* 禁止圖片長按跳出選單 */
             -webkit-touch-callout: none; 
         }
 
@@ -35,18 +33,16 @@
             font-family: 'Noto Sans TC', sans-serif;
             background-color: #faf9f6;
             color: #374151;
-            /* 使用 dvh (Dynamic Viewport Height) 解決 iOS 網址列伸縮問題 */
             height: 100dvh; 
             width: 100vw;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            /* 禁止整頁橡皮筋回彈效果 */
             overscroll-behavior-y: none;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Header (PWA 安全區域修正) --- */
+        /* --- Header --- */
         .app-header {
             height: auto;
             min-height: 60px;
@@ -54,14 +50,11 @@
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             display: grid;
-            grid-template-columns: 48px 1fr 48px;
+            grid-template-columns: 48px 1fr 48px; /* 保持左右平衡 */
             align-items: center;
             border-bottom: 1px solid #f3f4f6;
             z-index: 50;
-            
-            /* 上方內距：基本 10px + 手機劉海高度 */
             padding-top: calc(10px + env(safe-area-inset-top));
-            /* 左右內距：確保橫式時不貼邊 */
             padding-left: env(safe-area-inset-left);
             padding-right: env(safe-area-inset-right);
             padding-bottom: 10px;
@@ -99,7 +92,7 @@
 
         #map { width: 100%; height: 100%; }
 
-        /* Custom Marker Styles (Teardrop) */
+        /* Custom Marker */
         .pin-drop {
             width: 32px; height: 32px;
             border-radius: 50% 50% 50% 0;
@@ -107,7 +100,7 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
             display: flex; align-items: center; justify-content: center;
             border: 2px solid white;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s; /* Marker 動畫也加快 */
             margin-top: -16px; margin-left: -16px;
         }
         .pin-icon { transform: rotate(45deg); color: white; font-size: 14px; }
@@ -126,52 +119,49 @@
         }
         .map-label::before { display: none; }
 
-        /* --- Cards Section --- */
+        /* --- Cards Section (正方形比例調整) --- */
         #cards-container {
-            /* 增加高度，避免卡片浮起時被切到底部文字 */
-            height: 160px; 
+            height: 130px; /* 縮減高度適配正方形 */
             flex-shrink: 0;
             display: flex; align-items: center;
             overflow-x: auto; overflow-y: hidden;
-            
-            /* PWA 左右滑動邊距修正 */
             padding: 0 max(16px, env(safe-area-inset-right));
             padding-left: max(16px, env(safe-area-inset-left));
-            
             gap: 12px; margin-top: 4px;
             -ms-overflow-style: none; scrollbar-width: none;
         }
         #cards-container::-webkit-scrollbar { display: none; }
 
         .day-card {
-            flex: 0 0 100px; height: 125px;
-            border-radius: 14px; position: relative; overflow: hidden;
+            flex: 0 0 100px; /* 寬度 100 */
+            height: 100px;   /* 高度 100 -> 正方形 */
+            border-radius: 16px; 
+            position: relative; overflow: hidden;
             cursor: pointer; background: #f3f4f6;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             border: 2px solid transparent; transform: translateZ(0); 
         }
         
         .card-bg { 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            background-size: cover; background-position: center; transition: transform 0.5s ease;
+            background-size: cover; background-position: center; transition: transform 0.3s ease;
         }
         .card-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            /* 底部加深黑色漸層，確保文字不會消失 */
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
             z-index: 1;
         }
         .day-card.active { 
-            border-color: #3b82f6; transform: translateY(-5px); 
-            box-shadow: 0 12px 20px -8px rgba(59, 130, 246, 0.4);
+            border-color: #3b82f6; transform: translateY(-4px); 
+            box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.4);
         }
         .day-card.active .card-bg { transform: scale(1.1); }
 
         .card-content {
             position: relative; z-index: 2; height: 100%;
             display: flex; flex-direction: column; justify-content: space-between;
-            padding: 12px 10px;
+            padding: 10px; /* 稍微縮小內距 */
         }
 
         /* --- Details Section --- */
@@ -185,7 +175,6 @@
             margin-top: 8px;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.02);
-            /* 讓最後一個項目不會被 Home Bar 擋住 */
             padding-bottom: env(safe-area-inset-bottom);
         }
 
@@ -194,14 +183,27 @@
             padding-bottom: calc(40px + env(safe-area-inset-bottom));
         }
 
-        /* Info Blocks */
+        /* Overview Page Styles */
+        .overview-hint {
+            margin-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-5px);}
+            60% {transform: translateY(-3px);}
+        }
+
+        /* Timeline & Info */
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
         .info-box { 
             background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; 
             padding: 10px 14px; display: flex; flex-direction: column; 
         }
-
-        /* Timeline Hierarchy */
+        
         .timeline-container { position: relative; padding-left: 16px; }
         .timeline-line {
             position: absolute; left: 24px; top: 12px; bottom: 0;
@@ -226,10 +228,9 @@
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
         }
 
-        /* Animation */
-        .animate-fade { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+        .animate-fade { animation: fadeIn 0.4s ease-out; } /* 動畫也稍微加快 */
         @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(15px); } 
+            from { opacity: 0; transform: translateY(10px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
     </style>
@@ -239,7 +240,7 @@
     <header class="app-header">
         <div class="header-btn" onclick="resetView()"><i class="fas fa-home"></i></div>
         <h1 class="header-title">2026 東京親子行</h1>
-        <div class="header-btn"><i class="fas fa-calendar-alt text-sm opacity-50"></i></div>
+        <div class="header-btn" style="cursor: default;"></div>
     </header>
 
     <div id="map-wrapper">
@@ -429,10 +430,11 @@
             });
 
             if(allPoints.length > 0) {
+                 // Speed adjusted: duration 1.0s, easeLinearity 0.25 (Snappier)
                  map.flyToBounds(allPoints, { 
                      padding: [50, 50], 
-                     duration: 2.5, 
-                     easeLinearity: 0.1
+                     duration: 1.0, 
+                     easeLinearity: 0.25
                  });
             }
             renderOverviewDetails();
@@ -440,9 +442,10 @@
 
         function focusOnLocation(lat, lng) {
             if (!lat || !lng) return;
+            // Speed adjusted for focus
             map.flyTo([lat, lng], 14, { 
-                duration: 2.0, 
-                easeLinearity: 0.1 
+                duration: 0.8, 
+                easeLinearity: 0.25 
             });
         }
 
@@ -459,9 +462,9 @@
                 <div class="card-bg" style="background-image: url('${day.bg}')"></div>
                 <div class="card-overlay"></div>
                 <div class="card-content">
-                    <div class="flex justify-between items-center text-white">
-                        <span class="font-bold text-lg">${day.date.split('/')[1]}<span class="text-xs font-normal opacity-80 ml-1">日</span></span>
-                        <span class="text-[10px] font-medium opacity-90">${day.week}</span>
+                    <div class="text-white">
+                        <span class="font-bold text-lg leading-none">${day.date}</span>
+                        <div class="text-[10px] font-medium opacity-90 mt-1">${day.week}</div>
                     </div>
                     <div>
                         <div class="text-[10px] text-white/80 font-medium mb-0.5 truncate">${day.title}</div>
@@ -510,6 +513,11 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="overview-hint">
+                        <i class="fas fa-chevron-up mb-2"></i>
+                        <div>點擊上方卡片查看每日詳情</div>
                     </div>
                 </div>
             `;
@@ -602,8 +610,8 @@
 
                 map.flyToBounds(points, { 
                     padding: [60, 60], 
-                    duration: 2.0, 
-                    easeLinearity: 0.2 
+                    duration: 1.0, 
+                    easeLinearity: 0.25 
                 });
             }
         }
@@ -613,7 +621,7 @@
             navigator.serviceWorker.register('./sw.js');
         }
 
-        window.onload = () => setTimeout(resetView, 500);
+        window.onload = () => setTimeout(resetView, 300);
 
     </script>
 </body>
