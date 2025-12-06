@@ -1,117 +1,374 @@
 {
-  "meta": {
-    "title": "2026 東京親子行",
-    "subtitle": "5天4夜・2大2小｜東京・富士山・迪士尼",
-    "days": 5,
-    "nights": 4,
-    "people": "2大2小 (10 & 8 歲)"
-  },
-  "locations": {
-    "nrt": { "lat": 35.7719, "lng": 140.3929, "title": "成田機場" },
-    "ueno": { "lat": 35.7141, "lng": 139.7741, "title": "上野" },
-    "asakusa": { "lat": 35.7147, "lng": 139.7967, "title": "淺草" },
-    "skytree": { "lat": 35.71, "lng": 139.8107, "title": "晴空塔" },
-    "disney": { "lat": 35.6329, "lng": 139.8804, "title": "迪士尼" },
-    "fuji": { "lat": 35.5011, "lng": 138.7688, "title": "河口湖" },
-    "ropeway": { "lat": 35.5069, "lng": 138.7725, "title": "纜車" },
-    "shinjuku": { "lat": 35.6896, "lng": 139.7005, "title": "新宿" }
-  },
-  "schedule": [
-    {
-      "id": 1,
-      "date": "1/2",
-      "week": "週五",
-      "title": "抵達 & 上野",
-      "locName": "上野 Ueno",
-      "bg": "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=400&q=80",
-      "route": ["nrt", "ueno"],
-      "temp": "6°C ~ 12°C",
-      "wear": "洋蔥式 | 舒適",
-      "events": [
-        { "time": "10:40", "title": "起飛 (TPE)", "sub": "MM626 預定", "highlight": true },
-        { "time": "14:55", "title": "抵達成田機場 T1", "sub": "入境手續約 60 分鐘", "locKey": "nrt" },
-        { "time": "16:20", "title": "Skyliner 京成電鐵", "sub": "直達上野 (40分鐘)", "highlight": true },
-        { "time": "17:10", "title": "上野飯店 Check-in", "sub": "MIMARU / 三井花園", "locKey": "ueno" },
-        { "time": "18:00", "title": "阿美橫丁晚餐", "sub": "藥妝 & 零食時間" },
-        { "time": "20:00", "title": "超市採買", "sub": "補齊隔日早餐/飲料" }
-      ]
-    },
-    {
-      "id": 2,
-      "date": "1/3",
-      "week": "週六",
-      "title": "淺草晴空塔",
-      "locName": "淺草 Asakusa",
-      "bg": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "asakusa", "skytree"],
-      "temp": "5°C ~ 11°C",
-      "wear": "好走鞋 | 保暖",
-      "events": [
-        { "time": "09:00", "title": "前往淺草", "sub": "地鐵銀座線約 5 分鐘", "locKey": "ueno" },
-        { "time": "09:30", "title": "雷門 & 仲見世通", "sub": "人形燒、炸肉餅", "locKey": "asakusa" },
-        { "time": "10:30", "title": "淺草寺參拜", "sub": "抽籤祈福", "highlight": true },
-        { "time": "12:00", "title": "隅田公園散步", "sub": "沿河散步拍照" },
-        { "time": "13:30", "title": "晴空塔 Solamachi", "sub": "水族館 / 寶可夢中心", "locKey": "skytree" },
-        { "time": "18:00", "title": "返回上野晚餐", "sub": "拉麵 / 燒肉", "locKey": "ueno" }
-      ]
-    },
-    {
-      "id": 3,
-      "date": "1/4",
-      "week": "週日",
-      "title": "迪士尼樂園",
-      "locName": "舞濱 Disney",
-      "bg": "https://images.unsplash.com/photo-1597466599360-3b9775841aec?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "disney"],
-      "temp": "3°C ~ 10°C",
-      "wear": "極暖 | 貼暖暖包",
-      "events": [
-        { "time": "07:30", "title": "上野出發", "sub": "轉乘 JR 京葉線", "locKey": "ueno" },
-        { "time": "08:30", "title": "舞濱站抵達", "sub": "排隊安檢入園" },
-        { "time": "09:00", "title": "迪士尼入園", "sub": "DPA / PP 規劃", "highlight": true, "locKey": "disney" },
-        { "time": "12:00", "title": "園區午餐", "sub": "避開尖峰時段" },
-        { "time": "14:00", "title": "日間遊行", "locKey": "disney" },
-        { "time": "19:00", "title": "夜間遊行 / 煙火", "sub": "視體力彈性撤退" },
-        { "time": "20:30", "title": "返回上野休息", "locKey": "ueno" }
-      ]
-    },
-    {
-      "id": 4,
-      "date": "1/5",
-      "week": "週一",
-      "title": "河口湖溫泉",
-      "locName": "富士 Fuji",
-      "bg": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "shinjuku", "fuji"],
-      "temp": "-3°C ~ 5°C",
-      "wear": "羽絨 | 毛帽手套",
-      "events": [
-        { "time": "08:00", "title": "行李寄放/寄送", "sub": "輕裝前往河口湖", "locKey": "ueno" },
-        { "time": "09:30", "title": "富士回遊號", "sub": "新宿發車 (需預約)", "highlight": true, "locKey": "shinjuku" },
-        { "time": "11:25", "title": "抵達河口湖站", "locKey": "fuji" },
-        { "time": "12:30", "title": "午餐：餺飥麵", "sub": "當地名物" },
-        { "time": "14:00", "title": "天上山纜車", "sub": "俯瞰河口湖", "locKey": "ropeway" },
-        { "time": "16:00", "title": "飯店 Check-in", "sub": "溫泉旅館放鬆", "locKey": "fuji" },
-        { "time": "18:00", "title": "懷石料理晚餐", "sub": "享受飯店設施" }
-      ]
-    },
-    {
-      "id": 5,
-      "date": "1/6",
-      "week": "週二",
-      "title": "富士返台",
-      "locName": "成田 Airport",
-      "bg": "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?auto=format&fit=crop&w=400&q=80",
-      "route": ["fuji", "nrt"],
-      "temp": "舒適 | 機上",
-      "wear": "輕鬆 | 好穿脫",
-      "events": [
-        { "time": "07:00", "title": "逆富士時光", "sub": "清晨限定倒影", "highlight": true, "locKey": "fuji" },
-        { "time": "10:00", "title": "河口湖周邊散步", "sub": "依天氣彈性安排" },
-        { "time": "12:00", "title": "搭車前往機場", "sub": "高速巴士直達 NRT", "locKey": "fuji" },
-        { "time": "15:30", "title": "抵達成田 T1", "sub": "最後採買/報到", "locKey": "nrt" },
-        { "time": "17:45", "title": "起飛返台", "sub": "預計晚上抵達 TPE" }
-      ]
-    }
-  ]
+“meta”: {
+“title”: “東京・富士山・迪士尼 5 日親子慢遊”,
+“subtitle”: “5天4夜・2大2小｜東京市區・富士山河口湖・迪士尼樂園”,
+“days”: 5,
+“nights”: 4,
+“people”: “2大2小 (10 & 8 歲)”
+},
+“locations”: {
+“nrt”: {
+“lat”: 35.7719,
+“lng”: 140.3929,
+“title”: “成田機場”
+},
+“ueno”: {
+“lat”: 35.7141,
+“lng”: 139.7741,
+“title”: “上野”
+},
+“asakusa”: {
+“lat”: 35.7147,
+“lng”: 139.7967,
+“title”: “淺草”
+},
+“skytree”: {
+“lat”: 35.7101,
+“lng”: 139.8107,
+“title”: “晴空塔”
+},
+“disney”: {
+“lat”: 35.6329,
+“lng”: 139.8804,
+“title”: “東京迪士尼樂園”
+},
+“maihama”: {
+“lat”: 35.634,
+“lng”: 139.8836,
+“title”: “舞濱站”
+},
+“fuji”: {
+“lat”: 35.5011,
+“lng”: 138.7688,
+“title”: “河口湖”
+},
+“ropeway”: {
+“lat”: 35.5069,
+“lng”: 138.7725,
+“title”: “天上山纜車”
+},
+“shinjuku”: {
+“lat”: 35.6896,
+“lng”: 139.7005,
+“title”: “新宿”
+},
+“odaiba”: {
+“lat”: 35.625,
+“lng”: 139.775,
+“title”: “台場”
+},
+“ginza”: {
+“lat”: 35.6717,
+“lng”: 139.765,
+“title”: “銀座”
+}
+},
+“schedule”: [
+{
+“id”: 1,
+“date”: “2/10”,
+“week”: “週一”,
+“title”: “抵達東京・上野漫步”,
+“locName”: “上野 Ueno”,
+“bg”: “https://source.unsplash.com/800x600/?tokyo,city”,
+“route”: [
+“nrt”,
+“ueno”
+],
+“temp”: “5°C ~ 11°C”,
+“wear”: “洋蔥式穿搭・好走鞋”,
+“events”: [
+{
+“time”: “10:30”,
+“title”: “從台北出發”,
+“sub”: “預留機場報到與小孩吃點心時間，避免太趕”,
+“highlight”: true
+},
+{
+“time”: “14:30”,
+“title”: “抵達成田機場”,
+“sub”: “入境＋領行李約 60 分鐘，可在機場先上洗手間與補給點心”,
+“locKey”: “nrt”
+},
+{
+“time”: “16:00”,
+“title”: “搭乘 Skyliner 前往上野”,
+“sub”: “京成電鐵 Skyliner 約 45 分鐘，建議預先購票，車上可休息補眠”,
+“highlight”: true,
+“locKey”: “nrt”
+},
+{
+“time”: “17:00”,
+“title”: “上野飯店 Check-in”,
+“sub”: “選擇有家庭房或小廚房的飯店，方便晚間簡單料理與洗衣”,
+“locKey”: “ueno”
+},
+{
+“time”: “18:00”,
+“title”: “阿美橫丁覓食逛街”,
+“sub”: “推薦串燒、可樂餅、章魚燒等路邊攤，小孩可一起挑零食與戰利品”,
+“locKey”: “ueno”
+},
+{
+“time”: “19:30”,
+“title”: “上野公園散步+超市採買”,
+“sub”: “到附近超市補齊隔日早餐、水與小點心，約 20:30 前回飯店休息”,
+“locKey”: “ueno”
+}
+]
+},
+{
+“id”: 2,
+“date”: “2/11”,
+“week”: “週二”,
+“title”: “淺草雷門・晴空塔展望”,
+“locName”: “淺草 Asakusa”,
+“bg”: “https://source.unsplash.com/800x600/?asakusa,temple”,
+“route”: [
+“ueno”,
+“asakusa”,
+“skytree”
+],
+“temp”: “4°C ~ 10°C”,
+“wear”: “洋蔥式穿搭・保暖外套”,
+“events”: [
+{
+“time”: “09:00”,
+“title”: “從上野前往淺草”,
+“sub”: “搭地鐵銀座線約 5 分鐘即可抵達，避開通勤尖峰帶孩子較舒適”,
+“locKey”: “ueno”
+},
+{
+“time”: “09:30”,
+“title”: “雷門拍照＋仲見世通散步”,
+“sub”: “可以安排小任務讓小孩尋找造型人形燒、和風紀念品”,
+“locKey”: “asakusa”
+},
+{
+“time”: “10:30”,
+“title”: “淺草寺參拜”,
+“sub”: “簡單介紹抽籤文化，讓孩子體驗日式參拜禮儀”,
+“highlight”: true,
+“locKey”: “asakusa”
+},
+{
+“time”: “12:00”,
+“title”: “淺草午餐時間”,
+“sub”: “可選天婦羅丼或蕎麥麵名店，建議早一點入座以避免排隊”,
+“locKey”: “asakusa”
+},
+{
+“time”: “13:30”,
+“title”: “前往東京晴空塔”,
+“sub”: “乘坐東武線約 5 分鐘，推車可搭電梯，留意指標”,
+“locKey”: “skytree”
+},
+{
+“time”: “14:00”,
+“title”: “晴空塔展望台”,
+“sub”: “提早於官網預約時段可減少排隊，小孩可在高空找東京地標”,
+“highlight”: true,
+“locKey”: “skytree”
+},
+{
+“time”: “16:00”,
+“title”: “Solamachi 購物・點心時間”,
+“sub”: “有角色商店與美食街，可安排甜點時間當作走路小獎勵”,
+“locKey”: “skytree”
+},
+{
+“time”: “18:00”,
+“title”: “返回上野晚餐與休息”,
+“sub”: “可選拉麵或家庭餐廳，約 20:00 前回飯店放鬆”,
+“locKey”: “ueno”
+}
+]
+},
+{
+“id”: 3,
+“date”: “2/12”,
+“week”: “週三”,
+“title”: “東京迪士尼樂園一日遊”,
+“locName”: “舞濱 Disney”,
+“bg”: “https://source.unsplash.com/800x600/?disneyland,castle”,
+“route”: [
+“ueno”,
+“maihama”,
+“disney”
+],
+“temp”: “3°C ~ 9°C”,
+“wear”: “極暖內搭・羽絨外套・好走鞋”,
+“events”: [
+{
+“time”: “08:00”,
+“title”: “從上野出發前往舞濱”,
+“sub”: “JR 山手線轉京葉線，約 50–60 分鐘，車上先說明今日玩樂順序”,
+“locKey”: “ueno”
+},
+{
+“time”: “09:00”,
+“title”: “抵達舞濱站”,
+“sub”: “廁所休息＋整理裝備，確認門票與手機 App 狀態”,
+“locKey”: “maihama”
+},
+{
+“time”: “09:30”,
+“title”: “迪士尼入園與拍照”,
+“sub”: “先在世界市集與城堡前拍全家福，之後專心排設施”,
+“highlight”: true,
+“locKey”: “disney”
+},
+{
+“time”: “10:00”,
+“title”: “熱門遊樂設施時段”,
+“sub”: “優先安排適合 8–10 歲的設施，利用官方 App 查候位時間”,
+“locKey”: “disney”
+},
+{
+“time”: “12:00”,
+“title”: “園區午餐”,
+“sub”: “提早用餐避開尖峰，人多時可分工找座位與點餐”,
+“locKey”: “disney”
+},
+{
+“time”: “14:00”,
+“title”: “下午遊行＆下午茶”,
+“sub”: “提早 20–30 分鐘找位置，準備小點心讓小孩邊吃邊等”,
+“locKey”: “disney”
+},
+{
+“time”: “17:00”,
+“title”: “角色見面＋紀念品時間”,
+“sub”: “集中在一兩家商店採買，避免整天不斷進店拉長動線”,
+“locKey”: “disney”
+},
+{
+“time”: “19:00”,
+“title”: “夜間遊行或煙火後撤退”,
+“sub”: “依小孩體力決定是否看完整場，適時提前離開避開人潮”,
+“highlight”: true,
+“locKey”: “disney”
+},
+{
+“time”: “20:30”,
+“title”: “返回上野飯店休息”,
+“sub”: “電車約 1 小時，確保小孩上車前先上洗手間，回飯店直接洗澡睡覺”,
+“locKey”: “ueno”
+}
+]
+},
+{
+“id”: 4,
+“date”: “2/13”,
+“week”: “週四”,
+“title”: “富士山河口湖・溫泉旅館之夜”,
+“locName”: “富士山 Fuji”,
+“bg”: “https://source.unsplash.com/800x600/?fuji,mountain”,
+“route”: [
+“ueno”,
+“shinjuku”,
+“fuji”,
+“ropeway”
+],
+“temp”: “-3°C ~ 4°C”,
+“wear”: “羽絨外套＋毛帽手套・保暖襪”,
+“events”: [
+{
+“time”: “08:30”,
+“title”: “行李寄送或寄放”,
+“sub”: “大件行李可使用宅急便寄回東京機場附近飯店，輕裝出發較舒適”,
+“locKey”: “ueno”
+},
+{
+“time”: “09:30”,
+“title”: “前往新宿搭乘富士回遊號”,
+“sub”: “山手線約 25 分鐘，新宿站內預留找月台時間，建議預約指定席”,
+“locKey”: “shinjuku”
+},
+{
+“time”: “10:30”,
+“title”: “富士回遊號前往河口湖”,
+“sub”: “車程約 1.5 小時，可準備車上便當與遊戲書讓小孩不無聊”,
+“highlight”: true,
+“locKey”: “shinjuku”
+},
+{
+“time”: “12:00”,
+“title”: “抵達河口湖站・午餐”,
+“sub”: “車站附近品嚐名物餺飥麵，暖胃又適合寒冷天氣”,
+“locKey”: “fuji”
+},
+{
+“time”: “14:00”,
+“title”: “天上山纜車＋湖畔散步”,
+“sub”: “搭纜車俯瞰富士山與河口湖，山頂有簡單遊具適合孩子放電”,
+“highlight”: true,
+“locKey”: “ropeway”
+},
+{
+“time”: “16:00”,
+“title”: “溫泉旅館 Check-in”,
+“sub”: “選擇可眺望富士山的和洋式房間，安排晚餐前先在房內休息”,
+“locKey”: “fuji”
+},
+{
+“time”: “18:00”,
+“title”: “溫泉與懷石晚餐”,
+“sub”: “大人分批泡湯，一位陪小孩在房內玩桌遊或看卡通，避免過度勞累”,
+“locKey”: “fuji”
+},
+{
+“time”: “20:00”,
+“title”: “房內親子時光”,
+“sub”: “整理今日照片、寫明信片給自己，讓小孩提早就寢養足精神”
+}
+]
+},
+{
+“id”: 5,
+“date”: “2/14”,
+“week”: “週五”,
+“title”: “河口湖晨景・返回成田機場”,
+“locName”: “成田 Airport”,
+“bg”: “https://source.unsplash.com/800x600/?tokyo,airport”,
+“route”: [
+“fuji”,
+“nrt”
+],
+“temp”: “2°C ~ 8°C”,
+“wear”: “輕便洋蔥式・好穿脫衣物”,
+“events”: [
+{
+“time”: “07:00”,
+“title”: “清晨欣賞富士山”,
+“sub”: “若天氣良好可拍攝逆富士倒影，冷風較強記得替小孩多加一層外套”,
+“highlight”: true,
+“locKey”: “fuji”
+},
+{
+“time”: “09:00”,
+“title”: “旅館早餐與退房準備”,
+“sub”: “整理隨身行李與戰利品，確認護照與機票是否收好”,
+“locKey”: “fuji”
+},
+{
+“time”: “10:30”,
+“title”: “搭乘巴士或電車前往成田機場”,
+“sub”: “可選直達巴士或回新宿轉成田特快，至少預留 3 小時抵達機場”,
+“locKey”: “fuji”
+},
+{
+“time”: “14:00”,
+“title”: “成田機場辦理登機與午餐”,
+“sub”: “先辦理行李托運再用餐，機場內有拉麵與咖哩等選擇，讓小孩自行挑選”,
+“locKey”: “nrt”
+},
+{
+“time”: “16:30”,
+“title”: “搭機返回台灣”,
+“sub”: “登機前最後一次上洗手間，機上準備畫畫本與耳機，替孩子安排安靜時光”
+}
+]
+}
+]
 }
