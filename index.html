@@ -1,6 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="page-title">Loading...</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
+
+        * {
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #faf9f6;
+            color: #374151;
+            height: 100dvh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            overscroll-behavior-y: none;
+        }
+
+        /* Header */
+        .app-header {
+            min-height: 60px;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: grid;
+            grid-template-columns: 48px 1fr 48px;
+            align-items: center;
+            border-bottom: 1px solid #f3f4f6;
+            z-index: 50;
+            padding-top: calc(10px + env(safe-area-inset-top));
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+            padding-bottom: 10px;
+        }
+
+        .header-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            color: #6b7280;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .header-btn:active {
+            color: #111827;
+        }
+
+        .header-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            letter-spacing: 0.08em;
+        }
+
+        /* Map */
+        #map-wrapper {
+            padding: 12px;
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right));
+            height: 28vh;
+            width: 100%;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            background: #e5e7eb;
+            transform: translateZ(0);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .pin-drop {
+            width: 30px;
+            height: 30px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid white;
+            transition: all 0.2s;
+            margin: 0;
+        }
+
+        .pin-icon {
+            transform: rotate(45deg);
+            color: white;
+            font-size: 13px;
+        }
+
+        .pin-start {
+            background-color: #10b981;
+        }
+
+        .pin-dest {
+            background-color: #ef4444;
+        }
+
+        .pin-mid {
+            background-color: #3b82f6;
+        }
+
+        .pin-normal {
+            background-color: #8b5cf6;
+        }
+
+        .map-label {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            color: #1f2937;
+            font-weight: 700;
+            font-size: 11px;
+            text-align: center;
+            padding: 3px 8px;
+            font-family: 'Noto Sans TC', sans-serif;
+            margin-top: 2px;
+        }
+
+        .map-label::before {
+            display: none;
+        }
+
+        /* Day cards */
+        #cards-container {
+            height: 130px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            overflow-y: hidden;
+            padding-right: max(16px, env(safe-area-inset-right));
+            padding-left: max(16px, env(safe-area-inset-left));
+            gap: 12px;
+            margin-top: 4px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #cards-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .day-card {
+            flex: 0 0 100px;
+            height: 100px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background: #f3f4f6;
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border: 2px solid transparent;
+            transform: translateZ(0);
+        }
+
+        .day-card.active {
+            border-color: #3b82f6;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.4);
+        }
+
+        .card-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            transition: transform 0.3s ease;
+        }
+
+        .day-card.active .card-bg {
+            transform: scale(1.1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.8) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            rgba(0, 0, 0, 0) 100%);
+            z-index: 1;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+        }
+
+        /* Details */
+        #details-container {
+            flex: 1;
+            background: white;
+            border-top: 1px solid #f3f4f6;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 8px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .details-wrapper {
+            padding: 24px 20px 40px 20px;
+            padding-bottom: calc(40px + env(safe-area-inset-bottom));
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .info-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .timeline-container {
+            position: relative;
+            padding-left: 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 60px;
+            top: 8px;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .timeline-row {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        .timeline-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .time-col {
+            flex: 0 0 48px;
+            text-align: right;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 13px;
+            color: #6b7280;
+            padding-top: 2px;
+            font-weight: 500;
+            margin-right: 28px;
+        }
+
+        .dot-marker {
+            position: absolute;
+            left: 56px;
+            top: 7px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #d1d5db;
+            z-index: 2;
+        }
+
+        .timeline-row.highlight .dot-marker {
+            background: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+
+        .content-col {
+            flex: 1;
+            background: white;
+            padding-bottom: 4px;
+        }
+
+        .overview-hint {
+            margin-top: 30px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
+        .animate-fade {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="header-btn" onclick="resetView()">
+        <i class="fas fa-home"></i>
+    </div>
+    <h1 class="header-title" id="header-title"></h1>
+    <div class="header-btn" style="cursor: default;"></div>
+</header>
+
+<div id="map-wrapper">
+    <div id="map-container">
+        <div id="map"></div>
+    </div>
+</div>
+
+<div id="cards-container"></div>
+<div id="details-container"></div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    // 全域變數，等待 JSON 載入後填充
+    // 全域變數
     let tripData = null;
     let locations = {};
     let schedule = [];
@@ -13,7 +400,7 @@
     const cardsContainer = document.getElementById('cards-container');
     const detailsContainer = document.getElementById('details-container');
 
-    // Map init (初始化地圖，但先不放點)
+    // Map Init
     const map = L.map('map', {
         zoomControl: false,
         attributionControl: false,
@@ -30,25 +417,36 @@
 
     // --- 核心邏輯：讀取資料 ---
     async function initApp() {
-        // 1. 從網址取得參數 ?trip=xxx，預設為 tokyo
+        // 1. 取得網址參數，例如 ?trip=osaka
         const params = new URLSearchParams(window.location.search);
-        const tripId = params.get('trip') || 'tokyo'; 
+        
+        // 預設檔案名稱：'tokyo-2026-01-02'
+        let tripName = params.get('trip') || 'tokyo-2026-01-02';
+
+        // 自動補上 .json 副檔名 (如果網址沒打的話)
+        if (!tripName.endsWith('.json')) {
+            tripName += '.json';
+        }
 
         try {
-            // 2. 嘗試讀取 JSON
-            const response = await fetch(`./data/${tripId}.json`);
-            if (!response.ok) throw new Error('Network response was not ok');
+            // 2. Fetch 資料
+            // 注意：這裡假設 json 檔跟 index.html 放在「同一層目錄」
+            const response = await fetch(`./${tripName}`);
+            
+            if (!response.ok) {
+                throw new Error(`找不到行程檔 (${tripName})，請確認檔案名稱或路徑正確。`);
+            }
             
             tripData = await response.json();
             
-            // 3. 分配資料到全域變數
-            meta = tripData.meta;
-            locations = tripData.locations;
-            schedule = tripData.schedule;
+            // 3. 分配資料
+            meta = tripData.meta || {};
+            locations = tripData.locations || {};
+            schedule = tripData.schedule || [];
 
             // 4. 更新畫面標題
             if(meta.title) {
-                document.title = meta.title; // 瀏覽器分頁標題
+                document.title = meta.title; 
                 pageTitleEl.innerText = meta.title;
                 headerTitleEl.innerText = meta.title;
             }
@@ -59,11 +457,20 @@
 
         } catch (error) {
             console.error('Fetch error:', error);
-            alert('無法讀取行程資料，請確認 data 資料夾內是否有對應的 .json 檔案。\n\n錯誤: ' + error.message);
+            // 顯示友善錯誤訊息給使用者
+            headerTitleEl.innerText = "載入失敗";
+            detailsContainer.innerHTML = `
+                <div class="p-8 text-center text-gray-400">
+                    <i class="fas fa-exclamation-circle text-4xl mb-4 text-red-300"></i>
+                    <h3 class="font-bold text-gray-600 mb-2">無法讀取行程</h3>
+                    <p class="text-xs text-gray-400 font-mono bg-gray-100 p-2 rounded break-all">${error.message}</p>
+                    <p class="mt-4 text-xs">請確認 ${tripName} 檔案是否存在於 GitHub 倉庫中。</p>
+                </div>
+            `;
         }
     }
 
-    // --- 以下為 UI 邏輯 (大部分未變動，僅微調適應非同步載入) ---
+    // --- UI 邏輯 ---
 
     function createPinIcon(type) {
         let colorClass = 'pin-normal';
@@ -94,7 +501,7 @@
         const points = [];
         day.route.forEach((locKey, i) => {
             const loc = locations[locKey];
-            if (!loc) return; // 保護機制：如果 JSON 寫錯 key
+            if (!loc) return;
 
             const pt = [loc.lat, loc.lng];
             points.push(pt);
@@ -136,6 +543,7 @@
     }
 
     function selectDay(index) {
+        // 點擊相同卡片 -> 回到首頁 (Reset)
         if (currentActiveIndex === index) {
             resetView();
             return;
@@ -153,7 +561,10 @@
         }
 
         renderDetails(day);
+        
+        // 捲動內容置頂
         detailsContainer.scrollTop = 0;
+        
         updateMapRoute(day);
     }
 
@@ -172,6 +583,7 @@
             });
         });
 
+        // 簡單去重 + 顯示總覽 Marker
         const used = new Set();
         const mainMarkers = [];
         points.forEach(([lat, lng]) => {
@@ -182,7 +594,8 @@
             }
         });
 
-        mainMarkers.slice(0, 6).forEach(([lat, lng]) => {
+        // 最多顯示前 8 個點，避免畫面太亂
+        mainMarkers.slice(0, 8).forEach(([lat, lng]) => {
             L.marker([lat, lng], {
                 icon: createPinIcon('normal')
             }).addTo(currentLayerGroup);
@@ -197,11 +610,16 @@
         }
 
         renderOverviewDetails();
+        
+        // 捲動內容置頂
         detailsContainer.scrollTop = 0;
     }
 
     function renderOverviewDetails() {
-        const dayTitles = schedule.slice(0, 3).map(d => `Day ${d.id}・${d.title}`);
+        // 這裡做一個保護，避免 schedule 是空的時候報錯
+        if(!schedule || schedule.length === 0) return;
+
+        const dayTitles = schedule.map((d, i) => ({ id: d.id || i+1, title: d.title }));
         
         detailsContainer.innerHTML = `
             <div class="animate-fade bg-white h-full p-6">
@@ -211,7 +629,7 @@
                     </div>
                     <div class="flex-1">
                         <h2 class="text-xl font-bold text-gray-800 tracking-wide">${meta.title || '行程規劃'}</h2>
-                        <p class="text-xs text-gray-400 mt-1">${meta.subtitle || ''}</p>
+                        <p class="text-xs text-gray-400 mt-1">${meta.subtitle || '載入完成'}</p>
                     </div>
                 </div>
 
@@ -239,7 +657,7 @@
                                     D${idx + 1}
                                 </div>
                                 <div class="flex-1">
-                                    <div class="text-xs font-bold text-gray-700 group-hover:text-blue-600">${t}</div>
+                                    <div class="text-xs font-bold text-gray-700 group-hover:text-blue-600">Day ${t.id}・${t.title}</div>
                                 </div>
                                 <i class="fas fa-chevron-right text-[10px] text-gray-300 group-hover:text-blue-400"></i>
                             </div>
@@ -350,7 +768,9 @@
         navigator.serviceWorker.register('./sw.js');
     }
 
-    // 啟動點：改為呼叫 initApp
+    // 程式入口
     window.onload = initApp;
 
 </script>
+</body>
+</html>
