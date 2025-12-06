@@ -1,0 +1,404 @@
+{
+  "meta": {
+    "title": "2026 東京親子五日輕鬆行程",
+    "subtitle": "東京市區散策・富士山河口湖・東京迪士尼｜避開人潮的親子慢旅行",
+    "days": 5,
+    "nights": 4,
+    "people": "2大2小（10歲與8歲）"
+  },
+  "locations": {
+    "nrt": {
+      "lat": 35.771987,
+      "lng": 140.39285,
+      "title": "成田機場"
+    },
+    "shinjuku": {
+      "lat": 35.689487,
+      "lng": 139.691706,
+      "title": "新宿商圈"
+    },
+    "hotel_shinjuku": {
+      "lat": 35.6905,
+      "lng": 139.7003,
+      "title": "新宿飯店"
+    },
+    "tokyo_station": {
+      "lat": 35.681236,
+      "lng": 139.767125,
+      "title": "東京車站"
+    },
+    "asakusa": {
+      "lat": 35.714765,
+      "lng": 139.796655,
+      "title": "淺草雷門・仲見世通"
+    },
+    "sensoji": {
+      "lat": 35.7149,
+      "lng": 139.7967,
+      "title": "淺草寺"
+    },
+    "ueno": {
+      "lat": 35.7141,
+      "lng": 139.7741,
+      "title": "上野公園・阿美橫丁"
+    },
+    "ueno_zoo": {
+      "lat": 35.7156,
+      "lng": 139.7713,
+      "title": "上野動物園"
+    },
+    "skytree": {
+      "lat": 35.710063,
+      "lng": 139.8107,
+      "title": "東京晴空塔・Solamachi"
+    },
+    "odaiba": {
+      "lat": 35.6272,
+      "lng": 139.7768,
+      "title": "台場海濱公園"
+    },
+    "maihama": {
+      "lat": 35.634,
+      "lng": 139.8836,
+      "title": "舞濱站"
+    },
+    "disney": {
+      "lat": 35.632896,
+      "lng": 139.880394,
+      "title": "東京迪士尼樂園"
+    },
+    "fuji_kawaguchiko": {
+      "lat": 35.5175,
+      "lng": 138.7575,
+      "title": "富士山河口湖區"
+    },
+    "kawaguchiko_station": {
+      "lat": 35.4979,
+      "lng": 138.7647,
+      "title": "河口湖車站"
+    },
+    "kachi_kachi_ropeway": {
+      "lat": 35.5069,
+      "lng": 138.7725,
+      "title": "天上山纜車（卡奇卡奇山）"
+    }
+  },
+  "schedule": [
+    {
+      "id": 1,
+      "date": "1/2",
+      "week": "週五",
+      "title": "抵達東京・新宿安頓與輕鬆夜散步",
+      "locName": "新宿 Shinjuku",
+      "bg": "https://placehold.co/800x600?text=Shinjuku",
+      "route": ["nrt", "tokyo_station", "hotel_shinjuku"],
+      "temp": "0°C ~ 7°C",
+      "wear": "發熱衣＋毛衣＋厚外套，圍巾與毛帽建議必備，小朋友準備手套",
+      "events": [
+        {
+          "time": "10:40",
+          "title": "自台北起飛前往東京成田",
+          "sub": "建議提早抵達桃園機場，辦理報到與托運，讓小朋友提前吃點東西與上洗手間。",
+          "highlight": false
+        },
+        {
+          "time": "14:55",
+          "title": "抵達成田機場・通關與領行李",
+          "sub": "依指標前往入境審查與行李轉盤，預留約60〜90分鐘，途中讓小朋友活動伸展。",
+          "highlight": false,
+          "locKey": "nrt"
+        },
+        {
+          "time": "16:10",
+          "title": "搭乘成田特快或Skyliner進市區",
+          "sub": "依實際住宿地點選擇成田特快至東京或Skyliner至上野，再轉乘電車前往新宿。",
+          "highlight": false,
+          "locKey": "nrt"
+        },
+        {
+          "time": "17:30",
+          "title": "抵達新宿飯店・辦理入住或寄放行李",
+          "sub": "若尚未到入住時間，可先寄放行李，讓小朋友在大廳稍作休息、喝水與上洗手間。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        },
+        {
+          "time": "18:30",
+          "title": "新宿周邊晚餐",
+          "sub": "選擇親子友善的家庭餐廳、咖哩或拉麵店，避免排隊名店，讓小朋友不要餓過頭。",
+          "highlight": true,
+          "locKey": "shinjuku"
+        },
+        {
+          "time": "19:30",
+          "title": "便利商店與超市補給",
+          "sub": "採買隔天早餐、優格、水與小零食，也可讓孩子挑一兩樣日本點心當小旅行獎勵。",
+          "highlight": false,
+          "locKey": "shinjuku"
+        },
+        {
+          "time": "20:30",
+          "title": "回飯店整理與早點休息",
+          "sub": "分配隔日會用到的隨身背包，將保暖衣物與雨具準備好，讓小朋友提早就寢調整體力。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "date": "1/3",
+      "week": "週六",
+      "title": "淺草雷門・上野公園・台場夜景親子散步",
+      "locName": "東京市區 Tokyo City",
+      "bg": "https://placehold.co/800x600?text=Asakusa+Ueno+Odaiba",
+      "route": ["hotel_shinjuku", "asakusa", "ueno", "odaiba", "hotel_shinjuku"],
+      "temp": "1°C ~ 8°C",
+      "wear": "洋蔥式穿搭：發熱衣＋毛衣＋保暖外套，方便室內脫穿；小朋友穿好走的球鞋",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "飯店附近簡單早餐與慢準備",
+          "sub": "在飯店或周邊咖啡店輕鬆用餐，不趕時間，讓小朋友慢慢醒來與吃飽。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        },
+        {
+          "time": "11:00",
+          "title": "前往淺草雷門・仲見世通",
+          "sub": "搭地鐵前往淺草站，避開早上最壅塞時段，抵達後先在雷門前拍全家福。",
+          "highlight": true,
+          "locKey": "asakusa"
+        },
+        {
+          "time": "12:00",
+          "title": "仲見世通小吃與午餐",
+          "sub": "品嚐人形燒、煎餅與日式小點，正餐可選天丼或烏龍麵，餐廳以不需久候為主。",
+          "highlight": false,
+          "locKey": "asakusa"
+        },
+        {
+          "time": "13:30",
+          "title": "淺草寺參拜與抽御神籤",
+          "sub": "向小朋友解釋求籤文化，強調籤詩僅作參考遊戲，避免過度在意吉凶內容。",
+          "highlight": false,
+          "locKey": "sensoji"
+        },
+        {
+          "time": "15:00",
+          "title": "前往上野公園・上野動物園",
+          "sub": "錯開上午人潮，下午進動物園較為舒適，可優先安排孩子喜歡的動物區域。",
+          "highlight": true,
+          "locKey": "ueno_zoo"
+        },
+        {
+          "time": "17:00",
+          "title": "阿美橫丁逛街・點心時間",
+          "sub": "簡單逛逛藥妝店與零食店，小朋友可以挑選幾樣想帶回飯店的點心與飲料。",
+          "highlight": false,
+          "locKey": "ueno"
+        },
+        {
+          "time": "18:30",
+          "title": "前往台場海濱・晚餐與夜景",
+          "sub": "搭百合海鷗線前往台場，邊搭車邊看彩虹大橋與海景，在商場內尋找親子友善餐廳用餐。",
+          "highlight": true,
+          "locKey": "odaiba"
+        },
+        {
+          "time": "20:30",
+          "title": "返回新宿飯店",
+          "sub": "避開最晚回程人潮，回到飯店後簡單洗澡與收拾，讓小朋友放鬆準備隔天迪士尼。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "date": "1/4",
+      "week": "週日",
+      "title": "東京迪士尼樂園・魔法世界親子日",
+      "locName": "東京迪士尼 Tokyo Disney Resort",
+      "bg": "https://placehold.co/800x600?text=Tokyo+Disneyland",
+      "route": ["hotel_shinjuku", "maihama", "disney", "hotel_shinjuku"],
+      "temp": "0°C ~ 8°C",
+      "wear": "極暖內搭＋厚羽絨外套，圍巾與手套必備，園區早晚風大，建議準備暖暖包給小朋友",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "從新宿出發前往舞濱",
+          "sub": "搭JR或地鐵轉京葉線至舞濱站，盡量選擇轉乘次數少的路線，途中與小朋友說明今日行程重點。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        },
+        {
+          "time": "11:00",
+          "title": "抵達舞濱站・整理裝備",
+          "sub": "在車站或園區外先上洗手間、整理外套與帽子，確認門票與手機App狀態。",
+          "highlight": false,
+          "locKey": "maihama"
+        },
+        {
+          "time": "11:30",
+          "title": "入園拍照與路線規劃",
+          "sub": "在世界市集與城堡前拍全家照，再依孩子年齡選擇適合的園區路線，避免來回奔波。",
+          "highlight": true,
+          "locKey": "disney"
+        },
+        {
+          "time": "12:30",
+          "title": "園區內午餐與休息",
+          "sub": "選擇室內座位餐廳，用餐同時安排短暫休息，避免小朋友因排隊與走路過度疲勞。",
+          "highlight": false,
+          "locKey": "disney"
+        },
+        {
+          "time": "14:00",
+          "title": "下午遊樂設施與遊行觀賞",
+          "sub": "以適合10歲與8歲的家庭向設施為主，善用官方App查看排隊時間，若人潮過多就改看表演或逛商店。",
+          "highlight": true,
+          "locKey": "disney"
+        },
+        {
+          "time": "17:00",
+          "title": "角色見面與紀念品時間",
+          "sub": "安排固定時段逛紀念品店，讓小朋友集中選擇，避免整天被商店吸引而打亂行程。",
+          "highlight": false,
+          "locKey": "disney"
+        },
+        {
+          "time": "18:30",
+          "title": "簡單晚餐・視體力決定是否看夜間遊行",
+          "sub": "若天氣寒冷或小朋友明顯疲累，可提前離園返回飯店休息；若精神尚可再視情況觀賞夜間遊行。",
+          "highlight": false,
+          "locKey": "disney"
+        },
+        {
+          "time": "20:00",
+          "title": "返回新宿飯店",
+          "sub": "搭電車返回新宿，途中提醒小朋友回飯店後只需要洗澡與睡覺，減少拖延時間。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "date": "1/5",
+      "week": "週一",
+      "title": "富士山河口湖・纜車與湖畔悠閒一日",
+      "locName": "富士山河口湖 Fuji Kawaguchiko",
+      "bg": "https://placehold.co/800x600?text=Fuji+Kawaguchiko",
+      "route": ["hotel_shinjuku", "fuji_kawaguchiko", "kachi_kachi_ropeway", "hotel_shinjuku"],
+      "temp": "-3°C ~ 4°C",
+      "wear": "比東京再多一層：厚羽絨外套＋毛帽與手套，建議穿厚襪與防滑運動鞋或靴子",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "從新宿出發前往河口湖",
+          "sub": "建議事先預約高速巴士，自新宿巴士總站出發約2小時車程，可準備零食與小玩具讓小朋友在車上打發時間。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        },
+        {
+          "time": "12:00",
+          "title": "抵達河口湖・湖畔午餐",
+          "sub": "選擇可眺望富士山或湖景的餐廳，若天候不佳可改室內座位，避免讓小朋友在戶外久候著涼。",
+          "highlight": true,
+          "locKey": "fuji_kawaguchiko"
+        },
+        {
+          "time": "13:30",
+          "title": "天上山纜車（卡奇卡奇山）",
+          "sub": "錯開上午人潮於午後搭乘纜車，山頂視野絕佳，注意山上風較大，提醒小朋友拉好拉鍊與戴帽子。",
+          "highlight": true,
+          "locKey": "kachi_kachi_ropeway"
+        },
+        {
+          "time": "15:00",
+          "title": "湖畔散步與咖啡休息",
+          "sub": "視天氣在湖畔短暫散步拍照，若風太大則改到室內咖啡廳享用熱飲與甜點，讓小朋友暖暖身體。",
+          "highlight": false,
+          "locKey": "fuji_kawaguchiko"
+        },
+        {
+          "time": "16:30",
+          "title": "搭巴士返回新宿",
+          "sub": "選擇傍晚班次返回東京，車上安排小朋友聽音樂或看書，不需再安排行程。",
+          "highlight": false,
+          "locKey": "fuji_kawaguchiko"
+        },
+        {
+          "time": "18:30",
+          "title": "新宿簡單晚餐或便利商店補給",
+          "sub": "回到新宿後以近飯店的餐廳或便利商店熟食為主，避免再走遠路，小朋友可以邊吃邊分享今日最喜歡的風景。",
+          "highlight": false,
+          "locKey": "shinjuku"
+        },
+        {
+          "time": "20:00",
+          "title": "回飯店整理戰利品與行李",
+          "sub": "整理隔日返國需要的物品，確認護照與機票，讓小朋友挑選一兩樣最想帶在身上的小物。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "date": "1/6",
+      "week": "週二",
+      "title": "東京最後採買・返回成田機場返台",
+      "locName": "返回成田機場 Departure",
+      "bg": "https://placehold.co/800x600?text=Tokyo+Departure",
+      "route": ["hotel_shinjuku", "shinjuku", "tokyo_station", "nrt"],
+      "temp": "0°C ~ 7°C",
+      "wear": "維持保暖但方便脫穿，建議機上準備薄外套與圍巾，避免機艙冷氣吹到小朋友",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "飯店退房・寄放行李",
+          "sub": "若班機在傍晚，可先辦理退房並寄放大件行李，只帶輕便背包在新宿周邊活動。",
+          "highlight": false,
+          "locKey": "hotel_shinjuku"
+        },
+        {
+          "time": "11:00",
+          "title": "新宿周邊最後採買",
+          "sub": "到藥妝店或商場補齊清單上需要的物品，讓小朋友挑選最後的小紀念品，避免臨上車前手忙腳亂。",
+          "highlight": false,
+          "locKey": "shinjuku"
+        },
+        {
+          "time": "12:30",
+          "title": "新宿或東京車站附近午餐",
+          "sub": "在靠近前往機場交通工具的車站附近用餐，餐後可直接搭乘成田特快或機場巴士前往機場。",
+          "highlight": false,
+          "locKey": "tokyo_station"
+        },
+        {
+          "time": "14:30",
+          "title": "前往成田機場",
+          "sub": "預留約1小時車程與3小時機場手續時間，途中再次確認護照、登機證與小朋友的隨身物品。",
+          "highlight": false,
+          "locKey": "tokyo_station"
+        },
+        {
+          "time": "15:30",
+          "title": "抵達成田機場・辦理報到與托運",
+          "sub": "先完成報到與行李托運，再找座位休息，讓小朋友上洗手間與補充水分，避免登機前臨時手忙腳亂。",
+          "highlight": false,
+          "locKey": "nrt"
+        },
+        {
+          "time": "17:45",
+          "title": "搭機返回台灣",
+          "sub": "機上準備耳機、畫畫本或小點心，讓小朋友在飛行途中有安靜的活動，結束愉快的東京親子旅程。",
+          "highlight": true,
+          "locKey": "nrt"
+        }
+      ]
+    }
+  ]
+}
