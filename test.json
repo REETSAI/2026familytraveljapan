@@ -1,15 +1,15 @@
 {
   "meta": {
-    "title": "東京新春親子遊",
-    "subtitle": "淺草迪士尼與富士溫泉",
+    "title": "新春東京富士行",
+    "subtitle": "迪士尼與河口湖溫泉五日",
     "days": 5,
     "nights": 4,
     "people": "2大2小 (10歲/8歲)"
   },
   "locations": {
-    "hotel_asakusa": {
-      "lat": 35.7153,
-      "lng": 139.7945,
+    "hotel_tokyo": {
+      "lat": 35.7128,
+      "lng": 139.7928,
       "title": "淺草豪景飯店"
     },
     "hotel_fuji": {
@@ -35,7 +35,7 @@
     "fuji_lake": {
       "lat": 35.5011,
       "lng": 138.7694,
-      "title": "河口湖"
+      "title": "河口湖畔"
     },
     "narita": {
       "lat": 35.7719,
@@ -52,36 +52,36 @@
       "locName": "成田-淺草",
       "bg": "https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 4,
-      "stayHotel": "hotel_asakusa",
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel_asakusa"
+        "hotel_tokyo"
       ],
       "temp": "5°C 晚間寒冷",
       "wear": "羽絨外套、圍巾",
       "events": [
         {
-          "time": "18:55",
+          "time": "14:45",
           "title": "航班抵達",
-          "sub": "MM626 抵達東京成田",
+          "sub": "TPE 10:45 -> NRT",
           "highlight": false
         },
         {
-          "time": "20:00",
-          "title": "前往市區",
-          "sub": "京成Access特急直達淺草",
+          "time": "16:00",
+          "title": "機場交通",
+          "sub": "Access特急直達淺草",
           "highlight": false
         },
         {
-          "time": "21:30",
+          "time": "17:30",
           "title": "飯店入住",
-          "sub": "淺草景觀飯店",
+          "sub": "淺草豪景飯店 (暫定)",
           "highlight": false,
-          "locKey": "hotel_asakusa"
+          "locKey": "hotel_tokyo"
         },
         {
-          "time": "22:00",
-          "title": "深夜拉麵",
-          "sub": "飯店附近暖胃夜宵",
+          "time": "18:30",
+          "title": "晚餐",
+          "sub": "淺草六區美食街",
           "highlight": false,
           "locKey": "sensoji"
         }
@@ -91,52 +91,45 @@
       "id": 2,
       "date": "1/3",
       "week": "週六",
-      "title": "下町風情",
+      "title": "下町新春",
       "locName": "淺草/晴空塔",
       "bg": "https://images.pexels.com/photos/161251/senso-ji-temple-tokyo-japan-temple-161251.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 5,
-      "stayHotel": "hotel_asakusa",
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel_asakusa",
+        "hotel_tokyo",
         "sensoji",
         "skytree",
-        "hotel_asakusa"
+        "hotel_tokyo"
       ],
       "temp": "8°C 晴",
-      "wear": "舒適好走的鞋",
+      "wear": "舒適步鞋",
       "events": [
         {
-          "time": "09:30",
+          "time": "10:00",
           "title": "淺草寺參拜",
-          "sub": "雷門燈籠與仲見世通",
+          "sub": "雷門與仲見世通",
           "highlight": true,
           "locKey": "sensoji"
         },
         {
-          "time": "12:00",
-          "title": "午餐：天婦羅",
-          "sub": "淺草百年老店",
+          "time": "12:30",
+          "title": "午餐",
+          "sub": "淺草老舖天婦羅",
           "highlight": false,
           "locKey": "sensoji"
         },
         {
-          "time": "14:00",
-          "title": "隅田川步道",
-          "sub": "散步前往晴空塔",
-          "highlight": false,
-          "locKey": "skytree"
-        },
-        {
-          "time": "15:30",
+          "time": "14:30",
           "title": "晴空塔",
-          "sub": "350M展望台俯瞰東京",
+          "sub": "350M展望台與購物",
           "highlight": true,
           "locKey": "skytree"
         },
         {
           "time": "18:00",
           "title": "晚餐",
-          "sub": "晴空塔Solamachi美食街",
+          "sub": "晴空塔 Solamachi",
           "highlight": false,
           "locKey": "skytree"
         }
@@ -146,53 +139,53 @@
       "id": 3,
       "date": "1/4",
       "week": "週日",
-      "title": "童話一日",
+      "title": "童話世界",
       "locName": "迪士尼樂園",
       "bg": "https://images.pexels.com/photos/3411135/pexels-photo-3411135.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 5,
-      "stayHotel": "hotel_asakusa",
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel_asakusa",
+        "hotel_tokyo",
         "disney",
-        "hotel_asakusa"
+        "hotel_tokyo"
       ],
-      "temp": "7°C 海風涼",
-      "wear": "防風外套、帽子",
+      "temp": "7°C 海風",
+      "wear": "防風保暖、輕便",
       "events": [
         {
-          "time": "08:30",
-          "title": "出發迪士尼",
-          "sub": "搭乘晴空塔穿梭巴士直達",
+          "time": "09:00",
+          "title": "前往迪士尼",
+          "sub": "晴空塔接駁巴士或電車",
           "highlight": false,
-          "locKey": "hotel_asakusa"
+          "locKey": "hotel_tokyo"
         },
         {
-          "time": "10:00",
+          "time": "10:30",
           "title": "入園遊玩",
-          "sub": "夢幻樂園設施體驗",
+          "sub": "適合親子的設施體驗",
           "highlight": true,
           "locKey": "disney"
         },
         {
           "time": "13:00",
-          "title": "園區午餐",
-          "sub": "卡通造型餐點",
+          "title": "樂園午餐",
+          "sub": "造型餐點",
           "highlight": false,
           "locKey": "disney"
         },
         {
           "time": "15:00",
           "title": "日間遊行",
-          "sub": "歡樂遊行表演",
+          "sub": "欣賞歡樂表演",
           "highlight": true,
           "locKey": "disney"
         },
         {
           "time": "19:00",
           "title": "返回淺草",
-          "sub": "搭乘電車或巴士",
+          "sub": "避開閉園尖峰",
           "highlight": false,
-          "locKey": "hotel_asakusa"
+          "locKey": "hotel_tokyo"
         }
       ]
     },
@@ -200,13 +193,13 @@
       "id": 4,
       "date": "1/5",
       "week": "週一",
-      "title": "富士山旅",
+      "title": "富士溫泉",
       "locName": "河口湖",
       "bg": "https://images.pexels.com/photos/14829307/pexels-photo-14829307.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 3,
       "stayHotel": "hotel_fuji",
       "route": [
-        "hotel_asakusa",
+        "hotel_tokyo",
         "fuji_lake",
         "hotel_fuji"
       ],
@@ -216,36 +209,36 @@
         {
           "time": "09:00",
           "title": "退房移動",
-          "sub": "特急電車前往河口湖",
+          "sub": "富士回遊或巴士前往河口湖",
           "highlight": false,
-          "locKey": "hotel_asakusa"
+          "locKey": "hotel_tokyo"
         },
         {
           "time": "11:30",
           "title": "河口湖抵達",
-          "sub": "車站寄放行李",
+          "sub": "車站午餐(餺飥麵)",
           "highlight": false,
           "locKey": "fuji_lake"
         },
         {
-          "time": "12:30",
-          "title": "餺飥麵午餐",
-          "sub": "山梨縣鄉土料理",
-          "highlight": false,
-          "locKey": "fuji_lake"
-        },
-        {
-          "time": "14:00",
-          "title": "大石公園",
-          "sub": "欣賞富士山絕景",
+          "time": "13:30",
+          "title": "天上山公園",
+          "sub": "纜車俯瞰富士山",
           "highlight": true,
           "locKey": "fuji_lake"
         },
         {
-          "time": "16:30",
+          "time": "16:00",
           "title": "溫泉飯店入住",
           "sub": "享受一泊二食",
           "highlight": true,
+          "locKey": "hotel_fuji"
+        },
+        {
+          "time": "18:00",
+          "title": "會席料理",
+          "sub": "飯店內享用",
+          "highlight": false,
           "locKey": "hotel_fuji"
         }
       ]
@@ -255,9 +248,9 @@
       "date": "1/6",
       "week": "週二",
       "title": "悠閒返程",
-      "locName": "河口湖-機場",
+      "locName": "河口湖-成田",
       "bg": "https://images.pexels.com/photos/1108701/pexels-photo-1108701.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 3,
+      "crowdLevel": 2,
       "stayHotel": "hotel_fuji",
       "route": [
         "hotel_fuji",
@@ -275,8 +268,8 @@
         },
         {
           "time": "10:30",
-          "title": "退房",
-          "sub": "飯店接駁車至車站",
+          "title": "退房出發",
+          "sub": "前往河口湖車站",
           "highlight": false,
           "locKey": "fuji_lake"
         },
@@ -284,19 +277,20 @@
           "time": "11:00",
           "title": "機場巴士",
           "sub": "直達成田機場 (需預約)",
-          "highlight": false
+          "highlight": false,
+          "locKey": "fuji_lake"
         },
         {
-          "time": "14:45",
+          "time": "14:35",
           "title": "抵達機場",
           "sub": "第一航廈辦理登機",
           "highlight": false,
           "locKey": "narita"
         },
         {
-          "time": "16:45",
+          "time": "16:35",
           "title": "航班起飛",
-          "sub": "MM625 返回溫暖的家",
+          "sub": "MM625 返回",
           "highlight": false,
           "locKey": "narita"
         }
