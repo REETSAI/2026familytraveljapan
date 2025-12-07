@@ -11,20 +11,19 @@
     <meta name="theme-color" content="#ffffff">
     <meta name="mobile-web-app-capable" content="yes">
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
+    <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-    <!-- 1. Leaflet CSS -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     
-    <!-- 2. Leaflet JS (必須先載入) -->
+    <!-- Leaflet JS (核心) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- 3. Leaflet PolylineDecorator 插件 (必須在 Leaflet 之後) -->
+    <!-- Leaflet PolylineDecorator (箭頭特效插件) -->
     <script src="https://unpkg.com/leaflet-polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
 
     <style>
@@ -113,6 +112,7 @@
         #map {
             width: 100%;
             height: 100%;
+            z-index: 1;
         }
 
         .pin-drop {
@@ -135,21 +135,10 @@
             font-size: 13px;
         }
 
-        .pin-start {
-            background-color: #10b981;
-        }
-
-        .pin-dest {
-            background-color: #ef4444;
-        }
-
-        .pin-mid {
-            background-color: #3b82f6;
-        }
-
-        .pin-normal {
-            background-color: #8b5cf6;
-        }
+        .pin-start { background-color: #10b981; }
+        .pin-dest { background-color: #ef4444; }
+        .pin-mid { background-color: #3b82f6; }
+        .pin-normal { background-color: #8b5cf6; }
 
         .map-label {
             background: rgba(255, 255, 255, 0.95);
@@ -165,9 +154,7 @@
             margin-top: 2px;
         }
 
-        .map-label::before {
-            display: none;
-        }
+        .map-label::before { display: none; }
 
         /* Day cards */
         #cards-container {
@@ -185,9 +172,7 @@
             scrollbar-width: none;
         }
 
-        #cards-container::-webkit-scrollbar {
-            display: none;
-        }
+        #cards-container::-webkit-scrollbar { display: none; }
 
         .day-card {
             flex: 0 0 100px;
@@ -217,17 +202,12 @@
             transition: transform 0.3s ease;
         }
 
-        .day-card.active .card-bg {
-            transform: scale(1.1);
-        }
+        .day-card.active .card-bg { transform: scale(1.1); }
 
         .card-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.8) 0%,
-            rgba(0, 0, 0, 0.3) 50%,
-            rgba(0, 0, 0, 0) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
             z-index: 1;
         }
 
@@ -298,9 +278,7 @@
             z-index: 1;
         }
 
-        .timeline-row:last-child {
-            margin-bottom: 0;
-        }
+        .timeline-row:last-child { margin-bottom: 0; }
 
         .time-col {
             flex: 0 0 48px;
@@ -346,30 +324,15 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-5px);
-            }
-            60% {
-                transform: translateY(-3px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-5px); }
+            60% { transform: translateY(-3px); }
         }
 
-        .animate-fade {
-            animation: fadeIn 0.4s ease-out;
-        }
-
+        .animate-fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -393,7 +356,7 @@
 <div id="details-container"></div>
 
 <script>
-    // 全域變數
+    // Global Variables
     let tripData = null;
     let locations = {};
     let schedule = [];
@@ -407,7 +370,7 @@
     const cardsContainer = document.getElementById('cards-container');
     const detailsContainer = document.getElementById('details-container');
 
-    // Map Init
+    // Map Initialization
     const map = L.map('map', {
         zoomControl: false,
         attributionControl: false,
@@ -422,14 +385,11 @@
 
     const currentLayerGroup = L.layerGroup().addTo(map);
 
-    // --- 核心邏輯：讀取資料 ---
+    // --- Core Logic ---
     async function initApp() {
-        // 1. 取得網址參數
         const params = new URLSearchParams(window.location.search);
         let tripName = params.get('trip') || 'tokyo-2026-01-02';
-        if (!tripName.endsWith('.json')) {
-            tripName += '.json';
-        }
+        if (!tripName.endsWith('.json')) tripName += '.json';
 
         try {
             const response = await fetch(`./${tripName}`);
@@ -462,7 +422,7 @@
         }
     }
 
-    // --- UI 邏輯 ---
+    // --- UI Logic ---
 
     function createPinIcon(type) {
         let colorClass = 'pin-normal';
@@ -480,14 +440,11 @@
 
     function focusOnLocation(lat, lng) {
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        map.flyTo([lat, lng], 14, {
-            duration: 0.8,
-            easeLinearity: 0.25
-        });
+        map.flyTo([lat, lng], 14, { duration: 0.8, easeLinearity: 0.25 });
     }
 
     function updateMapRoute(day) {
-        // 1. 清除舊圖層與動畫
+        // 1. Reset
         currentLayerGroup.clearLayers();
         if (arrowAnimationId) {
             cancelAnimationFrame(arrowAnimationId);
@@ -496,100 +453,80 @@
 
         if (!day.route || !day.route.length) return;
 
+        // 2. Build Points
         const points = [];
-        
-        // 2. 建立標記點 (Markers)
         day.route.forEach((locKey, i) => {
             const loc = locations[locKey];
             if (!loc) return;
-
-            const pt = [loc.lat, loc.lng];
-            points.push(pt);
+            points.push([loc.lat, loc.lng]);
 
             let type = 'mid';
             if (i === 0) type = 'start';
             else if (i === day.route.length - 1) type = 'dest';
 
-            const marker = L.marker(pt, {
+            const marker = L.marker([loc.lat, loc.lng], {
                 icon: createPinIcon(type),
                 zIndexOffset: type === 'dest' ? 1000 : 0
             }).addTo(currentLayerGroup);
-
-            if (i === 0 || i === day.route.length - 1) {
-                marker.bindTooltip(loc.title, {
-                    permanent: true,
-                    direction: 'bottom',
-                    offset: [0, 5],
-                    className: 'map-label'
-                });
-            }
         });
 
-        // 3. 如果有點，先進行畫線與縮放 (確保地圖一定會動)
+        // 3. Draw Line & Arrows
         if (points.length > 0) {
-            // 基礎連線
+            // 底層路線 (淺藍色，讓深色箭頭更明顯)
             const polyline = L.polyline(points, {
-                color: '#3b82f6',
-                weight: 5,
-                opacity: 0.4, 
-                lineCap: 'round'
+                color: '#93C5FD', // Light Blue
+                weight: 6,
+                opacity: 0.7,
+                lineCap: 'round',
+                lineJoin: 'round'
             }).addTo(currentLayerGroup);
 
-            // **立即縮放** (避免下方特效失敗導致不縮放)
+            // 縮放地圖
             map.flyToBounds(points, {
-                padding: [60, 60],
+                padding: [50, 50],
                 duration: 1.0,
                 easeLinearity: 0.25
             });
 
-            // 4. 嘗試加入動態箭頭特效 (包在 try-catch 中以防萬一)
+            // 4. Arrow Animation Logic
             try {
-                if (typeof L.polylineDecorator === 'undefined') {
-                    console.warn("L.polylineDecorator plugin not loaded.");
-                    return; 
-                }
-
-                const arrowSymbol = L.Symbol.arrowHead({
-                    pixelSize: 12,  // 稍微加大一點
-                    polygon: false, 
-                    pathOptions: { 
-                        stroke: true, 
-                        color: '#2563eb', 
-                        weight: 3,
-                        opacity: 1
-                    }
-                });
-
-                const repeatDistance = 60; // 箭頭間距
-
-                const decorator = L.polylineDecorator(polyline, {
-                    patterns: [
-                        {
-                            offset: 0, 
-                            repeat: repeatDistance, 
-                            symbol: arrowSymbol 
+                if (typeof L.polylineDecorator !== 'undefined') {
+                    // 定義箭頭樣式 (深藍色，實心)
+                    const arrowSymbol = L.Symbol.arrowHead({
+                        pixelSize: 15,    // 箭頭大小
+                        polygon: true,    // 設為 true 變成實心三角形
+                        pathOptions: { 
+                            stroke: false, // 不要有邊框
+                            fillOpacity: 1, 
+                            color: '#1D4ED8' // Dark Blue arrow
                         }
-                    ]
-                }).addTo(currentLayerGroup);
+                    });
 
-                // 動畫迴圈
-                let offset = 0;
-                function animateArrows() {
-                    offset += 0.8; 
-                    if (offset > repeatDistance) offset = 0;
+                    // 建立裝飾器
+                    const decorator = L.polylineDecorator(polyline, {
+                        patterns: [
+                            { offset: 0, repeat: 80, symbol: arrowSymbol } // repeat: 箭頭間距
+                        ]
+                    }).addTo(currentLayerGroup);
 
-                    decorator.setPatterns([
-                        { offset: offset, repeat: repeatDistance, symbol: arrowSymbol }
-                    ]);
+                    // 動畫迴圈
+                    let offset = 0;
+                    function animate() {
+                        offset += 1.5; // 流動速度
+                        if (offset > 80) offset = 0; // 必須跟 repeat 一致
+
+                        decorator.setPatterns([
+                            { offset: offset, repeat: 80, symbol: arrowSymbol }
+                        ]);
+                        
+                        arrowAnimationId = requestAnimationFrame(animate);
+                    }
                     
-                    arrowAnimationId = requestAnimationFrame(animateArrows);
+                    // 啟動動畫
+                    animate();
                 }
-                
-                animateArrows();
-
             } catch (e) {
-                console.error("Arrow animation failed:", e);
-                // 失敗了也不會影響前面的縮放與畫線
+                console.warn("Arrow animation skipped:", e);
             }
         }
     }
@@ -613,8 +550,6 @@
 
         renderDetails(day);
         detailsContainer.scrollTop = 0;
-        
-        // 更新地圖
         updateMapRoute(day);
     }
 
@@ -638,7 +573,7 @@
             });
         });
 
-        // 去重與標記
+        // Unique points for overview
         const used = new Set();
         const mainMarkers = [];
         points.forEach(([lat, lng]) => {
