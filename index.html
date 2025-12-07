@@ -9,7 +9,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#ffffff">
-    <meta name="mobile-web-app-capable" content="yes">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,11 +19,11 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     
-    <!-- Leaflet JS (核心) -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Leaflet PolylineDecorator (箭頭特效插件) -->
-    <script src="https://unpkg.com/leaflet-polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
+    <!-- Leaflet PolylineDecorator (箭頭插件) - 使用 JSDelivr CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
@@ -76,10 +75,6 @@
             transition: color 0.2s;
         }
 
-        .header-btn:active {
-            color: #111827;
-        }
-
         .header-title {
             font-size: 1rem;
             font-weight: 700;
@@ -115,6 +110,18 @@
             z-index: 1;
         }
 
+        /* --- 關鍵 CSS 動畫：流動線條 --- */
+        @keyframes flow {
+            0% { stroke-dashoffset: 20; }
+            100% { stroke-dashoffset: 0; }
+        }
+        
+        /* 應用於 Leaflet 的 path 元素 */
+        .flowing-path {
+            animation: flow 1s linear infinite;
+        }
+
+        /* Marker Styles */
         .pin-drop {
             width: 30px;
             height: 30px;
@@ -315,20 +322,6 @@
             padding-bottom: 4px;
         }
 
-        .overview-hint {
-            margin-top: 30px;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 12px;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-5px); }
-            60% { transform: translateY(-3px); }
-        }
-
         .animate-fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -472,13 +465,16 @@
 
         // 3. Draw Line & Arrows
         if (points.length > 0) {
-            // 底層路線 (淺藍色，讓深色箭頭更明顯)
+            
+            // --- 方案 A: CSS 流動線 (雙重保險) ---
+            // 這條線使用 dashArray + CSS animation，保證能看到流動
             const polyline = L.polyline(points, {
-                color: '#93C5FD', // Light Blue
+                color: '#2563eb',   // 深藍色背景
                 weight: 6,
-                opacity: 0.7,
-                lineCap: 'round',
-                lineJoin: 'round'
+                opacity: 0.8,
+                dashArray: '10, 10', // 虛線
+                className: 'flowing-path', // 套用 CSS 動畫
+                lineCap: 'round'
             }).addTo(currentLayerGroup);
 
             // 縮放地圖
@@ -488,45 +484,48 @@
                 easeLinearity: 0.25
             });
 
-            // 4. Arrow Animation Logic
+            // --- 方案 B: JS 箭頭裝飾 (如果插件載入成功) ---
             try {
                 if (typeof L.polylineDecorator !== 'undefined') {
-                    // 定義箭頭樣式 (深藍色，實心)
+                    // 使用 白色箭頭，在深藍色線上非常明顯
                     const arrowSymbol = L.Symbol.arrowHead({
-                        pixelSize: 15,    // 箭頭大小
-                        polygon: true,    // 設為 true 變成實心三角形
+                        pixelSize: 12,
+                        polygon: true, // 實心
                         pathOptions: { 
-                            stroke: false, // 不要有邊框
+                            stroke: false, 
                             fillOpacity: 1, 
-                            color: '#1D4ED8' // Dark Blue arrow
+                            color: '#ffffff' // 白色
                         }
                     });
 
-                    // 建立裝飾器
-                    const decorator = L.polylineDecorator(polyline, {
+                    // 使用 coordinates 直接建立，避免 polyline 物件綁定問題
+                    const decorator = L.polylineDecorator(points, {
                         patterns: [
-                            { offset: 0, repeat: 80, symbol: arrowSymbol } // repeat: 箭頭間距
+                            { offset: 0, repeat: 60, symbol: arrowSymbol }
                         ]
                     }).addTo(currentLayerGroup);
 
-                    // 動畫迴圈
                     let offset = 0;
-                    function animate() {
-                        offset += 1.5; // 流動速度
-                        if (offset > 80) offset = 0; // 必須跟 repeat 一致
+                    const speed = 0.8; // 像素/禎
+                    const repeat = 60; // 必須與上面一致
 
+                    function animate() {
+                        offset += speed;
+                        if (offset > repeat) offset = 0;
+                        
                         decorator.setPatterns([
-                            { offset: offset, repeat: 80, symbol: arrowSymbol }
+                            { offset: offset, repeat: repeat, symbol: arrowSymbol }
                         ]);
                         
                         arrowAnimationId = requestAnimationFrame(animate);
                     }
                     
-                    // 啟動動畫
                     animate();
+                } else {
+                    console.warn("Leaflet PolylineDecorator not loaded.");
                 }
             } catch (e) {
-                console.warn("Arrow animation skipped:", e);
+                console.error("Arrow animation error:", e);
             }
         }
     }
