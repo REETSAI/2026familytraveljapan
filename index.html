@@ -13,7 +13,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- FontAwesome -->
+    <!-- FontAwesome (保留用於介面圖示) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- Leaflet CSS -->
@@ -34,7 +34,7 @@
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #faf9f6;
+            background-color: #faf9f6; /* 和紙白 */
             color: #374151;
             height: 100dvh;
             width: 100vw;
@@ -117,20 +117,29 @@
             animation: flow 1s linear infinite;
         }
 
-        /* --- CSS 動畫：移動的箭頭 --- */
+        /* --- 日式極簡箭頭樣式 --- */
         .moving-arrow-div {
-            transition: none !important; /* 重要：JS 控制位置時，移除 CSS transition 以避免抖動 */
+            transition: opacity 0.2s ease-out; /* 僅對透明度做動畫，位置由 JS 控制 */
             z-index: 1000 !important;
         }
 
-        .moving-arrow-icon {
+        .minimalist-arrow {
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15); /* 柔和陰影 */
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #fbbf24; /* 黃色箭頭 */
-            font-size: 18px; 
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
             /* 箭頭本身不需要 transition，角度由 JS 每一幀計算 */
+        }
+        
+        .minimalist-arrow svg {
+            width: 14px;
+            height: 14px;
+            fill: #1e3a8a; /* 紺色 (Deep Indigo) - 日式傳統色 */
+            display: block;
         }
 
         /* Marker Styles */
@@ -455,7 +464,7 @@
         const dy = p2.y - p1.y;
         let theta = Math.atan2(dy, dx); 
         let deg = theta * 180 / Math.PI; 
-        return deg + 90; // +90 修正 font-awesome 箭頭方向
+        return deg + 90; 
     }
 
     function updateMapRoute(day) {
@@ -493,7 +502,7 @@
         if (latlngs.length > 0) {
             
             const polyline = L.polyline(latlngs, {
-                color: '#2563eb',
+                color: '#2563eb', // 藍色底線
                 weight: 6,
                 opacity: 0.6,
                 dashArray: '10, 10',
@@ -507,24 +516,28 @@
                 easeLinearity: 0.25
             });
 
-            // --- 等速動畫邏輯 ---
+            // --- 箭頭動畫邏輯 ---
             if (latlngs.length > 1) {
-                // 3.1 計算每一段的距離與總距離
                 const distances = [];
                 let totalDistance = 0;
                 
                 for (let i = 0; i < latlngs.length - 1; i++) {
-                    const dist = latlngs[i].distanceTo(latlngs[i+1]); // Meters
+                    const dist = latlngs[i].distanceTo(latlngs[i+1]);
                     distances.push(dist);
                     totalDistance += dist;
                 }
 
-                // 3.2 建立箭頭
+                // 建立日式極簡箭頭 (白底圓形+靛藍箭頭)
                 const arrowIcon = L.divIcon({
                     className: 'moving-arrow-div',
-                    html: `<i class="fas fa-location-arrow moving-arrow-icon"></i>`,
-                    iconSize: [20, 20],
-                    iconAnchor: [10, 10]
+                    html: `
+                    <div class="minimalist-arrow">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L4.5 20.29C4.21 21.01 5.14 21.65 5.76 21.12L12 15.75L18.24 21.12C18.86 21.65 19.79 21.01 19.5 20.29L12 2Z" />
+                        </svg>
+                    </div>`,
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
                 });
 
                 arrowMarker = L.marker(latlngs[0], { 
@@ -532,23 +545,41 @@
                     zIndexOffset: 2000
                 }).addTo(currentLayerGroup);
 
-                // 3.3 動畫變數
                 let currentTraveled = 0;
-                // 設定速度: 總距離 / 150幀 (約2.5秒跑完一圈)，確保不同長度路線都有合理速度感
-                // 或者設固定速度: 500 meters/frame (視地圖比例尺而定)
-                // 這裡採用相對速度，確保無論路線多長，視覺上都在合理時間內跑完
-                const speed = totalDistance / 180; 
+                const speed = totalDistance / 180; // 約 3 秒跑完一圈
+                let isPaused = false; // 暫停標記
 
                 function animate() {
-                    // 增加距離
-                    currentTraveled += speed;
-                    
-                    // 循環播放
-                    if (currentTraveled >= totalDistance) {
-                        currentTraveled = 0;
+                    // 如果正在暫停，就直接 Return 不更新位置
+                    if (isPaused) {
+                        arrowAnimationId = requestAnimationFrame(animate);
+                        return;
                     }
 
-                    // 找出當前在哪一段 (Segment)
+                    currentTraveled += speed;
+
+                    // 循環播放與停頓邏輯
+                    if (currentTraveled >= totalDistance) {
+                        // 1. 觸發暫停狀態
+                        isPaused = true;
+                        currentTraveled = totalDistance; // 停在終點
+                        
+                        // 2. 隱藏箭頭
+                        arrowMarker.setOpacity(0);
+
+                        // 3. 設定計時器，0.5秒後重置
+                        setTimeout(() => {
+                            currentTraveled = 0; // 回到起點
+                            
+                            // 更新位置到起點，避免閃爍
+                            if(latlngs.length > 0) arrowMarker.setLatLng(latlngs[0]);
+                            
+                            arrowMarker.setOpacity(1); // 顯示箭頭
+                            isPaused = false; // 解除暫停
+                        }, 500); // 0.5 秒
+                    }
+
+                    // --- 計算位置邏輯 (同前) ---
                     let distSum = 0;
                     let activeSegmentIndex = 0;
                     
@@ -560,17 +591,14 @@
                         distSum += distances[i];
                     }
                     
-                    // 避免最後一點溢出
                     if (activeSegmentIndex >= latlngs.length - 1) {
                          activeSegmentIndex = latlngs.length - 2;
                     }
 
-                    // 計算在該段落的比例 (Ratio)
                     const segmentDist = distances[activeSegmentIndex];
                     const distInSegment = currentTraveled - distSum;
                     const ratio = segmentDist > 0 ? distInSegment / segmentDist : 0;
 
-                    // 內插計算新位置
                     const startLatLng = latlngs[activeSegmentIndex];
                     const endLatLng = latlngs[activeSegmentIndex + 1];
                     
@@ -579,14 +607,18 @@
 
                     arrowMarker.setLatLng([currentLat, currentLng]);
 
-                    // 計算角度
+                    // 計算旋轉角度
                     const p1 = map.latLngToLayerPoint(startLatLng);
                     const p2 = map.latLngToLayerPoint(endLatLng);
                     const angle = getAngle(p1, p2);
 
-                    const iconEl = arrowMarker.getElement()?.querySelector('.moving-arrow-icon');
+                    const iconEl = arrowMarker.getElement()?.querySelector('.minimalist-arrow');
                     if (iconEl) {
-                        iconEl.style.transform = `rotate(${angle - 45}deg)`; 
+                        // 因為 SVG 箭頭預設向上 (0度)，所以不需要像 FontAwesome 那樣 -45度，但 getAngle +90 是基於數學座標，這裡 SVG 箭頭朝上(0deg)，數學0度朝右
+                        // getAngle: 0度朝右, 90度朝下. 
+                        // SVG: 預設朝上. 
+                        // 所以 transform rotate 應該是: angle(數學) + 90
+                        iconEl.style.transform = `rotate(${angle}deg)`; 
                     }
 
                     arrowAnimationId = requestAnimationFrame(animate);
