@@ -19,6 +19,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    
+    <!-- 引入 Leaflet PolylineDecorator 插件 -->
+    <script src="https://unpkg.com/leaflet-polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
@@ -393,6 +396,7 @@
     let schedule = [];
     let meta = {};
     let currentActiveIndex = -1;
+    let arrowAnimationId = null; // 用於控制箭頭動畫
 
     // DOM Elements
     const pageTitleEl = document.getElementById('page-title');
@@ -495,7 +499,14 @@
     }
 
     function updateMapRoute(day) {
+        // 清除舊圖層
         currentLayerGroup.clearLayers();
+        // 如果有舊動畫，先停止
+        if (arrowAnimationId) {
+            cancelAnimationFrame(arrowAnimationId);
+            arrowAnimationId = null;
+        }
+
         if (!day.route || !day.route.length) return;
 
         const points = [];
@@ -526,13 +537,54 @@
         });
 
         if (points.length > 0) {
-            L.polyline(points, {
-                color: '#2563eb',
-                weight: 6,
-                opacity: 0.9,
-                dashArray: '12, 6',
+            // 1. 建立底線 (稍微變淡，讓箭頭明顯)
+            const polyline = L.polyline(points, {
+                color: '#3b82f6',
+                weight: 5,
+                opacity: 0.4, // 降低透明度
                 lineCap: 'round'
             }).addTo(currentLayerGroup);
+
+            // 2. 建立動態箭頭裝飾器
+            const arrowSymbol = L.Symbol.arrowHead({
+                pixelSize: 10,  // 箭頭大小
+                polygon: false, // 設為 false 為線條箭頭，true 為實心三角形
+                pathOptions: { 
+                    stroke: true, 
+                    color: '#2563eb', // 箭頭顏色 (較深藍)
+                    weight: 3,        // 箭頭粗細
+                    opacity: 1
+                }
+            });
+
+            // 3. 定義重複間隔 (像素)
+            const repeatDistance = 50; 
+
+            const decorator = L.polylineDecorator(polyline, {
+                patterns: [
+                    {
+                        offset: 0, 
+                        repeat: repeatDistance, 
+                        symbol: arrowSymbol 
+                    }
+                ]
+            }).addTo(currentLayerGroup);
+
+            // 4. 動畫函式
+            let offset = 0;
+            function animateArrows() {
+                offset += 0.8; // 流動速度
+                if (offset > repeatDistance) offset = 0; // 循環
+
+                decorator.setPatterns([
+                    { offset: offset, repeat: repeatDistance, symbol: arrowSymbol }
+                ]);
+                
+                arrowAnimationId = requestAnimationFrame(animateArrows);
+            }
+
+            // 5. 啟動動畫
+            animateArrows();
 
             map.flyToBounds(points, {
                 padding: [60, 60],
@@ -571,7 +623,13 @@
     function resetView() {
         currentActiveIndex = -1;
         document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+        
+        // 清除圖層與動畫
         currentLayerGroup.clearLayers();
+        if (arrowAnimationId) {
+            cancelAnimationFrame(arrowAnimationId);
+            arrowAnimationId = null;
+        }
 
         const points = [];
         schedule.forEach(day => {
@@ -774,3 +832,4 @@
 </script>
 </body>
 </html>
+
