@@ -22,8 +22,7 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Leaflet PolylineDecorator (箭頭插件) - 使用 JSDelivr CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/leaflet-polyline-decorator@1.6.0/dist/leaflet.polylineDecorator.min.js"></script>
+    <!-- 移除 PolylineDecorator 插件，改用原生 JS 實作 -->
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Roboto+Mono:wght@500&display=swap');
@@ -110,15 +109,25 @@
             z-index: 1;
         }
 
-        /* --- 關鍵 CSS 動畫：流動線條 --- */
+        /* --- CSS 動畫：背景流動線條 --- */
         @keyframes flow {
             0% { stroke-dashoffset: 20; }
             100% { stroke-dashoffset: 0; }
         }
         
-        /* 應用於 Leaflet 的 path 元素 */
         .flowing-path {
             animation: flow 1s linear infinite;
+        }
+
+        /* --- CSS 動畫：移動的箭頭 --- */
+        .moving-arrow-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fbbf24; /* Amber-400 (Yellow) */
+            font-size: 16px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
+            transition: transform 0.1s linear; /* 平滑旋轉 */
         }
 
         /* Marker Styles */
@@ -356,6 +365,7 @@
     let meta = {};
     let currentActiveIndex = -1;
     let arrowAnimationId = null;
+    let arrowMarker = null; // 用於移動的箭頭 Marker
 
     // DOM Elements
     const pageTitleEl = document.getElementById('page-title');
@@ -436,6 +446,23 @@
         map.flyTo([lat, lng], 14, { duration: 0.8, easeLinearity: 0.25 });
     }
 
+    // --- 數學輔助函式 (計算角度與距離) ---
+    function getDistance(p1, p2) {
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    function getAngle(p1, p2) {
+        // 計算兩點之間的角度 (度)
+        const dx = p2.x - p1.x;
+        const dy = p2.y - p1.y;
+        let theta = Math.atan2(dy, dx); 
+        // 轉換為度，並校正 Leaflet Marker 預設角度
+        let deg = theta * 180 / Math.PI; 
+        return deg + 90; // +90 是因為 font-awesome 箭頭預設向上
+    }
+
     function updateMapRoute(day) {
         // 1. Reset
         currentLayerGroup.clearLayers();
@@ -443,15 +470,19 @@
             cancelAnimationFrame(arrowAnimationId);
             arrowAnimationId = null;
         }
+        if (arrowMarker) {
+            arrowMarker.remove();
+            arrowMarker = null;
+        }
 
         if (!day.route || !day.route.length) return;
 
         // 2. Build Points
-        const points = [];
+        const latlngs = [];
         day.route.forEach((locKey, i) => {
             const loc = locations[locKey];
             if (!loc) return;
-            points.push([loc.lat, loc.lng]);
+            latlngs.push([loc.lat, loc.lng]);
 
             let type = 'mid';
             if (i === 0) type = 'start';
@@ -463,69 +494,86 @@
             }).addTo(currentLayerGroup);
         });
 
-        // 3. Draw Line & Arrows
-        if (points.length > 0) {
+        // 3. Draw Line & Start Animation
+        if (latlngs.length > 0) {
             
-            // --- 方案 A: CSS 流動線 (雙重保險) ---
-            // 這條線使用 dashArray + CSS animation，保證能看到流動
-            const polyline = L.polyline(points, {
-                color: '#2563eb',   // 深藍色背景
+            // 底層虛線 (CSS 流動)
+            const polyline = L.polyline(latlngs, {
+                color: '#2563eb',
                 weight: 6,
-                opacity: 0.8,
-                dashArray: '10, 10', // 虛線
-                className: 'flowing-path', // 套用 CSS 動畫
+                opacity: 0.6,
+                dashArray: '10, 10',
+                className: 'flowing-path', 
                 lineCap: 'round'
             }).addTo(currentLayerGroup);
 
             // 縮放地圖
-            map.flyToBounds(points, {
+            map.flyToBounds(latlngs, {
                 padding: [50, 50],
                 duration: 1.0,
                 easeLinearity: 0.25
             });
 
-            // --- 方案 B: JS 箭頭裝飾 (如果插件載入成功) ---
-            try {
-                if (typeof L.polylineDecorator !== 'undefined') {
-                    // 使用 白色箭頭，在深藍色線上非常明顯
-                    const arrowSymbol = L.Symbol.arrowHead({
-                        pixelSize: 12,
-                        polygon: true, // 實心
-                        pathOptions: { 
-                            stroke: false, 
-                            fillOpacity: 1, 
-                            color: '#ffffff' // 白色
+            // --- 純 JS 手動動畫 (Moving Arrow) ---
+            if (latlngs.length > 1) {
+                // 建立箭頭 Marker
+                const arrowIcon = L.divIcon({
+                    className: 'moving-arrow-div',
+                    html: `<i class="fas fa-location-arrow moving-arrow-icon"></i>`,
+                    iconSize: [20, 20],
+                    iconAnchor: [10, 10]
+                });
+
+                arrowMarker = L.marker(latlngs[0], { 
+                    icon: arrowIcon,
+                    zIndexOffset: 2000 // 確保在最上層
+                }).addTo(currentLayerGroup);
+
+                // 計算路徑總長度 (像素估算) 用於平滑動畫
+                // 這裡我們每次 frame 都重新把 latlng 轉成 layerPoint 比較準確，但會受縮放影響
+                // 為了簡單且效能好，我們使用邏輯進度 0.0 -> 1.0
+                
+                let progress = 0;
+                const speed = 0.003; // 速度 (每幀增加的進度)
+
+                function animate() {
+                    progress += speed;
+                    if (progress >= 1) progress = 0;
+
+                    // 找出當前進度對應的線段
+                    const totalSegments = latlngs.length - 1;
+                    const segmentProgress = progress * totalSegments;
+                    const segmentIndex = Math.floor(segmentProgress);
+                    const t = segmentProgress - segmentIndex; // 在該線段內的比例 (0-1)
+
+                    if (segmentIndex < totalSegments) {
+                        const startLatLng = L.latLng(latlngs[segmentIndex]);
+                        const endLatLng = L.latLng(latlngs[segmentIndex + 1]);
+
+                        // 內插計算新位置
+                        const currentLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * t;
+                        const currentLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * t;
+                        
+                        // 更新位置
+                        arrowMarker.setLatLng([currentLat, currentLng]);
+
+                        // 計算角度 (使用 map project 轉成像素來算角度比較準確)
+                        const p1 = map.latLngToLayerPoint(startLatLng);
+                        const p2 = map.latLngToLayerPoint(endLatLng);
+                        const angle = getAngle(p1, p2);
+
+                        // 旋轉箭頭圖示
+                        const iconEl = arrowMarker.getElement()?.querySelector('.moving-arrow-icon');
+                        if (iconEl) {
+                            // -45度是因為 fa-location-arrow 預設是斜的
+                            iconEl.style.transform = `rotate(${angle - 45}deg)`; 
                         }
-                    });
-
-                    // 使用 coordinates 直接建立，避免 polyline 物件綁定問題
-                    const decorator = L.polylineDecorator(points, {
-                        patterns: [
-                            { offset: 0, repeat: 60, symbol: arrowSymbol }
-                        ]
-                    }).addTo(currentLayerGroup);
-
-                    let offset = 0;
-                    const speed = 0.8; // 像素/禎
-                    const repeat = 60; // 必須與上面一致
-
-                    function animate() {
-                        offset += speed;
-                        if (offset > repeat) offset = 0;
-                        
-                        decorator.setPatterns([
-                            { offset: offset, repeat: repeat, symbol: arrowSymbol }
-                        ]);
-                        
-                        arrowAnimationId = requestAnimationFrame(animate);
                     }
-                    
-                    animate();
-                } else {
-                    console.warn("Leaflet PolylineDecorator not loaded.");
+
+                    arrowAnimationId = requestAnimationFrame(animate);
                 }
-            } catch (e) {
-                console.error("Arrow animation error:", e);
+
+                animate();
             }
         }
     }
@@ -560,6 +608,10 @@
         if (arrowAnimationId) {
             cancelAnimationFrame(arrowAnimationId);
             arrowAnimationId = null;
+        }
+        if (arrowMarker) {
+            arrowMarker.remove();
+            arrowMarker = null;
         }
 
         const points = [];
