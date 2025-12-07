@@ -1,71 +1,71 @@
 {
   "meta": {
     "title": "京阪神特種兵",
-    "subtitle": "五日極限打卡之旅",
+    "subtitle": "五日極限打卡｜京都一泊",
     "days": 5,
     "nights": 4,
-    "people": "2位大人"
+    "people": "2大人"
   },
   "locations": {
-    "hotel_namba": {
+    "hotel_kyoto": {
+      "lat": 34.9858,
+      "lng": 135.7588,
+      "title": "京都站前飯店"
+    },
+    "hotel_osaka": {
       "lat": 34.6641,
       "lng": 135.5028,
-      "title": "大阪難波瑞士飯店"
-    },
-    "dotonbori": {
-      "lat": 34.6687,
-      "lng": 135.5013,
-      "title": "道頓堀固力果"
-    },
-    "fushimi": {
-      "lat": 34.9671,
-      "lng": 135.7727,
-      "title": "伏見稻荷大社"
+      "title": "大阪難波飯店"
     },
     "kiyomizu": {
       "lat": 34.9949,
       "lng": 135.7850,
       "title": "清水寺"
     },
-    "gion": {
-      "lat": 35.0037,
-      "lng": 135.7779,
-      "title": "祇園花見小路"
+    "fushimi": {
+      "lat": 34.9671,
+      "lng": 135.7727,
+      "title": "伏見稻荷大社"
     },
     "arashiyama": {
       "lat": 35.0094,
       "lng": 135.6668,
-      "title": "嵐山竹林小徑"
+      "title": "嵐山竹林"
     },
     "kinkakuji": {
       "lat": 35.0394,
       "lng": 135.7292,
       "title": "金閣寺"
     },
+    "nara_park": {
+      "lat": 34.6850,
+      "lng": 135.8430,
+      "title": "奈良公園"
+    },
+    "kobe_port": {
+      "lat": 34.6826,
+      "lng": 135.1867,
+      "title": "神戶港"
+    },
+    "dotonbori": {
+      "lat": 34.6687,
+      "lng": 135.5013,
+      "title": "道頓堀"
+    },
     "osaka_castle": {
       "lat": 34.6873,
       "lng": 135.5262,
-      "title": "大阪城天守閣"
-    },
-    "kobe_port": {
-      "lat": 34.6795,
-      "lng": 135.1844,
-      "title": "神戶港塔"
-    },
-    "kitano": {
-      "lat": 34.7025,
-      "lng": 135.1913,
-      "title": "北野異人館"
-    },
-    "kuromon": {
-      "lat": 34.6656,
-      "lng": 135.5074,
-      "title": "黑門市場"
+      "title": "大阪城"
     },
     "kix_airport": {
       "lat": 34.4320,
       "lng": 135.2304,
-      "title": "關西國際機場"
+      "title": "關西機場"
+    },
+    "gion": {
+      "lat": 35.0037,
+      "lng": 135.7779,
+      "title": "祇園"
     }
   },
   "schedule": [
@@ -73,18 +73,19 @@
       "id": 1,
       "date": "1/2",
       "week": "週五",
-      "title": "大阪登陸",
-      "locName": "難波/道頓堀",
-      "bg": "https://images.pexels.com/photos/2389171/pexels-photo-2389171.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 5,
-      "stayHotel": "hotel_namba",
+      "title": "京都古韻",
+      "locName": "京都",
+      "bg": "https://images.pexels.com/photos/161401/fushimi-inari-taisha-shrine-kyoto-japan-temple-161401.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 4,
+      "stayHotel": "hotel_kyoto",
       "route": [
         "kix_airport",
-        "hotel_namba",
-        "dotonbori"
+        "hotel_kyoto",
+        "gion",
+        "hotel_kyoto"
       ],
-      "temp": "8°C 晴",
-      "wear": "時尚大衣、好走的靴子",
+      "temp": "6°C 陰冷",
+      "wear": "大衣、圍巾",
       "events": [
         {
           "time": "12:00",
@@ -95,37 +96,37 @@
         },
         {
           "time": "13:30",
-          "title": "南海電鐵特急",
-          "sub": "Rapi:t 直達難波站",
+          "title": "HARUKA 特急",
+          "sub": "直奔京都車站",
           "highlight": false
         },
         {
-          "time": "14:30",
-          "title": "飯店Check-in",
-          "sub": "難波車站直結飯店",
+          "time": "15:00",
+          "title": "飯店 Check-in",
+          "sub": "京都站前寄放行李",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "hotel_kyoto"
         },
         {
-          "time": "15:30",
-          "title": "心齋橋筋商店街",
-          "sub": "藥妝與服飾採購衝刺",
+          "time": "16:00",
+          "title": "八坂神社",
+          "sub": "參拜祈福",
           "highlight": true,
-          "locKey": "dotonbori"
+          "locKey": "gion"
         },
         {
-          "time": "18:00",
-          "title": "道頓堀跑跑人",
-          "sub": "固力果看板合影",
+          "time": "17:30",
+          "title": "花見小路",
+          "sub": "黃昏時分尋找藝妓身影",
           "highlight": true,
-          "locKey": "dotonbori"
+          "locKey": "gion"
         },
         {
           "time": "19:00",
-          "title": "晚餐：大阪燒",
-          "sub": "千日前名店體驗",
+          "title": "先斗町晚餐",
+          "sub": "鴨川畔的京料理",
           "highlight": false,
-          "locKey": "dotonbori"
+          "locKey": "gion"
         }
       ]
     },
@@ -133,69 +134,63 @@
       "id": 2,
       "date": "1/3",
       "week": "週六",
-      "title": "京都古韻",
-      "locName": "伏見/清水寺",
-      "bg": "https://images.pexels.com/photos/402028/pexels-photo-402028.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "title": "京都極限",
+      "locName": "京都全覽",
+      "bg": "https://images.pexels.com/photos/14959632/pexels-photo-14959632.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 5,
-      "stayHotel": "hotel_namba",
+      "stayHotel": "hotel_osaka",
       "route": [
-        "hotel_namba",
+        "hotel_kyoto",
         "fushimi",
         "kiyomizu",
-        "gion",
-        "hotel_namba"
+        "kinkakuji",
+        "arashiyama",
+        "hotel_osaka"
       ],
-      "temp": "6°C 陰冷",
-      "wear": "保暖層次穿搭",
+      "temp": "7°C 晴",
+      "wear": "好走的鞋",
       "events": [
         {
-          "time": "07:30",
-          "title": "早起出發",
-          "sub": "搭乘京阪電車前往京都",
-          "highlight": false,
-          "locKey": "hotel_namba"
-        },
-        {
-          "time": "08:30",
+          "time": "07:00",
           "title": "伏見稻荷大社",
-          "sub": "千本鳥居避開人潮",
+          "sub": "清晨無人千本鳥居打卡",
           "highlight": true,
           "locKey": "fushimi"
         },
         {
-          "time": "11:00",
+          "time": "09:30",
           "title": "清水寺",
-          "sub": "清水舞台與地主神社",
+          "sub": "清水舞台與二三年坂",
           "highlight": true,
           "locKey": "kiyomizu"
         },
         {
-          "time": "13:00",
-          "title": "二三年坂",
-          "sub": "古街散步與湯豆腐午餐",
+          "time": "12:30",
+          "title": "金閣寺",
+          "sub": "金碧輝煌的舍利殿",
           "highlight": true,
-          "locKey": "kiyomizu"
+          "locKey": "kinkakuji"
         },
         {
-          "time": "15:30",
-          "title": "祇園花見小路",
-          "sub": "尋找藝妓身影",
+          "time": "14:30",
+          "title": "嵐山竹林",
+          "sub": "竹林小徑與渡月橋",
           "highlight": true,
-          "locKey": "gion"
+          "locKey": "arashiyama"
         },
         {
-          "time": "17:30",
-          "title": "返回大阪",
-          "sub": "京阪特急轉御堂筋線",
+          "time": "18:00",
+          "title": "移動至大阪",
+          "sub": "搭乘阪急或JR前往大阪難波",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "hotel_osaka"
         },
         {
-          "time": "19:00",
-          "title": "晚餐：居酒屋",
-          "sub": "難波裏巷道地美食",
+          "time": "20:00",
+          "title": "道頓堀夜食",
+          "sub": "章魚燒與大阪王將",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "dotonbori"
         }
       ]
     },
@@ -203,68 +198,54 @@
       "id": 3,
       "date": "1/4",
       "week": "週日",
-      "title": "嵐山金閣",
-      "locName": "嵐山/金閣寺",
-      "bg": "https://images.pexels.com/photos/14959632/pexels-photo-14959632.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 5,
-      "stayHotel": "hotel_namba",
+      "title": "神戶洋風",
+      "locName": "神戶/新世界",
+      "bg": "https://images.pexels.com/photos/11005934/pexels-photo-11005934.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 4,
+      "stayHotel": "hotel_osaka",
       "route": [
-        "hotel_namba",
-        "arashiyama",
-        "kinkakuji",
-        "hotel_namba"
+        "hotel_osaka",
+        "kobe_port",
+        "dotonbori",
+        "hotel_osaka"
       ],
-      "temp": "7°C 晴",
-      "wear": "好走鞋、手套",
+      "temp": "8°C 海風",
+      "wear": "時尚穿搭",
       "events": [
         {
-          "time": "08:00",
-          "title": "前往嵐山",
-          "sub": "阪急電鐵直達",
-          "highlight": false,
-          "locKey": "hotel_namba"
-        },
-        {
-          "time": "09:30",
-          "title": "竹林小徑",
-          "sub": "野宮神社求緣分",
+          "time": "09:00",
+          "title": "北野異人館",
+          "sub": "風見雞館與星巴克打卡",
           "highlight": true,
-          "locKey": "arashiyama"
+          "locKey": "kobe_port"
         },
         {
-          "time": "11:00",
-          "title": "天龍寺",
-          "sub": "曹源池庭園世界遺產",
+          "time": "12:00",
+          "title": "神戶牛午餐",
+          "sub": "三宮地區鐵板燒",
           "highlight": true,
-          "locKey": "arashiyama"
+          "locKey": "kobe_port"
         },
         {
-          "time": "12:30",
-          "title": "嵐山大街午餐",
-          "sub": "著名的廣川鰻魚飯(需預約)或蕎麥麵",
-          "highlight": false,
-          "locKey": "arashiyama"
-        },
-        {
-          "time": "14:30",
-          "title": "金閣寺",
-          "sub": "夕陽下的金色樓閣",
+          "time": "14:00",
+          "title": "神戶港",
+          "sub": "BE KOBE 地標與美利堅公園",
           "highlight": true,
-          "locKey": "kinkakuji"
+          "locKey": "kobe_port"
         },
         {
-          "time": "17:00",
-          "title": "返回大阪",
-          "sub": "阪急電鐵返回梅田轉難波",
-          "highlight": false,
-          "locKey": "hotel_namba"
+          "time": "16:30",
+          "title": "通天閣",
+          "sub": "返回大阪新世界街區",
+          "highlight": true,
+          "locKey": "hotel_osaka"
         },
         {
-          "time": "18:30",
-          "title": "晚餐：燒肉",
-          "sub": "難波國產牛吃到飽",
+          "time": "19:00",
+          "title": "心齋橋購物",
+          "sub": "藥妝服飾最後衝刺",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "dotonbori"
         }
       ]
     },
@@ -272,68 +253,61 @@
       "id": 4,
       "date": "1/5",
       "week": "週一",
-      "title": "神戶洋風",
-      "locName": "神戶/大阪城",
-      "bg": "https://images.pexels.com/photos/11005934/pexels-photo-11005934.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "title": "奈良尋鹿",
+      "locName": "奈良/大阪城",
+      "bg": "https://images.pexels.com/photos/161401/fushimi-inari-taisha-shrine-kyoto-japan-temple-161401.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 4,
-      "stayHotel": "hotel_namba",
+      "stayHotel": "hotel_osaka",
       "route": [
-        "hotel_namba",
-        "kitano",
-        "kobe_port",
+        "hotel_osaka",
+        "nara_park",
         "osaka_castle",
-        "hotel_namba"
+        "hotel_osaka"
       ],
-      "temp": "8°C 海風",
-      "wear": "優雅穿搭",
+      "temp": "8°C 晴",
+      "wear": "輕便",
       "events": [
         {
           "time": "08:30",
-          "title": "前往神戶",
-          "sub": "阪神難波線快速急行",
+          "title": "近鐵前往奈良",
+          "sub": "快速急行約40分",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "hotel_osaka"
         },
         {
           "time": "09:30",
-          "title": "北野異人館",
-          "sub": "風見雞之館與星巴克",
+          "title": "奈良公園",
+          "sub": "餵食小鹿與東大寺",
           "highlight": true,
-          "locKey": "kitano"
+          "locKey": "nara_park"
         },
         {
           "time": "12:00",
-          "title": "神戶牛午餐",
-          "sub": "三宮地區鐵板燒",
-          "highlight": true,
-          "locKey": "kitano"
+          "title": "中谷堂麻糬",
+          "sub": "觀看搗麻糬表演",
+          "highlight": false,
+          "locKey": "nara_park"
         },
         {
-          "time": "14:00",
-          "title": "神戶港",
-          "sub": "BE KOBE 地標打卡",
-          "highlight": true,
-          "locKey": "kobe_port"
-        },
-        {
-          "time": "15:30",
-          "title": "返回大阪",
-          "sub": "前往大阪城公園",
-          "highlight": false
-        },
-        {
-          "time": "16:30",
-          "title": "大阪城",
-          "sub": "遠眺天守閣壯麗外觀",
+          "time": "14:30",
+          "title": "大阪城天守閣",
+          "sub": "豐臣秀吉的榮耀",
           "highlight": true,
           "locKey": "osaka_castle"
         },
         {
-          "time": "18:30",
-          "title": "難波 Parks",
-          "sub": "晚餐後欣賞光雕秀",
+          "time": "17:00",
+          "title": "梅田藍天大廈",
+          "sub": "空中庭園看日落夜景",
+          "highlight": true,
+          "locKey": "hotel_osaka"
+        },
+        {
+          "time": "20:00",
+          "title": "燒肉晚餐",
+          "sub": "難波國產牛吃到飽",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "dotonbori"
         }
       ]
     },
@@ -341,49 +315,48 @@
       "id": 5,
       "date": "1/6",
       "week": "週二",
-      "title": "美食告別",
-      "locName": "黑門/機場",
+      "title": "食倒大阪",
+      "locName": "難波-機場",
       "bg": "https://images.pexels.com/photos/2031688/pexels-photo-2031688.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 3,
-      "stayHotel": "hotel_namba",
+      "stayHotel": "hotel_osaka",
       "route": [
-        "hotel_namba",
-        "kuromon",
+        "hotel_osaka",
         "kix_airport"
       ],
       "temp": "9°C 晴",
-      "wear": "輕便",
+      "wear": "舒適",
       "events": [
         {
           "time": "09:00",
           "title": "黑門市場",
           "sub": "海鮮、和牛串早餐",
           "highlight": true,
-          "locKey": "kuromon"
+          "locKey": "dotonbori"
         },
         {
           "time": "11:00",
-          "title": "最後採買",
-          "sub": "BicCamera 或唐吉訶德",
-          "highlight": false,
-          "locKey": "hotel_namba"
+          "title": "難波八坂神社",
+          "sub": "巨型獅子頭祈求好運",
+          "highlight": true,
+          "locKey": "hotel_osaka"
         },
         {
-          "time": "13:00",
-          "title": "退房前往機場",
+          "time": "12:30",
+          "title": "前往機場",
           "sub": "搭乘南海特急 Rapi:t",
           "highlight": false,
-          "locKey": "hotel_namba"
+          "locKey": "hotel_osaka"
         },
         {
-          "time": "14:30",
+          "time": "14:00",
           "title": "機場報到",
-          "sub": "免稅店最後衝刺",
+          "sub": "最後免稅店採買",
           "highlight": false,
           "locKey": "kix_airport"
         },
         {
-          "time": "17:00",
+          "time": "16:30",
           "title": "航班起飛",
           "sub": "推薦航班 CI173/BR131",
           "highlight": false,
@@ -393,5 +366,4 @@
     }
   ]
 }
-
 
