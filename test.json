@@ -1,36 +1,41 @@
 {
   "meta": {
-    "title": "東京親子悠遊",
-    "subtitle": "富士山與迪士尼五日",
+    "title": "東京富士漫旅",
+    "subtitle": "迪士尼與河口湖溫泉五日",
     "days": 5,
     "nights": 4,
     "people": "2大2小 (10歲/8歲)"
   },
   "locations": {
-    "hotel": {
+    "hotel_tokyo": {
       "lat": 35.6946,
       "lng": 139.7028,
       "title": "新宿王子大飯店"
     },
-    "odaiba": {
-      "lat": 35.6254,
-      "lng": 139.7765,
-      "title": "台場海濱公園"
+    "hotel_fuji": {
+      "lat": 35.5042,
+      "lng": 138.7712,
+      "title": "河口湖溫泉飯店"
     },
-    "fuji": {
-      "lat": 35.5011,
-      "lng": 138.7694,
-      "title": "河口湖"
+    "shinjuku": {
+      "lat": 35.6909,
+      "lng": 139.7005,
+      "title": "新宿"
     },
     "disney": {
       "lat": 35.6329,
       "lng": 139.8804,
       "title": "東京迪士尼樂園"
     },
-    "shinjuku": {
-      "lat": 35.6909,
-      "lng": 139.7005,
-      "title": "新宿"
+    "odaiba": {
+      "lat": 35.6254,
+      "lng": 139.7765,
+      "title": "台場海濱公園"
+    },
+    "fuji_lake": {
+      "lat": 35.5011,
+      "lng": 138.7694,
+      "title": "河口湖畔"
     }
   },
   "schedule": [
@@ -40,11 +45,11 @@
       "week": "週五",
       "title": "抵達東京",
       "locName": "成田-新宿",
-      "bg": "https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "bg": "https://images.pexels.com/photos/1510595/pexels-photo-1510595.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 4,
-      "stayHotel": "hotel",
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel"
+        "hotel_tokyo"
       ],
       "temp": "5°C 晚間寒冷",
       "wear": "羽絨外套、保暖衣物",
@@ -64,14 +69,14 @@
         {
           "time": "21:30",
           "title": "飯店入住",
-          "sub": "寄放行李與休息",
+          "sub": "辦理入住手續",
           "highlight": false,
-          "locKey": "hotel"
+          "locKey": "hotel_tokyo"
         },
         {
           "time": "22:00",
-          "title": "輕食晚餐",
-          "sub": "飯店附近便利商店或拉麵",
+          "title": "便利商店晚餐",
+          "sub": "體驗日本超商美食",
           "highlight": false,
           "locKey": "shinjuku"
         }
@@ -81,51 +86,51 @@
       "id": 2,
       "date": "1/3",
       "week": "週六",
-      "title": "未來都市",
+      "title": "台場悠遊",
       "locName": "台場",
-      "bg": "https://images.pexels.com/photos/15857218/pexels-photo-15857218.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "bg": "https://images.pexels.com/photos/2128032/pexels-photo-2128032.jpeg?auto=compress&cs=tinysrgb&w=800",
       "crowdLevel": 5,
-      "stayHotel": "hotel",
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel",
+        "hotel_tokyo",
         "odaiba",
-        "hotel"
+        "hotel_tokyo"
       ],
       "temp": "8°C 晴",
       "wear": "舒適步鞋、洋蔥式穿搭",
       "events": [
         {
           "time": "10:30",
-          "title": "出發前往台場",
-          "sub": "避開早晨尖峰",
+          "title": "前往台場",
+          "sub": "睡飽後悠閒出發",
           "highlight": false,
           "locKey": "shinjuku"
         },
         {
           "time": "11:30",
-          "title": "台場鋼彈",
-          "sub": "DiverCity 參觀巨型鋼彈",
+          "title": "獨角獸鋼彈",
+          "sub": "DiverCity 觀賞變身",
           "highlight": true,
           "locKey": "odaiba"
         },
         {
           "time": "13:00",
           "title": "景觀午餐",
-          "sub": "Aqua City 拉麵國技館",
+          "sub": "AQUA CITY 面海餐廳",
           "highlight": false,
           "locKey": "odaiba"
         },
         {
           "time": "15:00",
-          "title": "海濱散步",
-          "sub": "自由女神像與彩虹大橋",
+          "title": "海濱沙灘",
+          "sub": "遠眺彩虹大橋與自由女神",
           "highlight": false,
           "locKey": "odaiba"
         },
         {
-          "time": "18:00",
-          "title": "返回新宿晚餐",
-          "sub": "飯店周邊餐廳",
+          "time": "18:30",
+          "title": "新宿晚餐",
+          "sub": "返回飯店附近用餐",
           "highlight": false,
           "locKey": "shinjuku"
         }
@@ -135,59 +140,53 @@
       "id": 3,
       "date": "1/4",
       "week": "週日",
-      "title": "富士絕景",
-      "locName": "河口湖",
-      "bg": "https://images.pexels.com/photos/14829307/pexels-photo-14829307.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 4,
-      "stayHotel": "hotel",
+      "title": "夢幻樂園",
+      "locName": "迪士尼",
+      "bg": "https://images.pexels.com/photos/3411135/pexels-photo-3411135.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 5,
+      "stayHotel": "hotel_tokyo",
       "route": [
-        "hotel",
-        "fuji",
-        "hotel"
+        "hotel_tokyo",
+        "disney",
+        "hotel_tokyo"
       ],
-      "temp": "2°C 晴朗寒冷",
-      "wear": "極保暖外套、手套、帽子",
+      "temp": "7°C 微風",
+      "wear": "防風外套、輕便背包",
       "events": [
         {
-          "time": "08:30",
-          "title": "富士回遊/巴士",
-          "sub": "新宿出發直達河口湖",
+          "time": "09:00",
+          "title": "直達巴士",
+          "sub": "新宿南口出發",
           "highlight": false,
           "locKey": "shinjuku"
         },
         {
           "time": "10:30",
-          "title": "天上山公園",
-          "sub": "搭乘纜車眺望富士山",
+          "title": "迪士尼樂園",
+          "sub": "體驗童話設施",
           "highlight": true,
-          "locKey": "fuji"
+          "locKey": "disney"
         },
         {
-          "time": "12:30",
-          "title": "餺飥麵午餐",
-          "sub": "山梨縣特色料理",
+          "time": "13:30",
+          "title": "園區午餐",
+          "sub": "造型漢堡與點心",
           "highlight": false,
-          "locKey": "fuji"
+          "locKey": "disney"
         },
         {
-          "time": "14:00",
-          "title": "河口湖遊覽船",
-          "sub": "湖上欣賞富士山",
+          "time": "16:00",
+          "title": "日間遊行",
+          "sub": "欣賞卡通明星遊行",
           "highlight": true,
-          "locKey": "fuji"
+          "locKey": "disney"
         },
         {
-          "time": "16:30",
-          "title": "返回東京",
-          "sub": "搭乘巴士/鐵路返回",
-          "highlight": false
-        },
-        {
-          "time": "18:30",
-          "title": "晚餐",
-          "sub": "新宿百貨美食街",
+          "time": "19:00",
+          "title": "離園晚餐",
+          "sub": "IKSPIARI 美食街",
           "highlight": false,
-          "locKey": "shinjuku"
+          "locKey": "disney"
         }
       ]
     },
@@ -195,60 +194,53 @@
       "id": 4,
       "date": "1/5",
       "week": "週一",
-      "title": "童話世界",
-      "locName": "迪士尼",
-      "bg": "https://images.pexels.com/photos/3411135/pexels-photo-3411135.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 4,
-      "stayHotel": "hotel",
+      "title": "富士溫泉",
+      "locName": "河口湖",
+      "bg": "https://images.pexels.com/photos/14829307/pexels-photo-14829307.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 3,
+      "stayHotel": "hotel_fuji",
       "route": [
-        "hotel",
-        "disney",
-        "hotel"
+        "hotel_tokyo",
+        "fuji_lake",
+        "hotel_fuji"
       ],
-      "temp": "7°C 微風",
-      "wear": "舒適防風衣物、好走的鞋",
+      "temp": "2°C 寒冷",
+      "wear": "極保暖外套、手套",
       "events": [
         {
-          "time": "09:00",
-          "title": "前往迪士尼",
-          "sub": "從新宿搭乘直達巴士或電車",
+          "time": "10:00",
+          "title": "退房移動",
+          "sub": "新宿高速巴士前往河口湖",
           "highlight": false,
           "locKey": "shinjuku"
         },
         {
-          "time": "10:30",
-          "title": "入園遊玩",
-          "sub": "適合親子的遊樂設施",
-          "highlight": true,
-          "locKey": "disney"
-        },
-        {
-          "time": "13:00",
-          "title": "園區午餐",
-          "sub": "卡通造型餐點",
+          "time": "12:00",
+          "title": "河口湖抵達",
+          "sub": "車站寄放行李/午餐",
           "highlight": false,
-          "locKey": "disney"
+          "locKey": "fuji_lake"
         },
         {
-          "time": "15:00",
-          "title": "日間遊行",
-          "sub": "找好位置欣賞表演",
+          "time": "14:00",
+          "title": "天上山公園",
+          "sub": "纜車俯瞰富士山",
           "highlight": true,
-          "locKey": "disney"
+          "locKey": "fuji_lake"
+        },
+        {
+          "time": "16:30",
+          "title": "溫泉旅館入住",
+          "sub": "享受一泊二食",
+          "highlight": true,
+          "locKey": "hotel_fuji"
         },
         {
           "time": "18:00",
-          "title": "準備返回",
-          "sub": "避開閉園人潮",
+          "title": "會席料理",
+          "sub": "飯店內享用晚餐",
           "highlight": false,
-          "locKey": "disney"
-        },
-        {
-          "time": "19:30",
-          "title": "晚餐",
-          "sub": "新宿周邊用餐",
-          "highlight": false,
-          "locKey": "shinjuku"
+          "locKey": "hotel_fuji"
         }
       ]
     },
@@ -256,42 +248,42 @@
       "id": 5,
       "date": "1/6",
       "week": "週二",
-      "title": "漫步返程",
-      "locName": "新宿-成田",
+      "title": "晨曦返程",
+      "locName": "富士-機場",
       "bg": "https://images.pexels.com/photos/1108701/pexels-photo-1108701.jpeg?auto=compress&cs=tinysrgb&w=800",
-      "crowdLevel": 3,
-      "stayHotel": "hotel",
+      "crowdLevel": 2,
+      "stayHotel": "hotel_fuji",
       "route": [
-        "hotel"
+        "hotel_fuji"
       ],
-      "temp": "9°C 晴",
-      "wear": "整理輕便",
+      "temp": "3°C 晴",
+      "wear": "保暖衣物",
       "events": [
         {
-          "time": "10:00",
-          "title": "退房寄放行李",
-          "sub": "新宿王子大飯店",
+          "time": "08:00",
+          "title": "晨間溫泉",
+          "sub": "欣賞逆富士美景",
+          "highlight": true,
+          "locKey": "hotel_fuji"
+        },
+        {
+          "time": "10:30",
+          "title": "退房出發",
+          "sub": "前往河口湖車站",
           "highlight": false,
-          "locKey": "hotel"
+          "locKey": "fuji_lake"
         },
         {
           "time": "11:00",
-          "title": "新宿御苑",
-          "sub": "享受最後的東京早晨",
-          "highlight": true,
-          "locKey": "shinjuku"
-        },
-        {
-          "time": "12:30",
-          "title": "最後午餐",
-          "sub": "車站周邊",
+          "title": "機場巴士",
+          "sub": "直達成田機場 (需預約)",
           "highlight": false,
-          "locKey": "shinjuku"
+          "locKey": "fuji_lake"
         },
         {
-          "time": "13:45",
-          "title": "前往機場",
-          "sub": "搭乘 NEX 成田特快",
+          "time": "14:45",
+          "title": "抵達機場",
+          "sub": "辦理登機手續",
           "highlight": false
         },
         {
@@ -304,5 +296,3 @@
     }
   ]
 }
-
-
