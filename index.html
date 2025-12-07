@@ -167,22 +167,23 @@
         .pin-mid { background-color: #3b82f6; }
         .pin-normal { background-color: #8b5cf6; }
 
-        /* 地標文字樣式 (日式標籤) */
-        .custom-map-label {
+        /* 地標文字樣式 (改為上方顯示) */
+        .leaflet-tooltip.custom-map-label {
             background-color: rgba(255, 255, 255, 0.95);
             border: none;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             font-family: 'Noto Sans TC', sans-serif;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
-            color: #374151;
-            padding: 2px 6px;
+            color: #1f2937;
+            padding: 4px 8px;
             white-space: nowrap;
+            margin-bottom: 5px; /* 額外間距 */
         }
         
         /* 隱藏 Leaflet Tooltip 預設的小箭頭 */
-        .custom-map-label::before {
+        .leaflet-tooltip-top:before {
             display: none;
         }
 
@@ -451,15 +452,18 @@
             className: 'custom-div-icon',
             html: `<div class="pin-drop ${colorClass}"><i class="fas fa-map-marker-alt pin-icon"></i></div>`,
             iconSize: [28, 28],
-            iconAnchor: [14, 38], // 讓尖端對準座標
-            tooltipAnchor: [0, -40] // 文字顯示在上方
+            iconAnchor: [14, 38], // 讓尖端對準座標 (尖端在下方)
+            // tooltipAnchor: 控制 Tooltip 相對於 iconAnchor 的位置
+            // iconAnchor 是 (14, 38)，我們希望 Tooltip 在圖釘上方
+            // 圖釘總高度約 40px (旋轉後)，所以往上移 45px 比較保險
+            tooltipAnchor: [0, -45] 
         });
     }
 
     function focusOnLocation(lat, lng) {
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        map.flyTo([lat, lng], 15, { duration: 0.8, easeLinearity: 0.25 });
-        // 因為標籤已經設為永久顯示 (Permanent Tooltip)，這裡不需要額外操作
+        // 放大倍率設為 16，確保文字清楚分離
+        map.flyTo([lat, lng], 16, { duration: 0.8, easeLinearity: 0.25 });
     }
 
     // 計算角度 (用於箭頭旋轉)
@@ -502,12 +506,12 @@
                 zIndexOffset: type === 'dest' ? 1000 : 500
             }).addTo(currentLayerGroup);
 
-            // 綁定永久顯示的文字標籤 (Tooltip)
+            // 綁定永久顯示的文字標籤 (Tooltip) - 設為上方
             marker.bindTooltip(loc.title, {
                 permanent: true,       // 永遠顯示
-                direction: 'bottom',   // 顯示在下方
-                className: 'custom-map-label', // 自訂樣式
-                offset: [0, 5]         // 微調位置
+                direction: 'top',      // 改為上方 !!!
+                className: 'custom-map-label', 
+                offset: [0, -45]       // 再次確認偏移，確保不蓋住圖釘
             });
         });
 
@@ -559,10 +563,7 @@
                 }).addTo(currentLayerGroup);
 
                 let currentTraveled = 0;
-                // 基礎速度 (公尺/幀)
-                // 假設在 Zoom 10 時，我們希望 150 幀跑完全程
-                // 這個值會被 Zoom Level 動態調整
-                const baseSpeedConstant = 250; // 調整這個值可以改變「基礎速度感」
+                const baseSpeedConstant = 250; 
                 let isPaused = false;
 
                 function animate() {
@@ -571,16 +572,9 @@
                         return;
                     }
 
-                    // --- 關鍵修改：動態速度計算 ---
-                    // 取得當前縮放層級
+                    // 動態速度計算 (保持視覺速度恆定)
                     const currentZoom = map.getZoom();
-                    // 計算縮放因子：每放大一級 (Zoom +1)，顯示的地理範圍變小一半 (除以2)
-                    // 為了讓螢幕上的移動速度看起來一樣，每放大一級，每幀移動的地理距離也要除以2
-                    // 基準設為 Zoom 10 (任意值，與 baseSpeedConstant 配合)
                     const zoomFactor = Math.pow(2, currentZoom - 10);
-                    
-                    // 實際移動速度 = 基礎常數 / 縮放因子
-                    // 這樣放大地圖時，實際移動的公尺數變少，但螢幕像素移動量保持不變
                     const step = baseSpeedConstant / zoomFactor;
 
                     currentTraveled += step;
@@ -690,8 +684,7 @@
             });
         });
 
-        // 總覽模式：只顯示點，不顯示路徑，避免太亂
-        // 但為了顯示地標文字，我們依然加上 tooltip
+        // 總覽模式：只顯示點
         const used = new Set();
         const mainMarkers = [];
         points.forEach(([lat, lng]) => {
@@ -706,7 +699,6 @@
             const m = L.marker([lat, lng], {
                 icon: createPinIcon('normal')
             }).addTo(currentLayerGroup);
-            // 總覽模式不顯示文字，避免重疊太嚴重，只有進入單日模式才顯示文字
         });
 
         if (mainMarkers.length > 0) {
