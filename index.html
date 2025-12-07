@@ -13,7 +13,7 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- FontAwesome (保留用於介面圖示) -->
+    <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
     <!-- Leaflet CSS -->
@@ -107,7 +107,7 @@
             z-index: 1;
         }
 
-        /* --- CSS 動畫：背景流動線條 (裝飾用) --- */
+        /* --- CSS 動畫：背景流動線條 --- */
         @keyframes flow {
             0% { stroke-dashoffset: 20; }
             100% { stroke-dashoffset: 0; }
@@ -119,8 +119,9 @@
 
         /* --- 日式極簡箭頭樣式 --- */
         .moving-arrow-div {
-            transition: opacity 0.2s ease-out; /* 僅對透明度做動畫，位置由 JS 控制 */
-            z-index: 1000 !important;
+            transition: opacity 0.2s ease-out; 
+            z-index: 2000 !important; /* 確保箭頭在最上層 */
+            pointer-events: none; /* 讓點擊穿透箭頭 */
         }
 
         .minimalist-arrow {
@@ -128,39 +129,37 @@
             height: 24px;
             background: white;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15); /* 柔和陰影 */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2); 
             display: flex;
             align-items: center;
             justify-content: center;
-            /* 箭頭本身不需要 transition，角度由 JS 每一幀計算 */
         }
         
         .minimalist-arrow svg {
             width: 14px;
             height: 14px;
-            fill: #1e3a8a; /* 紺色 (Deep Indigo) - 日式傳統色 */
+            fill: #1e3a8a; /* 紺色 */
             display: block;
         }
 
-        /* Marker Styles */
+        /* Marker & Label Styles */
         .pin-drop {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             border: 2px solid white;
-            transition: all 0.2s;
             margin: 0;
         }
 
         .pin-icon {
             transform: rotate(45deg);
             color: white;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .pin-start { background-color: #10b981; }
@@ -168,21 +167,24 @@
         .pin-mid { background-color: #3b82f6; }
         .pin-normal { background-color: #8b5cf6; }
 
-        .map-label {
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            color: #1f2937;
-            font-weight: 700;
-            font-size: 11px;
-            text-align: center;
-            padding: 3px 8px;
+        /* 地標文字樣式 (日式標籤) */
+        .custom-map-label {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             font-family: 'Noto Sans TC', sans-serif;
-            margin-top: 2px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #374151;
+            padding: 2px 6px;
+            white-space: nowrap;
         }
-
-        .map-label::before { display: none; }
+        
+        /* 隱藏 Leaflet Tooltip 預設的小箭頭 */
+        .custom-map-label::before {
+            display: none;
+        }
 
         /* Day cards */
         #cards-container {
@@ -448,17 +450,19 @@
         return L.divIcon({
             className: 'custom-div-icon',
             html: `<div class="pin-drop ${colorClass}"><i class="fas fa-map-marker-alt pin-icon"></i></div>`,
-            iconSize: [30, 30],
-            iconAnchor: [15, 42]
+            iconSize: [28, 28],
+            iconAnchor: [14, 38], // 讓尖端對準座標
+            tooltipAnchor: [0, -40] // 文字顯示在上方
         });
     }
 
     function focusOnLocation(lat, lng) {
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        map.flyTo([lat, lng], 14, { duration: 0.8, easeLinearity: 0.25 });
+        map.flyTo([lat, lng], 15, { duration: 0.8, easeLinearity: 0.25 });
+        // 因為標籤已經設為永久顯示 (Permanent Tooltip)，這裡不需要額外操作
     }
 
-    // 計算兩點角度 (像素座標)
+    // 計算角度 (用於箭頭旋轉)
     function getAngle(p1, p2) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
@@ -492,17 +496,26 @@
             if (i === 0) type = 'start';
             else if (i === day.route.length - 1) type = 'dest';
 
+            // 建立 Marker
             const marker = L.marker([loc.lat, loc.lng], {
                 icon: createPinIcon(type),
-                zIndexOffset: type === 'dest' ? 1000 : 0
+                zIndexOffset: type === 'dest' ? 1000 : 500
             }).addTo(currentLayerGroup);
+
+            // 綁定永久顯示的文字標籤 (Tooltip)
+            marker.bindTooltip(loc.title, {
+                permanent: true,       // 永遠顯示
+                direction: 'bottom',   // 顯示在下方
+                className: 'custom-map-label', // 自訂樣式
+                offset: [0, 5]         // 微調位置
+            });
         });
 
         // 3. Draw Line
         if (latlngs.length > 0) {
             
             const polyline = L.polyline(latlngs, {
-                color: '#2563eb', // 藍色底線
+                color: '#2563eb',
                 weight: 6,
                 opacity: 0.6,
                 dashArray: '10, 10',
@@ -527,7 +540,7 @@
                     totalDistance += dist;
                 }
 
-                // 建立日式極簡箭頭 (白底圓形+靛藍箭頭)
+                // 日式極簡箭頭
                 const arrowIcon = L.divIcon({
                     className: 'moving-arrow-div',
                     html: `
@@ -546,40 +559,46 @@
                 }).addTo(currentLayerGroup);
 
                 let currentTraveled = 0;
-                const speed = totalDistance / 180; // 約 3 秒跑完一圈
-                let isPaused = false; // 暫停標記
+                // 基礎速度 (公尺/幀)
+                // 假設在 Zoom 10 時，我們希望 150 幀跑完全程
+                // 這個值會被 Zoom Level 動態調整
+                const baseSpeedConstant = 250; // 調整這個值可以改變「基礎速度感」
+                let isPaused = false;
 
                 function animate() {
-                    // 如果正在暫停，就直接 Return 不更新位置
                     if (isPaused) {
                         arrowAnimationId = requestAnimationFrame(animate);
                         return;
                     }
 
-                    currentTraveled += speed;
+                    // --- 關鍵修改：動態速度計算 ---
+                    // 取得當前縮放層級
+                    const currentZoom = map.getZoom();
+                    // 計算縮放因子：每放大一級 (Zoom +1)，顯示的地理範圍變小一半 (除以2)
+                    // 為了讓螢幕上的移動速度看起來一樣，每放大一級，每幀移動的地理距離也要除以2
+                    // 基準設為 Zoom 10 (任意值，與 baseSpeedConstant 配合)
+                    const zoomFactor = Math.pow(2, currentZoom - 10);
+                    
+                    // 實際移動速度 = 基礎常數 / 縮放因子
+                    // 這樣放大地圖時，實際移動的公尺數變少，但螢幕像素移動量保持不變
+                    const step = baseSpeedConstant / zoomFactor;
 
-                    // 循環播放與停頓邏輯
+                    currentTraveled += step;
+
+                    // 循環播放與停頓
                     if (currentTraveled >= totalDistance) {
-                        // 1. 觸發暫停狀態
                         isPaused = true;
-                        currentTraveled = totalDistance; // 停在終點
-                        
-                        // 2. 隱藏箭頭
+                        currentTraveled = totalDistance; 
                         arrowMarker.setOpacity(0);
-
-                        // 3. 設定計時器，0.5秒後重置
                         setTimeout(() => {
-                            currentTraveled = 0; // 回到起點
-                            
-                            // 更新位置到起點，避免閃爍
+                            currentTraveled = 0; 
                             if(latlngs.length > 0) arrowMarker.setLatLng(latlngs[0]);
-                            
-                            arrowMarker.setOpacity(1); // 顯示箭頭
-                            isPaused = false; // 解除暫停
-                        }, 500); // 0.5 秒
+                            arrowMarker.setOpacity(1); 
+                            isPaused = false; 
+                        }, 500); 
                     }
 
-                    // --- 計算位置邏輯 (同前) ---
+                    // 位置計算
                     let distSum = 0;
                     let activeSegmentIndex = 0;
                     
@@ -607,17 +626,13 @@
 
                     arrowMarker.setLatLng([currentLat, currentLng]);
 
-                    // 計算旋轉角度
+                    // 旋轉
                     const p1 = map.latLngToLayerPoint(startLatLng);
                     const p2 = map.latLngToLayerPoint(endLatLng);
                     const angle = getAngle(p1, p2);
 
                     const iconEl = arrowMarker.getElement()?.querySelector('.minimalist-arrow');
                     if (iconEl) {
-                        // 因為 SVG 箭頭預設向上 (0度)，所以不需要像 FontAwesome 那樣 -45度，但 getAngle +90 是基於數學座標，這裡 SVG 箭頭朝上(0deg)，數學0度朝右
-                        // getAngle: 0度朝右, 90度朝下. 
-                        // SVG: 預設朝上. 
-                        // 所以 transform rotate 應該是: angle(數學) + 90
                         iconEl.style.transform = `rotate(${angle}deg)`; 
                     }
 
@@ -675,7 +690,8 @@
             });
         });
 
-        // Unique points for overview
+        // 總覽模式：只顯示點，不顯示路徑，避免太亂
+        // 但為了顯示地標文字，我們依然加上 tooltip
         const used = new Set();
         const mainMarkers = [];
         points.forEach(([lat, lng]) => {
@@ -687,9 +703,10 @@
         });
 
         mainMarkers.slice(0, 8).forEach(([lat, lng]) => {
-            L.marker([lat, lng], {
+            const m = L.marker([lat, lng], {
                 icon: createPinIcon('normal')
             }).addTo(currentLayerGroup);
+            // 總覽模式不顯示文字，避免重疊太嚴重，只有進入單日模式才顯示文字
         });
 
         if (mainMarkers.length > 0) {
