@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "title": "沖繩冬日自駕",
+    "subtitle": "海風與親子慢活五日",
+    "days": 5,
+    "nights": 4,
+    "people": "2大2小 (10歲/8歲)"
+  },
+  "locations": {
+    "hotel_chatan": {
+      "lat": 26.3165,
+      "lng": 127.7573,
+      "title": "北谷海濱渡假飯店"
+    },
+    "naha_airport": {
+      "lat": 26.2048,
+      "lng": 127.6458,
+      "title": "那霸機場"
+    },
+    "american_village": {
+      "lat": 26.3159,
+      "lng": 127.7578,
+      "title": "美國村"
+    },
+    "aquarium": {
+      "lat": 26.6943,
+      "lng": 127.8779,
+      "title": "美麗海水族館"
+    },
+    "kouri": {
+      "lat": 26.6957,
+      "lng": 128.0244,
+      "title": "古宇利島"
+    },
+    "urasoe_park": {
+      "lat": 26.2486,
+      "lng": 127.7303,
+      "title": "浦添大公園"
+    },
+    "senaga": {
+      "lat": 26.1764,
+      "lng": 127.6439,
+      "title": "瀨長島"
+    },
+    "bios": {
+      "lat": 26.4258,
+      "lng": 127.7979,
+      "title": "碧生物語"
+    }
+  },
+  "schedule": [
+    {
+      "id": 1,
+      "date": "1/2",
+      "week": "週五",
+      "title": "抵達沖繩",
+      "locName": "那霸-北谷",
+      "bg": "https://images.pexels.com/photos/1756543/pexels-photo-1756543.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 3,
+      "stayHotel": "hotel_chatan",
+      "route": [
+        "naha_airport",
+        "american_village",
+        "hotel_chatan"
+      ],
+      "temp": "19°C 舒適",
+      "wear": "薄長袖、擋風外套",
+      "events": [
+        {
+          "time": "11:00",
+          "title": "抵達那霸",
+          "sub": "推薦航班 CI120/BR112",
+          "highlight": false,
+          "locKey": "naha_airport"
+        },
+        {
+          "time": "12:00",
+          "title": "租車取車",
+          "sub": "機場接駁至租車中心",
+          "highlight": false,
+          "locKey": "naha_airport"
+        },
+        {
+          "time": "13:30",
+          "title": "午餐：通堂拉麵",
+          "sub": "琉球新麵體驗",
+          "highlight": false
+        },
+        {
+          "time": "15:30",
+          "title": "飯店入住",
+          "sub": "中部北谷區，位置便利",
+          "highlight": false,
+          "locKey": "hotel_chatan"
+        },
+        {
+          "time": "17:00",
+          "title": "美國村散步",
+          "sub": "充滿異國風情的特色街區",
+          "highlight": true,
+          "locKey": "american_village"
+        },
+        {
+          "time": "18:30",
+          "title": "晚餐：迴轉壽司",
+          "sub": "美國村グルメ回転寿司市場",
+          "highlight": false,
+          "locKey": "american_village"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "date": "1/3",
+      "week": "週六",
+      "title": "海洋奇觀",
+      "locName": "北部一日",
+      "bg": "https://images.pexels.com/photos/3540026/pexels-photo-3540026.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 4,
+      "stayHotel": "hotel_chatan",
+      "route": [
+        "hotel_chatan",
+        "aquarium",
+        "kouri",
+        "hotel_chatan"
+      ],
+      "temp": "18°C 海風強",
+      "wear": "防風外套",
+      "events": [
+        {
+          "time": "09:00",
+          "title": "自駕北上",
+          "sub": "前往海洋博公園",
+          "highlight": false,
+          "locKey": "hotel_chatan"
+        },
+        {
+          "time": "10:30",
+          "title": "美麗海水族館",
+          "sub": "黑潮之海觀賞鯨鯊",
+          "highlight": true,
+          "locKey": "aquarium"
+        },
+        {
+          "time": "13:00",
+          "title": "古民家午餐",
+          "sub": "本部町享用沖繩麵",
+          "highlight": false
+        },
+        {
+          "time": "14:30",
+          "title": "古宇利大橋",
+          "sub": "絕美海景兜風路線",
+          "highlight": true,
+          "locKey": "kouri"
+        },
+        {
+          "time": "16:00",
+          "title": "蝦蝦飯餐車",
+          "sub": "古宇利島人氣點心",
+          "highlight": false,
+          "locKey": "kouri"
+        },
+        {
+          "time": "18:30",
+          "title": "返回晚餐",
+          "sub": "飯店附近燒肉王",
+          "highlight": false,
+          "locKey": "american_village"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "date": "1/4",
+      "week": "週日",
+      "title": "亞熱帶森林",
+      "locName": "中部自然",
+      "bg": "https://images.pexels.com/photos/951539/pexels-photo-951539.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 3,
+      "stayHotel": "hotel_chatan",
+      "route": [
+        "hotel_chatan",
+        "bios",
+        "hotel_chatan"
+      ],
+      "temp": "20°C 舒適",
+      "wear": "休閒好活動",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "BIOS之丘",
+          "sub": "搭乘湖水鑑賞船",
+          "highlight": true,
+          "locKey": "bios"
+        },
+        {
+          "time": "12:00",
+          "title": "園區午餐",
+          "sub": "有機食材料理",
+          "highlight": false,
+          "locKey": "bios"
+        },
+        {
+          "time": "13:30",
+          "title": "大型鞦韆",
+          "sub": "森林中的親子遊樂場",
+          "highlight": false,
+          "locKey": "bios"
+        },
+        {
+          "time": "15:30",
+          "title": "永旺夢樂城",
+          "sub": "Rycom 購物中心逛街避風",
+          "highlight": false
+        },
+        {
+          "time": "18:00",
+          "title": "美食街晚餐",
+          "sub": "選擇多樣適合親子",
+          "highlight": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "date": "1/5",
+      "week": "週一",
+      "title": "盡情放電",
+      "locName": "浦添/港川",
+      "bg": "https://images.pexels.com/photos/1684187/pexels-photo-1684187.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 3,
+      "stayHotel": "hotel_chatan",
+      "route": [
+        "hotel_chatan",
+        "urasoe_park",
+        "hotel_chatan"
+      ],
+      "temp": "21°C 晴",
+      "wear": "輕便服裝",
+      "events": [
+        {
+          "time": "10:00",
+          "title": "浦添大公園",
+          "sub": "超長滾輪溜滑梯",
+          "highlight": true,
+          "locKey": "urasoe_park"
+        },
+        {
+          "time": "12:30",
+          "title": "港川外人住宅",
+          "sub": "OHacorte 水果塔與午餐",
+          "highlight": true
+        },
+        {
+          "time": "14:30",
+          "title": "PARCO CITY",
+          "sub": "面海的新型購物中心",
+          "highlight": false
+        },
+        {
+          "time": "17:00",
+          "title": "日落海灘",
+          "sub": "飯店前沙灘玩沙看夕陽",
+          "highlight": false,
+          "locKey": "hotel_chatan"
+        },
+        {
+          "time": "18:30",
+          "title": "晚餐：塔可飯",
+          "sub": "沖繩靈魂美食 Taco Rice",
+          "highlight": false,
+          "locKey": "american_village"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "date": "1/6",
+      "week": "週二",
+      "title": "看機踏浪",
+      "locName": "瀨長島-機場",
+      "bg": "https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=800",
+      "crowdLevel": 3,
+      "stayHotel": "hotel_chatan",
+      "route": [
+        "hotel_chatan",
+        "senaga",
+        "naha_airport"
+      ],
+      "temp": "20°C 晴",
+      "wear": "舒適",
+      "events": [
+        {
+          "time": "10:30",
+          "title": "退房",
+          "sub": "整理行李準備南下",
+          "highlight": false,
+          "locKey": "hotel_chatan"
+        },
+        {
+          "time": "11:30",
+          "title": "瀨長島",
+          "sub": "Umikaji Terrace 白色露台",
+          "highlight": true,
+          "locKey": "senaga"
+        },
+        {
+          "time": "12:30",
+          "title": "看飛機午餐",
+          "sub": "近距離欣賞飛機起降",
+          "highlight": false,
+          "locKey": "senaga"
+        },
+        {
+          "time": "14:00",
+          "title": "還車手續",
+          "sub": "預留時間前往租車公司",
+          "highlight": false,
+          "locKey": "naha_airport"
+        },
+        {
+          "time": "15:30",
+          "title": "機場報到",
+          "sub": "最後伴手禮採買",
+          "highlight": false,
+          "locKey": "naha_airport"
+        },
+        {
+          "time": "17:30",
+          "title": "航班起飛",
+          "sub": "推薦航班 CI123/BR186 返回",
+          "highlight": false,
+          "locKey": "naha_airport"
+        }
+      ]
+    }
+  ]
+}
+
+
