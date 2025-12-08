@@ -120,8 +120,8 @@
         /* --- 日式極簡箭頭樣式 --- */
         .moving-arrow-div {
             transition: opacity 0.2s ease-out; 
-            z-index: 2000 !important; /* 確保箭頭在最上層 */
-            pointer-events: none; /* 讓點擊穿透箭頭 */
+            z-index: 2000 !important;
+            pointer-events: none;
         }
 
         .minimalist-arrow {
@@ -156,6 +156,17 @@
             margin: 0;
         }
 
+        /* 次要景點的小圓點樣式 */
+        .pin-sub {
+            width: 16px;
+            height: 16px;
+            background-color: white;
+            border: 3px solid #6b7280;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
         .pin-icon {
             transform: rotate(45deg);
             color: white;
@@ -167,22 +178,20 @@
         .pin-mid { background-color: #3b82f6; }
         .pin-normal { background-color: #8b5cf6; }
 
-        /* 地標文字樣式 (改為上方顯示) */
+        /* 地標文字樣式 */
         .leaflet-tooltip.custom-map-label {
             background-color: rgba(255, 255, 255, 0.95);
             border: none;
             border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             font-family: 'Noto Sans TC', sans-serif;
             font-size: 12px;
             font-weight: 700;
             color: #1f2937;
-            padding: 4px 8px;
+            padding: 3px 8px;
             white-space: nowrap;
-            margin-bottom: 5px; /* 額外間距 */
         }
         
-        /* 隱藏 Leaflet Tooltip 預設的小箭頭 */
         .leaflet-tooltip-top:before {
             display: none;
         }
@@ -373,6 +382,125 @@
 <div id="details-container"></div>
 
 <script>
+    // 預設資料 (您提供的 JSON)
+    const DEFAULT_DATA = {
+      "meta": {
+        "title": "2026 東京親子行",
+        "subtitle": "5天4夜・2大2小｜東京・富士山・迪士尼",
+        "days": 5,
+        "nights": 4,
+        "people": "2大2小 (10 & 8 歲)"
+      },
+      "locations": {
+        "nrt": { "lat": 35.7719, "lng": 140.3929, "title": "成田機場" },
+        "ueno": { "lat": 35.7141, "lng": 139.7741, "title": "上野" },
+        "asakusa": { "lat": 35.7147, "lng": 139.7967, "title": "淺草" },
+        "skytree": { "lat": 35.71, "lng": 139.8107, "title": "晴空塔" },
+        "disney": { "lat": 35.6329, "lng": 139.8804, "title": "迪士尼" },
+        "fuji": { "lat": 35.5011, "lng": 138.7688, "title": "河口湖" },
+        "ropeway": { "lat": 35.5069, "lng": 138.7725, "title": "纜車" },
+        "shinjuku": { "lat": 35.6896, "lng": 139.7005, "title": "新宿" }
+      },
+      "schedule": [
+        {
+          "id": 1,
+          "date": "1/2",
+          "week": "週五",
+          "title": "抵達 & 上野",
+          "locName": "上野 Ueno",
+          "bg": "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=400&q=80",
+          "route": ["nrt", "ueno"],
+          "temp": "6°C ~ 12°C",
+          "wear": "洋蔥式 | 舒適",
+          "events": [
+            { "time": "10:40", "title": "起飛 (TPE)", "sub": "MM626 預定", "highlight": true },
+            { "time": "14:55", "title": "抵達成田機場 T1", "sub": "入境手續約 60 分鐘", "locKey": "nrt" },
+            { "time": "16:20", "title": "Skyliner 京成電鐵", "sub": "直達上野 (40分鐘)", "highlight": true },
+            { "time": "17:10", "title": "上野飯店 Check-in", "sub": "MIMARU / 三井花園", "locKey": "ueno" },
+            { "time": "18:00", "title": "阿美橫丁晚餐", "sub": "藥妝 & 零食時間" },
+            { "time": "20:00", "title": "超市採買", "sub": "補齊隔日早餐/飲料" }
+          ]
+        },
+        {
+          "id": 2,
+          "date": "1/3",
+          "week": "週六",
+          "title": "淺草晴空塔",
+          "locName": "淺草 Asakusa",
+          "bg": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=400&q=80",
+          "route": ["ueno", "asakusa", "skytree"],
+          "temp": "5°C ~ 11°C",
+          "wear": "好走鞋 | 保暖",
+          "events": [
+            { "time": "09:00", "title": "前往淺草", "sub": "地鐵銀座線約 5 分鐘", "locKey": "ueno" },
+            { "time": "09:30", "title": "雷門 & 仲見世通", "sub": "人形燒、炸肉餅", "locKey": "asakusa" },
+            { "time": "10:30", "title": "淺草寺參拜", "sub": "抽籤祈福", "highlight": true },
+            { "time": "12:00", "title": "隅田公園散步", "sub": "沿河散步拍照" },
+            { "time": "13:30", "title": "晴空塔 Solamachi", "sub": "水族館 / 寶可夢中心", "locKey": "skytree" },
+            { "time": "18:00", "title": "返回上野晚餐", "sub": "拉麵 / 燒肉", "locKey": "ueno" }
+          ]
+        },
+        {
+          "id": 3,
+          "date": "1/4",
+          "week": "週日",
+          "title": "迪士尼樂園",
+          "locName": "舞濱 Disney",
+          "bg": "https://images.unsplash.com/photo-1597466599360-3b9775841aec?auto=format&fit=crop&w=400&q=80",
+          "route": ["ueno", "disney"],
+          "temp": "3°C ~ 10°C",
+          "wear": "極暖 | 貼暖暖包",
+          "events": [
+            { "time": "07:30", "title": "上野出發", "sub": "轉乘 JR 京葉線", "locKey": "ueno" },
+            { "time": "08:30", "title": "舞濱站抵達", "sub": "排隊安檢入園" },
+            { "time": "09:00", "title": "迪士尼入園", "sub": "DPA / PP 規劃", "highlight": true, "locKey": "disney" },
+            { "time": "12:00", "title": "園區午餐", "sub": "避開尖峰時段" },
+            { "time": "14:00", "title": "日間遊行", "locKey": "disney" },
+            { "time": "19:00", "title": "夜間遊行 / 煙火", "sub": "視體力彈性撤退" },
+            { "time": "20:30", "title": "返回上野休息", "locKey": "ueno" }
+          ]
+        },
+        {
+          "id": 4,
+          "date": "1/5",
+          "week": "週一",
+          "title": "河口湖溫泉",
+          "locName": "富士 Fuji",
+          "bg": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=400&q=80",
+          "route": ["ueno", "shinjuku", "fuji"],
+          "temp": "-3°C ~ 5°C",
+          "wear": "羽絨 | 毛帽手套",
+          "events": [
+            { "time": "08:00", "title": "行李寄放/寄送", "sub": "輕裝前往河口湖", "locKey": "ueno" },
+            { "time": "09:30", "title": "富士回遊號", "sub": "新宿發車 (需預約)", "highlight": true, "locKey": "shinjuku" },
+            { "time": "11:25", "title": "抵達河口湖站", "locKey": "fuji" },
+            { "time": "12:30", "title": "午餐：餺飥麵", "sub": "當地名物" },
+            { "time": "14:00", "title": "天上山纜車", "sub": "俯瞰河口湖", "locKey": "ropeway" },
+            { "time": "16:00", "title": "飯店 Check-in", "sub": "溫泉旅館放鬆", "locKey": "fuji" },
+            { "time": "18:00", "title": "懷石料理晚餐", "sub": "享受飯店設施" }
+          ]
+        },
+        {
+          "id": 5,
+          "date": "1/6",
+          "week": "週二",
+          "title": "富士返台",
+          "locName": "成田 Airport",
+          "bg": "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?auto=format&fit=crop&w=400&q=80",
+          "route": ["fuji", "nrt"],
+          "temp": "舒適 | 機上",
+          "wear": "輕鬆 | 好穿脫",
+          "events": [
+            { "time": "07:00", "title": "逆富士時光", "sub": "清晨限定倒影", "highlight": true, "locKey": "fuji" },
+            { "time": "10:00", "title": "河口湖周邊散步", "sub": "依天氣彈性安排" },
+            { "time": "12:00", "title": "搭車前往機場", "sub": "高速巴士直達 NRT", "locKey": "fuji" },
+            { "time": "15:30", "title": "抵達成田 T1", "sub": "最後採買/報到", "locKey": "nrt" },
+            { "time": "17:45", "title": "起飛返台", "sub": "預計晚上抵達 TPE" }
+          ]
+        }
+      ]
+    };
+
     // Global Variables
     let tripData = null;
     let locations = {};
@@ -406,14 +534,19 @@
     // --- Core Logic ---
     async function initApp() {
         const params = new URLSearchParams(window.location.search);
-        let tripName = params.get('trip') || 'tokyo-2026-01-02';
-        if (!tripName.endsWith('.json')) tripName += '.json';
+        let tripName = params.get('trip');
 
         try {
-            const response = await fetch(`./${tripName}`);
-            if (!response.ok) throw new Error(`找不到行程檔 (${tripName})`);
+            if (tripName) {
+                if (!tripName.endsWith('.json')) tripName += '.json';
+                const response = await fetch(`./${tripName}`);
+                if (!response.ok) throw new Error(`找不到行程檔 (${tripName})`);
+                tripData = await response.json();
+            } else {
+                // 如果沒有指定 trip 參數，使用預設資料 (您提供的 JSON)
+                tripData = DEFAULT_DATA;
+            }
             
-            tripData = await response.json();
             meta = tripData.meta || {};
             locations = tripData.locations || {};
             schedule = tripData.schedule || [];
@@ -429,20 +562,30 @@
 
         } catch (error) {
             console.error('Fetch error:', error);
-            headerTitleEl.innerText = "載入失敗";
-            detailsContainer.innerHTML = `
-                <div class="p-8 text-center text-gray-400">
-                    <i class="fas fa-exclamation-circle text-4xl mb-4 text-red-300"></i>
-                    <h3 class="font-bold text-gray-600 mb-2">無法讀取行程</h3>
-                    <p class="text-xs text-gray-400 font-mono bg-gray-100 p-2 rounded break-all">${error.message}</p>
-                </div>
-            `;
+            // 載入失敗也使用預設資料，確保 Demo 可行
+            console.log("Fallback to default data");
+            tripData = DEFAULT_DATA;
+            meta = tripData.meta || {};
+            locations = tripData.locations || {};
+            schedule = tripData.schedule || [];
+            renderCards();
+            setTimeout(resetView, 300);
         }
     }
 
     // --- UI Logic ---
 
     function createPinIcon(type) {
+        if (type === 'sub') {
+             return L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div class="pin-sub"></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                tooltipAnchor: [0, -18] // 次要景點文字稍微低一點
+            });
+        }
+
         let colorClass = 'pin-normal';
         if (type === 'start') colorClass = 'pin-start';
         if (type === 'dest') colorClass = 'pin-dest';
@@ -452,21 +595,17 @@
             className: 'custom-div-icon',
             html: `<div class="pin-drop ${colorClass}"><i class="fas fa-map-marker-alt pin-icon"></i></div>`,
             iconSize: [28, 28],
-            iconAnchor: [14, 38], // 讓尖端對準座標 (尖端在下方)
-            // tooltipAnchor: 控制 Tooltip 相對於 iconAnchor 的位置
-            // iconAnchor 是 (14, 38)，我們希望 Tooltip 在圖釘上方
-            // 圖釘總高度約 40px (旋轉後)，所以往上移 45px 比較保險
-            tooltipAnchor: [0, -45] 
+            iconAnchor: [14, 38], 
+            // 修正: 減少 Y 軸偏移，讓文字更貼近圖釘頂部
+            tooltipAnchor: [0, -32] 
         });
     }
 
     function focusOnLocation(lat, lng) {
         if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        // 放大倍率設為 16，確保文字清楚分離
         map.flyTo([lat, lng], 16, { duration: 0.8, easeLinearity: 0.25 });
     }
 
-    // 計算角度 (用於箭頭旋轉)
     function getAngle(p1, p2) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
@@ -487,38 +626,57 @@
             arrowMarker = null;
         }
 
-        if (!day.route || !day.route.length) return;
+        // 關鍵修改：收集當日「所有」相關的地點 Key (Route + Events)
+        // 這樣即使是不在 Route 裡的 ropeway 也會被畫出來
+        const routeKeys = day.route || [];
+        const eventKeys = (day.events || []).map(e => e.locKey).filter(k => k);
+        const allMarkerKeys = new Set([...routeKeys, ...eventKeys]);
 
-        // 2. Build Points & Markers
-        const latlngs = [];
-        day.route.forEach((locKey, i) => {
-            const loc = locations[locKey];
+        const routePoints = []; // 只存 Route 的點來畫線
+
+        // 2. 建立所有 Markers
+        allMarkerKeys.forEach(key => {
+            const loc = locations[key];
             if (!loc) return;
-            latlngs.push(L.latLng(loc.lat, loc.lng));
 
-            let type = 'mid';
-            if (i === 0) type = 'start';
-            else if (i === day.route.length - 1) type = 'dest';
+            // 判斷類型
+            let type = 'sub'; // 預設為次要景點 (不在 route 裡的點)
+            
+            if (routeKeys.includes(key)) {
+                // 如果在 route 裡，判斷是起點、終點還是中途點
+                const idx = routeKeys.indexOf(key);
+                if (idx === 0) type = 'start';
+                else if (idx === routeKeys.length - 1) type = 'dest';
+                else type = 'mid';
+                
+                // 順便收集畫線用的點 (依序)
+            }
 
             // 建立 Marker
             const marker = L.marker([loc.lat, loc.lng], {
                 icon: createPinIcon(type),
-                zIndexOffset: type === 'dest' ? 1000 : 500
+                zIndexOffset: type === 'sub' ? 400 : (type === 'dest' ? 1000 : 500)
             }).addTo(currentLayerGroup);
 
-            // 綁定永久顯示的文字標籤 (Tooltip) - 設為上方
             marker.bindTooltip(loc.title, {
-                permanent: true,       // 永遠顯示
-                direction: 'top',      // 改為上方 !!!
+                permanent: true,       
+                direction: 'top',      
                 className: 'custom-map-label', 
-                offset: [0, -45]       // 再次確認偏移，確保不蓋住圖釘
+                // 修正: Tooltip 偏移量設為 0 (因為在 createPinIcon 已經設好 tooltipAnchor)
+                // 這裡設 [0, -5] 做微調即可
+                offset: [0, -5]       
             });
         });
 
-        // 3. Draw Line
-        if (latlngs.length > 0) {
-            
-            const polyline = L.polyline(latlngs, {
+        // 3. 準備畫線的資料 (必須依照 route 的順序)
+        routeKeys.forEach(key => {
+            const loc = locations[key];
+            if (loc) routePoints.push(L.latLng(loc.lat, loc.lng));
+        });
+
+        // 4. Draw Line & Animation
+        if (routePoints.length > 0) {
+            const polyline = L.polyline(routePoints, {
                 color: '#2563eb',
                 weight: 6,
                 opacity: 0.6,
@@ -527,24 +685,32 @@
                 lineCap: 'round'
             }).addTo(currentLayerGroup);
 
-            map.flyToBounds(latlngs, {
-                padding: [50, 50],
-                duration: 1.0,
-                easeLinearity: 0.25
+            // 縮放時包含所有標記點 (不只是路線點)
+            const allPoints = [];
+            allMarkerKeys.forEach(k => {
+                 const l = locations[k];
+                 if(l) allPoints.push([l.lat, l.lng]);
             });
 
+            if (allPoints.length > 0) {
+                map.flyToBounds(allPoints, {
+                    padding: [50, 50],
+                    duration: 1.0,
+                    easeLinearity: 0.25
+                });
+            }
+
             // --- 箭頭動畫邏輯 ---
-            if (latlngs.length > 1) {
+            if (routePoints.length > 1) {
                 const distances = [];
                 let totalDistance = 0;
                 
-                for (let i = 0; i < latlngs.length - 1; i++) {
-                    const dist = latlngs[i].distanceTo(latlngs[i+1]);
+                for (let i = 0; i < routePoints.length - 1; i++) {
+                    const dist = routePoints[i].distanceTo(routePoints[i+1]);
                     distances.push(dist);
                     totalDistance += dist;
                 }
 
-                // 日式極簡箭頭
                 const arrowIcon = L.divIcon({
                     className: 'moving-arrow-div',
                     html: `
@@ -557,7 +723,7 @@
                     iconAnchor: [12, 12]
                 });
 
-                arrowMarker = L.marker(latlngs[0], { 
+                arrowMarker = L.marker(routePoints[0], { 
                     icon: arrowIcon,
                     zIndexOffset: 2000
                 }).addTo(currentLayerGroup);
@@ -572,27 +738,24 @@
                         return;
                     }
 
-                    // 動態速度計算 (保持視覺速度恆定)
                     const currentZoom = map.getZoom();
                     const zoomFactor = Math.pow(2, currentZoom - 10);
                     const step = baseSpeedConstant / zoomFactor;
 
                     currentTraveled += step;
 
-                    // 循環播放與停頓
                     if (currentTraveled >= totalDistance) {
                         isPaused = true;
                         currentTraveled = totalDistance; 
                         arrowMarker.setOpacity(0);
                         setTimeout(() => {
                             currentTraveled = 0; 
-                            if(latlngs.length > 0) arrowMarker.setLatLng(latlngs[0]);
+                            if(routePoints.length > 0) arrowMarker.setLatLng(routePoints[0]);
                             arrowMarker.setOpacity(1); 
                             isPaused = false; 
                         }, 500); 
                     }
 
-                    // 位置計算
                     let distSum = 0;
                     let activeSegmentIndex = 0;
                     
@@ -604,23 +767,22 @@
                         distSum += distances[i];
                     }
                     
-                    if (activeSegmentIndex >= latlngs.length - 1) {
-                         activeSegmentIndex = latlngs.length - 2;
+                    if (activeSegmentIndex >= routePoints.length - 1) {
+                         activeSegmentIndex = routePoints.length - 2;
                     }
 
                     const segmentDist = distances[activeSegmentIndex];
                     const distInSegment = currentTraveled - distSum;
                     const ratio = segmentDist > 0 ? distInSegment / segmentDist : 0;
 
-                    const startLatLng = latlngs[activeSegmentIndex];
-                    const endLatLng = latlngs[activeSegmentIndex + 1];
+                    const startLatLng = routePoints[activeSegmentIndex];
+                    const endLatLng = routePoints[activeSegmentIndex + 1];
                     
                     const currentLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * ratio;
                     const currentLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * ratio;
 
                     arrowMarker.setLatLng([currentLat, currentLng]);
 
-                    // 旋轉
                     const p1 = map.latLngToLayerPoint(startLatLng);
                     const p2 = map.latLngToLayerPoint(endLatLng);
                     const angle = getAngle(p1, p2);
@@ -684,12 +846,14 @@
             });
         });
 
-        // 總覽模式：只顯示點
+        // 總覽模式：收集所有地點 (Route + Events)
         const used = new Set();
         const mainMarkers = [];
+        
+        // 1. Route Points
         points.forEach(([lat, lng]) => {
-            const key = `${lat.toFixed(3)},${lng.toFixed(3)}`;
-            if (!used.has(key)) {
+             const key = `${lat.toFixed(3)},${lng.toFixed(3)}`;
+             if (!used.has(key)) {
                 used.add(key);
                 mainMarkers.push([lat, lng]);
             }
