@@ -29,7 +29,7 @@
           "sub": "CI100 航班降落，辦理入境",
           "highlight": true,
           "locKey": "nrt_airport",
-          "image_query": "Airport Terminal Japan",
+          "image_query": "Narita Airport Terminal",
           "maps_query": "Narita International Airport Terminal 2"
         },
         {
@@ -38,7 +38,7 @@
           "sub": "快速直達上野 (約45分)",
           "highlight": false,
           "locKey": "keisei_ueno",
-          "image_query": "Japan Train Skyliner",
+          "image_query": "Keisei Skyliner Train",
           "maps_query": "Keisei Ueno Station"
         },
         {
@@ -47,7 +47,7 @@
           "sub": "寬敞親子公寓飯店，放置行李",
           "highlight": false,
           "locKey": "mimaru_ueno",
-          "image_query": "MIMARU Hotel Room",
+          "image_query": "Modern Japanese Apartment Hotel",
           "maps_query": "MIMARU TOKYO UENO NORTH"
         },
         {
@@ -84,7 +84,7 @@
           "sub": "避開人潮高峰，仲見世通吃人形燒",
           "highlight": true,
           "locKey": "sensoji",
-          "image_query": "Sensoji Temple Lantern",
+          "image_query": "Sensoji Temple Red Lantern",
           "maps_query": "Sensoji Temple"
         },
         {
@@ -93,7 +93,7 @@
           "sub": "漫步河岸，遠眺晴空塔全景",
           "highlight": false,
           "locKey": "sumida_park",
-          "image_query": "Sumida River Tokyo Skytree",
+          "image_query": "Tokyo Skytree River View",
           "maps_query": "Sumida Park"
         },
         {
@@ -111,7 +111,7 @@
           "sub": "室內設施，適合親子觀賞企鵝",
           "highlight": true,
           "locKey": "sumida_aquarium",
-          "image_query": "Jellyfish Aquarium",
+          "image_query": "Jellyfish Tank Aquarium",
           "maps_query": "Sumida Aquarium"
         },
         {
@@ -120,7 +120,7 @@
           "sub": "晴空塔店，精緻水果塔名店",
           "highlight": false,
           "locKey": "quil_fait_bon",
-          "image_query": "Fruit Tart Cake",
+          "image_query": "Fruit Tart Strawberry",
           "maps_query": "Qu'il fait bon Tokyo Skytree Town Solamachi"
         }
       ]
@@ -146,7 +146,7 @@
           "sub": "搭乘地鐵至八丁堀轉京葉線",
           "highlight": false,
           "locKey": "mimaru_ueno",
-          "image_query": "Tokyo Subway Station",
+          "image_query": "Tokyo Disneyland Castle", 
           "maps_query": "Ueno Station"
         },
         {
@@ -155,7 +155,7 @@
           "sub": "美女與野獸、杯麵、米奇魔法屋",
           "highlight": true,
           "locKey": "disneyland",
-          "image_query": "Cinderella Castle Tokyo",
+          "image_query": "Mickey Mouse Balloon",
           "maps_query": "Tokyo Disneyland"
         },
         {
@@ -164,7 +164,7 @@
           "sub": "推薦：紅心皇后宴會大廳 (漢堡排)",
           "highlight": false,
           "locKey": "disneyland",
-          "image_query": "Disney Food Japan",
+          "image_query": "Alice in Wonderland Restaurant",
           "maps_query": "Queen of Hearts Banquet Hall"
         },
         {
@@ -173,7 +173,7 @@
           "sub": "夢之光電子大遊行 (視孩子體力)",
           "highlight": true,
           "locKey": "disneyland",
-          "image_query": "Electrical Parade Dreamlights",
+          "image_query": "Tokyo Disney Electrical Parade",
           "maps_query": "Tokyo Disneyland"
         }
       ]
@@ -201,7 +201,7 @@
           "sub": "大行李寄往機場/下一間，輕裝出發",
           "highlight": false,
           "locKey": "shinjuku_st",
-          "image_query": "Shinjuku Station Crowd",
+          "image_query": "Mt Fuji View From Train", 
           "maps_query": "Shinjuku Station"
         },
         {
@@ -210,7 +210,7 @@
           "sub": "新宿直達河口湖 (需提前預約)",
           "highlight": true,
           "locKey": "shinjuku_st",
-          "image_query": "Fuji Excursion Train",
+          "image_query": "Fuji Excursion Train Red",
           "maps_query": "Shinjuku Station"
         },
         {
@@ -219,7 +219,7 @@
           "sub": "河口湖站前店，名物餺飥麵",
           "highlight": false,
           "locKey": "hoto_fudo",
-          "image_query": "Hoto Noodles Pot",
+          "image_query": "Hoto Noodles",
           "maps_query": "Hoto Fudo Kawaguchiko Station"
         },
         {
@@ -228,7 +228,7 @@
           "sub": "眺望富士山全景 (視天氣)",
           "highlight": false,
           "locKey": "fuji_ropeway",
-          "image_query": "Mt Fuji Ropeway View",
+          "image_query": "Lake Kawaguchi Mount Fuji",
           "maps_query": "Mt. Fuji Panoramic Ropeway"
         },
         {
@@ -237,7 +237,7 @@
           "sub": "在房間與露天風呂欣賞逆富士",
           "highlight": true,
           "locKey": "fuji_ginkei",
-          "image_query": "Ryokan Fuji View Onsen",
+          "image_query": "Onsen with Mt Fuji View",
           "maps_query": "Koraku Onyado Fuji Ginkei"
         }
       ]
@@ -264,7 +264,7 @@
           "sub": "欣賞清晨寧靜的富士山",
           "highlight": true,
           "locKey": "fuji_ginkei",
-          "image_query": "Mt Fuji Sunrise Lake",
+          "image_query": "Mt Fuji Sunrise",
           "maps_query": "Koraku Onyado Fuji Ginkei"
         },
         {
@@ -273,7 +273,7 @@
           "sub": "湖畔甜點時光，享用起司蛋糕",
           "highlight": true,
           "locKey": "cheese_cake_garden",
-          "image_query": "Cheesecake Dessert",
+          "image_query": "Cheesecake Japan",
           "maps_query": "Kawaguchiko Cheese Cake Garden"
         },
         {
@@ -282,7 +282,7 @@
           "sub": "搭乘巴士或電車前往成田機場周邊",
           "highlight": false,
           "locKey": "kawaguchiko_st",
-          "image_query": "Highway Bus Japan",
+          "image_query": "Japan Highway Bus",
           "maps_query": "Kawaguchiko Station"
         },
         {
@@ -291,7 +291,7 @@
           "sub": "鄰近機場，方便明日早班機",
           "highlight": false,
           "locKey": "hotel_nikko_narita",
-          "image_query": "Airport Hotel Room",
+          "image_query": "Hotel Nikko Narita",
           "maps_query": "Hotel Nikko Narita"
         },
         {
@@ -300,7 +300,7 @@
           "sub": "輕鬆用餐，早點休息",
           "highlight": false,
           "locKey": "hotel_nikko_narita",
-          "image_query": "Buffet Dinner",
+          "image_query": "Buffet Dinner Hotel",
           "maps_query": "Hotel Nikko Narita"
         }
       ]
@@ -325,7 +325,7 @@
           "sub": "搭乘免費接駁車前往 T2",
           "highlight": false,
           "locKey": "hotel_nikko_narita",
-          "image_query": "Shuttle Bus",
+          "image_query": "Airport Shuttle Bus",
           "maps_query": "Hotel Nikko Narita"
         },
         {
@@ -343,7 +343,7 @@
           "sub": "帶著美好回憶回家",
           "highlight": false,
           "locKey": "nrt_airport",
-          "image_query": "Airplane Taking Off",
+          "image_query": "Airplane Wing Sky",
           "maps_query": "Narita International Airport Terminal 2"
         }
       ]
