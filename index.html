@@ -410,31 +410,33 @@
     L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 18 }).addTo(map);
     const currentLayerGroup = L.layerGroup().addTo(map);
 
-    // --- Pexels Logic (Enhanced for Quality) ---
+        // --- Pexels Logic (Fix: Relevance First) ---
     async function fetchPexelsImage(keyword) {
         if (!PEXELS_API_KEY) return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         
-        // 1. Append aesthetic keywords
-        const enhancedQuery = `${keyword} aesthetic travel wallpaper`;
+        // 修正 1: 不再自動亂加 aesthetic 後綴，只用 AI 給的精準關鍵字
+        // 如果 AI 給 "Sensoji Temple Red Lantern"，就只搜這個，確保是景點
+        const query = keyword; 
         
         try {
-            // 2. Fetch 3 images, per_page=3
-            const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(enhancedQuery)}&per_page=3&orientation=landscape&size=large`, {
+            // 修正 2: per_page=1，只抓最準的那一張
+            const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&size=large`, {
                 headers: { Authorization: PEXELS_API_KEY }
             });
             if (!res.ok) throw new Error('API Error');
             const data = await res.json();
             
             if (data.photos && data.photos.length > 0) {
-                // 3. Randomly pick one from the top 3 results
-                const randomIndex = Math.floor(Math.random() * data.photos.length);
-                return data.photos[randomIndex].src.large; // Use large size for retina
+                // 修正 3: 直接回傳第 0 張 (最相關)，不要隨機
+                return data.photos[0].src.large; 
             }
+            // 沒圖時的備案
             return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         } catch (e) {
             return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         }
     }
+
 
     // --- Init ---
     async function initApp() {
