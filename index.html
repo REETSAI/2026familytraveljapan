@@ -713,9 +713,9 @@
                         const loc = e.locKey ? locations[e.locKey] : null;
                         const clickable = !!loc;
                         
-                        // Google Maps URL
-                        const mapQuery = e.maps_query || e.title;
-                        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+                        // Google Maps URL (Modified Logic: Strictly use maps_query)
+                        const mapQuery = e.maps_query; 
+                        const mapUrl = mapQuery ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}` : '#';
                         const showMapBtn = !!mapQuery;
 
                         return `
@@ -768,6 +768,7 @@
             card.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
         }
         renderDetails(day);
+        detailsContainer.scrollTop = 0; // Fix: Scroll to top
         updateMapRoute(day);
     }
 
@@ -841,6 +842,7 @@
         });
         if(bounds.length) map.flyToBounds(bounds, {padding: [50, 50], duration: 1.0});
         renderOverviewDetails();
+        detailsContainer.scrollTop = 0; // Fix: Scroll to top
     }
 
     window.onload = initApp;
