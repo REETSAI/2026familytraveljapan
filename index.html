@@ -34,7 +34,7 @@
 
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #faf9f6; /* 和紙白 */
+            background-color: #faf9f6;
             color: #374151;
             height: 100dvh;
             width: 100vw;
@@ -85,7 +85,7 @@
             padding: 12px;
             padding-left: max(12px, env(safe-area-inset-left));
             padding-right: max(12px, env(safe-area-inset-right));
-            height: 35vh; /* 稍微加大地圖比例 */
+            height: 35vh;
             width: 100%;
             box-sizing: border-box;
             flex-shrink: 0;
@@ -107,17 +107,46 @@
             z-index: 1;
         }
 
-        /* --- CSS 動畫：背景流動線條 --- */
-        @keyframes flow {
-            0% { stroke-dashoffset: 20; }
-            100% { stroke-dashoffset: 0; }
-        }
+        /* Markers */
+        .custom-div-icon { background: transparent; border: none; }
         
-        .flowing-path {
-            animation: flow 1s linear infinite;
+        .pin-drop {
+            width: 28px; height: 28px;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid white; margin: 0;
         }
+        .pin-sub {
+            width: 14px; height: 14px;
+            background-color: white; border: 3px solid #6b7280;
+            border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .pin-icon { transform: rotate(45deg); color: white; font-size: 12px; }
 
-        /* --- 日式極簡箭頭樣式 --- */
+        /* Colors */
+        .pin-start { background-color: #10b981; } /* Green */
+        .pin-dest { background-color: #ef4444; }  /* Red */
+        .pin-mid { background-color: #3b82f6; }   /* Blue */
+        .pin-base { background-color: #8b5cf6; }  /* Purple (Base) */
+        .pin-normal { background-color: #8b5cf6; } /* Purple (Overview) */
+
+        .leaflet-tooltip.custom-map-label {
+            background-color: rgba(255, 255, 255, 0.95);
+            border: none; border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 12px; font-weight: 700;
+            color: #1f2937; padding: 3px 8px; white-space: nowrap;
+        }
+        .leaflet-tooltip-top:before { display: none; }
+
+        /* Flowing Path */
+        @keyframes flow { 0% { stroke-dashoffset: 20; } 100% { stroke-dashoffset: 0; } }
+        .flowing-path { animation: flow 1s linear infinite; }
+
+        /* Moving Arrow */
         .moving-arrow-div {
             transition: opacity 0.2s ease-out; 
             z-index: 2000 !important;
@@ -125,244 +154,94 @@
         }
 
         .minimalist-arrow {
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
+            width: 24px; height: 24px;
+            background: white; border-radius: 50%;
             box-shadow: 0 3px 6px rgba(0,0,0,0.2); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
         
         .minimalist-arrow svg {
-            width: 14px;
-            height: 14px;
-            fill: #1e3a8a; /* 紺色 */
-            display: block;
+            width: 14px; height: 14px;
+            fill: #1e3a8a; display: block;
         }
 
-        /* Marker & Label Styles */
-        .pin-drop {
-            width: 28px;
-            height: 28px;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid white;
-            margin: 0;
-            transition: transform 0.2s;
-        }
-
-        /* 次要景點的小圓點樣式 */
-        .pin-sub {
-            width: 14px;
-            height: 14px;
-            background-color: white;
-            border: 3px solid #6b7280;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-
-        .pin-icon {
-            transform: rotate(45deg);
-            color: white;
-            font-size: 12px;
-        }
-
-        .pin-start { background-color: #10b981; } /* 機場/起點 綠色 */
-        .pin-dest { background-color: #ef4444; }  /* 終點 紅色 */
-        .pin-mid { background-color: #3b82f6; }   /* 中途點 藍色 */
-        .pin-normal { background-color: #8b5cf6; } /* 一般 紫色 */
-
-        /* 地標文字樣式 */
-        .leaflet-tooltip.custom-map-label {
-            background-color: rgba(255, 255, 255, 0.95);
-            border: none;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            font-family: 'Noto Sans TC', sans-serif;
-            font-size: 12px;
-            font-weight: 700;
-            color: #1f2937;
-            padding: 3px 8px;
-            white-space: nowrap;
-        }
-        
-        .leaflet-tooltip-top:before { display: none; }
-
-        /* Day cards */
+        /* Cards */
         #cards-container {
-            height: 130px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding-right: max(16px, env(safe-area-inset-right));
-            padding-left: max(16px, env(safe-area-inset-left));
-            gap: 12px;
-            margin-top: 4px;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
+            height: 130px; flex-shrink: 0;
+            display: flex; align-items: center;
+            overflow-x: auto; gap: 12px;
+            padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
+            margin-top: 4px; scrollbar-width: none;
         }
-
         #cards-container::-webkit-scrollbar { display: none; }
 
         .day-card {
-            flex: 0 0 110px; /* 稍微加寬 */
-            height: 100px;
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            background: #f3f4f6;
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 2px solid transparent;
-            transform: translateZ(0);
+            flex: 0 0 110px; height: 100px;
+            border-radius: 16px; position: relative;
+            overflow: hidden; cursor: pointer;
+            background: #f3f4f6; border: 2px solid transparent;
+            transition: all 0.2s;
         }
-
         .day-card.active {
-            border-color: #3b82f6;
-            transform: translateY(-4px);
+            border-color: #3b82f6; transform: translateY(-4px);
             box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.4);
         }
-
         .card-bg {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.5s ease;
-            background-color: #e5e7eb; /* Loading color */
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            transition: transform 0.5s ease; background-color: #e5e7eb;
         }
-
         .day-card.active .card-bg { transform: scale(1.1); }
-
         .card-overlay {
-            position: absolute;
-            inset: 0;
+            position: absolute; inset: 0;
             background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0) 100%);
             z-index: 1;
         }
-
         .card-content {
-            position: relative;
-            z-index: 2;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
+            position: relative; z-index: 2; height: 100%;
+            display: flex; flex-direction: column; justify-content: space-between; padding: 10px;
         }
 
         /* Details */
         #details-container {
-            flex: 1;
-            background: white;
-            border-top: 1px solid #f3f4f6;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            margin-top: 8px;
-            border-radius: 20px 20px 0 0;
+            flex: 1; background: white;
+            border-top: 1px solid #f3f4f6; overflow-y: auto;
+            margin-top: 8px; border-radius: 20px 20px 0 0;
             box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.02);
             padding-bottom: env(safe-area-inset-bottom);
         }
-
-        .details-wrapper {
-            padding: 24px 20px 40px 20px;
-            padding-bottom: calc(40px + env(safe-area-inset-bottom));
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .info-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .timeline-container {
-            position: relative;
-            padding-left: 0;
-        }
-
-        .timeline-line {
-            position: absolute;
-            left: 60px;
-            top: 10px;
-            bottom: 10px;
-            width: 2px;
-            background: #e5e7eb;
-            z-index: 0;
-        }
-
-        .timeline-row {
-            position: relative;
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 24px;
-            z-index: 1;
-        }
-
-        .timeline-row:last-child { margin-bottom: 0; }
-
-        .time-col {
-            flex: 0 0 48px;
-            text-align: right;
-            font-family: 'Roboto Mono', monospace;
-            font-size: 13px;
-            color: #6b7280;
-            padding-top: 3px;
-            font-weight: 500;
-            margin-right: 28px;
-        }
-
-        .dot-marker {
-            position: absolute;
-            left: 56px;
-            top: 7px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid #d1d5db;
-            z-index: 2;
-        }
-
-        .timeline-row.highlight .dot-marker {
-            background: #ef4444;
-            border-color: #ef4444;
-            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
-        }
+        .details-wrapper { padding: 24px 20px 40px 20px; }
         
-        /* Event Type Icons */
-        .type-icon {
-            display: inline-flex;
-            width: 20px;
-            justify-content: center;
-            margin-right: 4px;
-            color: #9ca3af;
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 12px; margin-bottom: 24px;
+        }
+        .info-box {
+            background: #f9fafb; border: 1px solid #e5e7eb;
+            border-radius: 10px; padding: 10px 14px;
+            display: flex; flex-direction: column;
         }
 
-        .content-col {
-            flex: 1;
-            background: white;
-            padding-bottom: 4px;
+        .timeline-container { position: relative; }
+        .timeline-line {
+            position: absolute; left: 60px; top: 10px; bottom: 10px;
+            width: 2px; background: #e5e7eb; z-index: 0;
         }
+        .timeline-row {
+            position: relative; display: flex; align-items: flex-start;
+            margin-bottom: 24px; z-index: 1;
+        }
+        .time-col {
+            flex: 0 0 48px; text-align: right;
+            font-family: 'Roboto Mono', monospace; font-size: 13px;
+            color: #6b7280; padding-top: 3px; margin-right: 28px;
+        }
+        .dot-marker {
+            position: absolute; left: 56px; top: 7px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: white; border: 2px solid #d1d5db; z-index: 2;
+        }
+        .content-col { flex: 1; padding-bottom: 4px; }
 
         .animate-fade { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn {
@@ -394,146 +273,154 @@
     // ==========================================
     // CONFIGURATION
     // ==========================================
-    
-    // ⚠️ 貼上您的 Pexels API Key 才能動態抓圖
-    // 如果留空，系統會使用 Placeholder 圖片
-    const PEXELS_API_KEY = 'pXteTvWtxlGD6EmKejw4PcrQPBIq2AfT8cDjPEQX1hCufCKu2oNfaxVL'; 
+    const PEXELS_API_KEY = ''; // 填入您的 Key
 
     // ==========================================
-    // DEFAULT DATA (Updated for "Start from Flight" Logic)
+    // DEFAULT DATA
     // ==========================================
     const DEFAULT_DATA = {
       "meta": {
-        "title": "2026 東京之旅",
-        "subtitle": "5天4夜・機場出發・親子遊",
+        "title": "東京富士親子遊",
+        "subtitle": "5天4夜｜迪士尼・河口湖溫泉",
         "days": 5,
         "nights": 4,
-        "people": "2大2小"
-      },
-      "locations": {
-        "nrt": { "lat": 35.7719, "lng": 140.3929, "title": "成田機場" },
-        "ueno_st": { "lat": 35.7137, "lng": 139.7776, "title": "京成上野站" },
-        "hotel_ueno": { "lat": 35.7115, "lng": 139.7745, "title": "MIMARU上野" },
-        "asakusa": { "lat": 35.7147, "lng": 139.7967, "title": "淺草雷門" },
-        "skytree": { "lat": 35.71, "lng": 139.8107, "title": "晴空塔" },
-        "disney": { "lat": 35.6329, "lng": 139.8804, "title": "迪士尼樂園" },
-        "kawaguchi": { "lat": 35.4981, "lng": 138.7688, "title": "河口湖站" },
-        "mt_fuji_view": { "lat": 35.5228, "lng": 138.7483, "title": "大石公園" }
+        "people": "2大2小 (親子/放鬆)"
       },
       "schedule": [
         {
           "id": 1,
           "date": "1/2",
           "week": "週五",
-          "title": "抵達與報到",
+          "title": "抵達上野",
           "locName": "Narita Airport",
-          "stayHotel": "hotel_ueno",
-          "temp": "12°C 晴",
-          "wear": "洋蔥式穿搭",
-          "route": ["nrt", "ueno_st", "hotel_ueno"],
+          "stayHotel": "mimaru_ueno",
+          "temp": "6°C ~ 12°C",
+          "wear": "洋蔥式穿搭 | 防風外套",
+          "route": ["nrt_airport", "keisei_ueno", "mimaru_ueno", "ameyoko"],
           "events": [
-            { "time": "13:00", "title": "抵達成田機場", "sub": "T2 航廈入境", "highlight": true, "locKey": "nrt", "image": "airport terminal" },
-            { "time": "14:30", "title": "Skyliner 特急", "sub": "前往市區 (45分)", "locKey": "ueno_st", "image": "train japan" },
-            { "time": "15:30", "title": "飯店 Check-in", "sub": "寄放行李", "locKey": "hotel_ueno", "image": "hotel reception" },
-            { "time": "18:00", "title": "阿美橫丁晚餐", "sub": "自由覓食", "locKey": "ueno_st", "image": "street food japan" }
+            { "time": "14:55", "title": "抵達成田機場 (T1)", "sub": "MM626 航班降落", "locKey": "nrt_airport", "image_query": "Airport Terminal", "maps_query": "Narita International Airport Terminal 1" },
+            { "time": "16:00", "title": "Skyliner 京成電鐵", "sub": "直達上野 (約45分)", "locKey": "keisei_ueno", "image_query": "Japan Train", "maps_query": "Keisei Ueno Station" },
+            { "time": "17:00", "title": "MIMARU Check-in", "sub": "親子友善公寓式酒店", "locKey": "mimaru_ueno", "image_query": "Hotel Room Family", "maps_query": "MIMARU TOKYO UENO NORTH" },
+            { "time": "18:30", "title": "阿美橫丁晚餐", "sub": "體驗熱鬧氣氛", "locKey": "ameyoko", "image_query": "Tokyo Street Food", "maps_query": "Ameyoko Shopping District" }
           ]
         },
         {
           "id": 2,
           "date": "1/3",
           "week": "週六",
-          "title": "淺草文化",
-          "locName": "Asakusa Temple",
-          "stayHotel": "hotel_ueno",
-          "temp": "10°C 陰",
-          "route": ["hotel_ueno", "asakusa", "skytree"],
+          "title": "淺草晴空塔",
+          "locName": "Asakusa Area",
+          "stayHotel": "mimaru_ueno",
+          "temp": "5°C ~ 11°C",
+          "wear": "舒適好走鞋 | 保暖",
+          "route": ["mimaru_ueno", "sensoji", "sumida_park", "skytree", "mimaru_ueno"],
           "events": [
-            { "time": "09:00", "title": "前往淺草", "sub": "地鐵銀座線", "locKey": "hotel_ueno", "image": "subway tokyo" },
-            { "time": "09:30", "title": "雷門 & 仲見世通", "sub": "拍照吃點心", "locKey": "asakusa", "image": "sensoji temple" },
-            { "time": "13:30", "title": "晴空塔展望台", "sub": "450m 天望迴廊", "highlight": true, "locKey": "skytree", "image": "tokyo skytree" }
+            { "time": "09:30", "title": "淺草寺雷門", "sub": "仲見世通吃點心", "locKey": "sensoji", "image_query": "Sensoji Temple", "maps_query": "Sensoji Temple" },
+            { "time": "11:30", "title": "隅田公園散步", "sub": "步行過橋前往晴空塔", "locKey": "sumida_park", "image_query": "Park River", "maps_query": "Sumida Park" },
+            { "time": "12:30", "title": "晴空塔午餐", "sub": "推薦：敘敘苑燒肉 (30F)", "locKey": "skytree", "image_query": "Yakiniku Beef", "maps_query": "Jojoen Tokyo Skytree Town Solamachi" },
+            { "time": "14:30", "title": "墨田水族館", "sub": "適合親子", "locKey": "sumida_aquarium", "image_query": "Aquarium Jellyfish", "maps_query": "Sumida Aquarium" }
           ]
         },
         {
           "id": 3,
           "date": "1/4",
           "week": "週日",
-          "title": "迪士尼夢想",
-          "locName": "Tokyo Disney",
-          "stayHotel": "hotel_ueno",
-          "route": ["hotel_ueno", "disney"],
+          "title": "迪士尼樂園",
+          "locName": "Disney Land",
+          "stayHotel": "mimaru_ueno",
+          "temp": "4°C ~ 10°C",
+          "wear": "極暖裝備 | 暖暖包",
+          "route": ["mimaru_ueno", "disneyland", "mimaru_ueno"],
           "events": [
-            { "time": "07:30", "title": "出發", "sub": "JR 京葉線", "locKey": "hotel_ueno", "image": "train station" },
-            { "time": "08:30", "title": "迪士尼樂園", "sub": "全日遊玩", "highlight": true, "locKey": "disney", "image": "cinderella castle" }
+            { "time": "09:00", "title": "東京迪士尼樂園", "sub": "卡通城、美女與野獸", "locKey": "disneyland", "image_query": "Cinderella Castle", "maps_query": "Tokyo Disneyland" },
+            { "time": "13:00", "title": "園區午餐", "sub": "紅心皇后宴會大廳", "locKey": "disneyland", "image_query": "Theme Park Food", "maps_query": "Queen of Hearts Banquet Hall" },
+            { "time": "17:00", "title": "夜間遊行", "sub": "視體力提早離園", "locKey": "disneyland", "image_query": "Parade Lights", "maps_query": "Tokyo Disneyland" }
           ]
         },
         {
-            "id": 4,
-            "date": "1/5",
-            "week": "週一",
-            "title": "富士山絕景",
-            "locName": "Mt Fuji Lake",
-            "stayHotel": "hotel_ueno",
-            "route": ["hotel_ueno", "kawaguchi", "mt_fuji_view"],
-            "events": [
-              { "time": "08:00", "title": "富士回遊號", "sub": "直達河口湖", "locKey": "hotel_ueno", "image": "train scenery" },
-              { "time": "10:30", "title": "河口湖站", "sub": "轉乘巴士", "locKey": "kawaguchi", "image": "kawaguchiko station" },
-              { "time": "11:30", "title": "大石公園", "sub": "花海與富士山", "highlight": true, "locKey": "mt_fuji_view", "image": "fuji mountain lake" }
-            ]
+          "id": 4,
+          "date": "1/5",
+          "week": "週一",
+          "title": "移動至河口湖",
+          "locName": "Mt Fuji",
+          "stayHotel": "fuji_ginkei",
+          "temp": "-2°C ~ 5°C",
+          "wear": "羽絨外套 | 毛帽手套",
+          "route": ["mimaru_ueno", "shinjuku_st", "kawaguchiko_st", "fuji_ropeway", "fuji_ginkei"],
+          "events": [
+            { "time": "10:30", "title": "富士回遊號", "sub": "直達河口湖 (需預約)", "locKey": "shinjuku_st", "image_query": "Train Scenery Mountain", "maps_query": "Shinjuku Station" },
+            { "time": "12:30", "title": "午餐：不動茶屋", "sub": "河口湖名物餺飥麵", "locKey": "hoto_fudo", "image_query": "Noodle Soup Pot", "maps_query": "Hoto Fudo Kawaguchiko Station" },
+            { "time": "14:30", "title": "富士全景纜車", "sub": "眺望富士山", "locKey": "fuji_ropeway", "image_query": "Cable Car Mountain", "maps_query": "Mt. Fuji Panoramic Ropeway" },
+            { "time": "16:00", "title": "富士吟景 Check-in", "sub": "逆富士溫泉與懷石料理", "locKey": "fuji_ginkei", "image_query": "Ryokan Onsen", "maps_query": "Koraku Onyado Fuji Ginkei" }
+          ]
+        },
+        {
+          "id": 5,
+          "date": "1/6",
+          "week": "週二",
+          "title": "溫泉與返程",
+          "locName": "Return Home",
+          "stayHotel": "fuji_ginkei",
+          "temp": "0°C ~ 6°C",
+          "wear": "舒適 | 適合搭機",
+          "route": ["fuji_ginkei", "kawaguchiko_st", "nrt_airport"],
+          "events": [
+            { "time": "07:00", "title": "晨間露天風呂", "sub": "欣賞清晨的富士山", "locKey": "fuji_ginkei", "image_query": "Mt Fuji Sunrise", "maps_query": "Koraku Onyado Fuji Ginkei" },
+            { "time": "11:00", "title": "前往成田機場", "sub": "預留 3.5 小時車程", "locKey": "kawaguchiko_st", "image_query": "Highway Bus", "maps_query": "Kawaguchiko Station" },
+            { "time": "14:50", "title": "抵達成田機場 (T1)", "sub": "MM625 (16:50起飛)", "locKey": "nrt_airport", "image_query": "Airport Checkin", "maps_query": "Narita International Airport Terminal 1" }
+          ]
         }
-      ]
+      ],
+      "locations": {
+        "nrt_airport": { "lat": 35.7719, "lng": 140.3929, "title": "成田國際機場" },
+        "keisei_ueno": { "lat": 35.7113, "lng": 139.7749, "title": "京成上野站" },
+        "mimaru_ueno": { "lat": 35.7135, "lng": 139.7785, "title": "MIMARU 上野" },
+        "ameyoko": { "lat": 35.7107, "lng": 139.7745, "title": "阿美橫丁" },
+        "sensoji": { "lat": 35.7147, "lng": 139.7967, "title": "淺草寺" },
+        "sumida_park": { "lat": 35.7140, "lng": 139.8040, "title": "隅田公園" },
+        "skytree": { "lat": 35.7100, "lng": 139.8107, "title": "東京晴空塔" },
+        "sumida_aquarium": { "lat": 35.7102, "lng": 139.8109, "title": "墨田水族館" },
+        "disneyland": { "lat": 35.6329, "lng": 139.8804, "title": "東京迪士尼樂園" },
+        "shinjuku_st": { "lat": 35.6896, "lng": 139.7005, "title": "新宿站" },
+        "kawaguchiko_st": { "lat": 35.4981, "lng": 138.7688, "title": "河口湖站" },
+        "hoto_fudo": { "lat": 35.4996, "lng": 138.7656, "title": "不動茶屋" },
+        "fuji_ropeway": { "lat": 35.5069, "lng": 138.7725, "title": "富士山全景纜車" },
+        "fuji_ginkei": { "lat": 35.5097, "lng": 138.7728, "title": "富士吟景" }
+      }
     };
-
-    // ==========================================
-    // CORE LOGIC
-    // ==========================================
 
     let tripData = null;
     let locations = {};
     let schedule = [];
     let meta = {};
     let currentActiveIndex = -1;
-    let arrowAnimationId = null;
-    let arrowMarker = null;
+    let arrowAnimationId = null; // Animation ID
+    let arrowMarker = null;      // Arrow Marker
 
-    // DOM Elements
+    // Elements
     const pageTitleEl = document.getElementById('page-title');
     const headerTitleEl = document.getElementById('header-title');
     const cardsContainer = document.getElementById('cards-container');
     const detailsContainer = document.getElementById('details-container');
 
-    // Map Initialization
+    // Map Init
     const map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false,
-        zoomAnimation: true,
-        fadeAnimation: true,
-        markerZoomAnimation: true
-    }).setView([35.7719, 140.3929], 10); // Default to Narita area
-
-    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        maxZoom: 18
-    }).addTo(map);
-
+        zoomControl: false, attributionControl: false, zoomAnimation: true
+    }).setView([35.68, 139.76], 10);
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 18 }).addTo(map);
     const currentLayerGroup = L.layerGroup().addTo(map);
 
-    // --- Pexels Integration ---
+    // --- Pexels Logic ---
     async function fetchPexelsImage(keyword) {
-        if (!PEXELS_API_KEY) {
-            // Fallback if no key provided
-            return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
-        }
+        if (!PEXELS_API_KEY) return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         try {
             const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(keyword)}&per_page=1&orientation=landscape`, {
                 headers: { Authorization: PEXELS_API_KEY }
             });
             if (!res.ok) throw new Error('API Error');
             const data = await res.json();
-            if (data.photos && data.photos.length > 0) {
-                return data.photos[0].src.medium;
-            }
-            throw new Error('No photos found');
+            return data.photos?.[0]?.src?.medium || `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         } catch (e) {
-            console.warn(`Pexels fetch failed for ${keyword}:`, e);
             return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         }
     }
@@ -547,77 +434,53 @@
             if (tripName) {
                 if (!tripName.endsWith('.json')) tripName += '.json';
                 const response = await fetch(`./${tripName}`);
-                if (!response.ok) throw new Error(`找不到行程檔 (${tripName})`);
+                if (!response.ok) throw new Error('File not found');
                 tripData = await response.json();
             } else {
                 tripData = DEFAULT_DATA;
             }
+        } catch (error) { tripData = DEFAULT_DATA; }
             
-            meta = tripData.meta || {};
-            locations = tripData.locations || {};
-            schedule = tripData.schedule || [];
+        meta = tripData.meta || {};
+        locations = tripData.locations || {};
+        schedule = tripData.schedule || [];
 
-            if(meta.title) {
-                document.title = meta.title; 
-                pageTitleEl.innerText = meta.title;
-                headerTitleEl.innerText = meta.title;
-            }
-
-            // 非同步渲染 Card (圖片會慢慢載入)
-            renderCards();
-            
-            // 稍後重置視圖
-            setTimeout(resetView, 300);
-
-        } catch (error) {
-            console.error('Fetch error:', error);
-            tripData = DEFAULT_DATA;
-            meta = tripData.meta || {};
-            locations = tripData.locations || {};
-            schedule = tripData.schedule || [];
-            renderCards();
-            setTimeout(resetView, 300);
-        }
-    }
-
-    // --- Map Logic ---
-
-    function createPinIcon(type) {
-        if (type === 'sub') {
-             return L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div class="pin-sub"></div>`,
-                iconSize: [14, 14],
-                iconAnchor: [7, 7],
-                tooltipAnchor: [0, -10]
-            });
+        if(meta.title) {
+            document.title = meta.title; 
+            pageTitleEl.innerText = meta.title;
+            headerTitleEl.innerText = meta.title;
         }
 
-        let colorClass = 'pin-normal';
-        if (type === 'start') colorClass = 'pin-start'; // Airport/First
-        if (type === 'dest') colorClass = 'pin-dest';   // Last spot
-        if (type === 'mid') colorClass = 'pin-mid';     // Major mid spot
-
-        return L.divIcon({
-            className: 'custom-div-icon',
-            html: `<div class="pin-drop ${colorClass}"><i class="fas fa-map-marker-alt pin-icon"></i></div>`,
-            iconSize: [28, 28],
-            iconAnchor: [14, 30], // Tip of pin
-            tooltipAnchor: [0, -28] 
-        });
+        renderCards();
+        setTimeout(resetView, 300);
     }
 
-    function focusOnLocation(lat, lng) {
-        if (typeof lat !== 'number' || typeof lng !== 'number') return;
-        map.flyTo([lat, lng], 15, { duration: 0.8, easeLinearity: 0.25 });
-    }
-
+    // --- Helper Functions ---
     function getAngle(p1, p2) {
         const dx = p2.x - p1.x;
         const dy = p2.y - p1.y;
         let theta = Math.atan2(dy, dx); 
         let deg = theta * 180 / Math.PI; 
         return deg + 90; 
+    }
+
+    // --- MAP ---
+    function createPinIcon(type) {
+        let color = 'pin-normal';
+        let icon = '<i class="fas fa-map-marker-alt pin-icon"></i>';
+        
+        if (type === 'start') color = 'pin-start';
+        else if (type === 'dest') { color = 'pin-dest'; icon = '<i class="fas fa-flag-checkered pin-icon"></i>'; }
+        else if (type === 'base') { color = 'pin-base'; icon = '<i class="fas fa-home pin-icon"></i>'; }
+        else if (type === 'mid') color = 'pin-mid';
+        else if (type === 'normal') color = 'pin-normal'; 
+        else if (type === 'sub') return L.divIcon({className: 'custom-div-icon', html: `<div class="pin-sub"></div>`, iconSize: [14, 14], iconAnchor: [7, 7]});
+
+        return L.divIcon({
+            className: 'custom-div-icon',
+            html: `<div class="pin-drop ${color}">${icon}</div>`,
+            iconSize: [28, 28], iconAnchor: [14, 30], tooltipAnchor: [0, -28]
+        });
     }
 
     function updateMapRoute(day) {
@@ -632,234 +495,189 @@
             arrowMarker = null;
         }
 
-        // 2. 收集當日所有需要標記的地點 (來自 Route 或是 Events 中有 locKey 的)
-        const routeKeys = day.route || []; // 這是移動路徑的順序
-        
-        // 遍歷所有 event，只要有 locKey 就收集起來
+        const routeKeys = day.route || [];
         const eventKeys = (day.events || []).map(e => e.locKey).filter(k => k);
-        const allRelevantKeys = new Set([...routeKeys, ...eventKeys]);
+        const allKeys = Array.from(new Set([...routeKeys, ...eventKeys]));
+        
+        // Check for round trip
+        let isRoundTrip = false;
+        if (routeKeys.length >= 2) {
+            const start = routeKeys[0], end = routeKeys[routeKeys.length-1];
+            if (start === end) isRoundTrip = true;
+            else if(locations[start] && locations[end]) {
+                if(Math.abs(locations[start].lat - locations[end].lat) < 0.0001) isRoundTrip = true;
+            }
+        }
 
-        const routePoints = []; // 用來畫線的點 (只根據 route)
-
-        // 3. 繪製所有 Markers
-        allRelevantKeys.forEach(key => {
+        const routePoints = [];
+        allKeys.forEach(key => {
             const loc = locations[key];
             if (!loc) return;
-
-            // 決定 Marker 樣式
-            let type = 'sub'; 
             
-            // 如果這個點在 Route 列表裡，依據順序給顏色
+            let type = 'sub';
+            let zIndex = 400;
+            
             if (routeKeys.includes(key)) {
-                const idx = routeKeys.indexOf(key);
-                if (idx === 0) type = 'start'; // Day start (Usually Hotel or Airport)
-                else if (idx === routeKeys.length - 1) type = 'dest';
-                else type = 'mid';
-            } else {
-                // 如果不在 Route 裡但在 Events 裡 (例如周邊吃飯)，設為 sub
-                type = 'sub';
+                const fIdx = routeKeys.indexOf(key);
+                const lIdx = routeKeys.lastIndexOf(key);
+                
+                if (isRoundTrip && (fIdx === 0 || lIdx === routeKeys.length-1) && (key === routeKeys[0] || key === routeKeys[routeKeys.length-1])) {
+                    type = 'base'; zIndex = 1000;
+                } else if (fIdx === 0) { type = 'start'; zIndex = 900; }
+                else if (lIdx === routeKeys.length-1) { type = 'dest'; zIndex = 900; }
+                else { type = 'mid'; zIndex = 600; }
             }
 
-            // 建立 Marker
             const marker = L.marker([loc.lat, loc.lng], {
-                icon: createPinIcon(type),
-                zIndexOffset: type === 'sub' ? 400 : (type === 'start' ? 1000 : 800)
+                icon: createPinIcon(type), zIndexOffset: zIndex
             }).addTo(currentLayerGroup);
-
+            
             marker.bindTooltip(loc.title, {
-                permanent: true,       
-                direction: 'top',      
-                className: 'custom-map-label', 
-                offset: [0, -5]       
+                permanent: true, direction: 'top', className: 'custom-map-label', offset: [0, -5]
             });
         });
 
-        // 4. 準備畫線資料
-        routeKeys.forEach(key => {
-            const loc = locations[key];
-            if (loc) routePoints.push(L.latLng(loc.lat, loc.lng));
+        routeKeys.forEach(k => {
+            if(locations[k]) routePoints.push([locations[k].lat, locations[k].lng]);
         });
 
-        // 5. 畫線與聚焦
         if (routePoints.length > 0) {
+            // Draw Line
             L.polyline(routePoints, {
-                color: '#2563eb',
-                weight: 5,
-                opacity: 0.6,
-                dashArray: '8, 8',
-                className: 'flowing-path', 
-                lineCap: 'round'
+                color: '#2563eb', weight: 5, opacity: 0.6,
+                dashArray: '8, 8', className: 'flowing-path', lineCap: 'round'
             }).addTo(currentLayerGroup);
+            
+            // Fit Bounds
+            const allPoints = allKeys.map(k => locations[k] ? [locations[k].lat, locations[k].lng] : null).filter(p => p);
+            if(allPoints.length) map.flyToBounds(allPoints, { padding: [60, 60], duration: 1.0 });
 
-            // 聚焦包含所有標記點
-            const allPoints = [];
-            allRelevantKeys.forEach(k => {
-                 const l = locations[k];
-                 if(l) allPoints.push([l.lat, l.lng]);
-            });
-
-            if (allPoints.length > 0) {
-                map.flyToBounds(allPoints, {
-                    padding: [60, 60],
-                    duration: 1.0
-                });
-            }
-
-            // --- 箭頭動畫 (僅當有路徑時) ---
+            // --- Arrow Animation Logic ---
             if (routePoints.length > 1) {
-                // (保留原有的流動箭頭邏輯，為節省長度不重複註解，邏輯不變)
+                // Pre-calculate distances
+                const latLngs = routePoints.map(p => L.latLng(p[0], p[1]));
                 const distances = [];
                 let totalDistance = 0;
-                for (let i = 0; i < routePoints.length - 1; i++) {
-                    const dist = routePoints[i].distanceTo(routePoints[i+1]);
+                
+                for (let i = 0; i < latLngs.length - 1; i++) {
+                    const dist = latLngs[i].distanceTo(latLngs[i+1]);
                     distances.push(dist);
                     totalDistance += dist;
                 }
 
+                // Create Arrow Marker
                 const arrowIcon = L.divIcon({
                     className: 'moving-arrow-div',
                     html: `
                     <div class="minimalist-arrow">
-                        <svg viewBox="0 0 24 24"><path d="M12 2L4.5 20.29C4.21 21.01 5.14 21.65 5.76 21.12L12 15.75L18.24 21.12C18.86 21.65 19.79 21.01 19.5 20.29L12 2Z" /></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L4.5 20.29C4.21 21.01 5.14 21.65 5.76 21.12L12 15.75L18.24 21.12C18.86 21.65 19.79 21.01 19.5 20.29L12 2Z" />
+                        </svg>
                     </div>`,
-                    iconSize: [24, 24], iconAnchor: [12, 12]
+                    iconSize: [24, 24],
+                    iconAnchor: [12, 12]
                 });
-                arrowMarker = L.marker(routePoints[0], { icon: arrowIcon, zIndexOffset: 2000 }).addTo(currentLayerGroup);
-                
+
+                arrowMarker = L.marker(latLngs[0], { 
+                    icon: arrowIcon,
+                    zIndexOffset: 2000
+                }).addTo(currentLayerGroup);
+
                 let currentTraveled = 0;
+                const baseSpeedConstant = 250; 
                 let isPaused = false;
-                
+
                 function animate() {
-                    if (isPaused) { arrowAnimationId = requestAnimationFrame(animate); return; }
-                    const zoomFactor = Math.pow(2, map.getZoom() - 10);
-                    currentTraveled += (250 / zoomFactor); 
-                    
+                    if (isPaused) {
+                        arrowAnimationId = requestAnimationFrame(animate);
+                        return;
+                    }
+
+                    const currentZoom = map.getZoom();
+                    const zoomFactor = Math.pow(2, currentZoom - 10);
+                    const step = baseSpeedConstant / zoomFactor; // Adjust speed based on zoom
+
+                    currentTraveled += step;
+
+                    // Check if reached end
                     if (currentTraveled >= totalDistance) {
                         isPaused = true;
                         currentTraveled = totalDistance; 
                         arrowMarker.setOpacity(0);
                         setTimeout(() => {
                             currentTraveled = 0; 
-                            if(routePoints.length > 0) arrowMarker.setLatLng(routePoints[0]);
+                            if(latLngs.length > 0) arrowMarker.setLatLng(latLngs[0]);
                             arrowMarker.setOpacity(1); 
                             isPaused = false; 
                         }, 500); 
                     }
+
+                    // Calculate current position
+                    let distSum = 0;
+                    let activeSegmentIndex = 0;
                     
-                    // 計算目前位置
-                    let distSum = 0, activeIndex = 0;
                     for (let i = 0; i < distances.length; i++) {
-                        if (currentTraveled < distSum + distances[i]) { activeIndex = i; break; }
+                        if (currentTraveled < distSum + distances[i]) {
+                            activeSegmentIndex = i;
+                            break;
+                        }
                         distSum += distances[i];
                     }
-                    if (activeIndex >= routePoints.length - 1) activeIndex = routePoints.length - 2;
+                    
+                    if (activeSegmentIndex >= latLngs.length - 1) {
+                         activeSegmentIndex = latLngs.length - 2;
+                    }
 
-                    const ratio = distances[activeIndex] > 0 ? (currentTraveled - distSum) / distances[activeIndex] : 0;
-                    const p1 = routePoints[activeIndex], p2 = routePoints[activeIndex + 1];
-                    const currLat = p1.lat + (p2.lat - p1.lat) * ratio;
-                    const currLng = p1.lng + (p2.lng - p1.lng) * ratio;
+                    const segmentDist = distances[activeSegmentIndex];
+                    const distInSegment = currentTraveled - distSum;
+                    const ratio = segmentDist > 0 ? distInSegment / segmentDist : 0;
 
-                    arrowMarker.setLatLng([currLat, currLng]);
-                    const pix1 = map.latLngToLayerPoint(p1), pix2 = map.latLngToLayerPoint(p2);
-                    const angle = getAngle(pix1, pix2);
-                    const el = arrowMarker.getElement()?.querySelector('.minimalist-arrow');
-                    if(el) el.style.transform = `rotate(${angle}deg)`;
+                    const startLatLng = latLngs[activeSegmentIndex];
+                    const endLatLng = latLngs[activeSegmentIndex + 1];
+                    
+                    const currentLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * ratio;
+                    const currentLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * ratio;
+
+                    arrowMarker.setLatLng([currentLat, currentLng]);
+
+                    // Calculate Rotation
+                    const p1 = map.latLngToLayerPoint(startLatLng);
+                    const p2 = map.latLngToLayerPoint(endLatLng);
+                    const angle = getAngle(p1, p2);
+
+                    const iconEl = arrowMarker.getElement()?.querySelector('.minimalist-arrow');
+                    if (iconEl) {
+                        iconEl.style.transform = `rotate(${angle}deg)`; 
+                    }
 
                     arrowAnimationId = requestAnimationFrame(animate);
                 }
+
                 animate();
             }
         }
     }
 
-    function selectDay(index) {
-        if (currentActiveIndex === index) {
-            resetView();
-            return;
-        }
-        currentActiveIndex = index;
-        const day = schedule[index];
-        if (!day) return;
-
-        document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
-        const card = document.getElementById(`card-${index}`);
-        if (card) {
-            card.classList.add('active');
-            card.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
-        }
-
-        renderDetails(day);
-        detailsContainer.scrollTop = 0;
-        updateMapRoute(day);
+    function focusOnLocation(lat, lng) {
+        if (!lat || !lng) return;
+        map.flyTo([lat, lng], 15, { duration: 0.8 });
     }
 
-    function resetView() {
-        currentActiveIndex = -1;
-        document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
-        
-        currentLayerGroup.clearLayers();
-        if (arrowAnimationId) { cancelAnimationFrame(arrowAnimationId); arrowAnimationId = null; }
-        if (arrowMarker) { arrowMarker.remove(); arrowMarker = null; }
-
-        // 總覽：顯示主要行程點
-        const points = [];
-        schedule.forEach(day => {
-            (day.route || []).forEach(k => {
-                if(locations[k]) points.push([locations[k].lat, locations[k].lng]);
-            });
-        });
-
-        // 簡單去重
-        const uniquePoints = [];
-        const seen = new Set();
-        points.forEach(([lat, lng]) => {
-            const k = `${lat},${lng}`;
-            if(!seen.has(k)) { seen.add(k); uniquePoints.push([lat, lng]); }
-        });
-
-        uniquePoints.slice(0, 10).forEach(([lat, lng]) => {
-            L.marker([lat, lng], { icon: createPinIcon('normal') }).addTo(currentLayerGroup);
-        });
-
-        if (uniquePoints.length > 0) {
-            map.flyToBounds(uniquePoints, { padding: [50, 50], duration: 1.0 });
-        }
-
-        renderOverviewDetails();
-        detailsContainer.scrollTop = 0;
-    }
-
+    // --- UI Renderers ---
     function renderOverviewDetails() {
-        if(!schedule || schedule.length === 0) return;
-        
+        if(!schedule.length) return;
         detailsContainer.innerHTML = `
             <div class="animate-fade bg-white h-full p-6">
                 <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 shadow-sm">
-                        <i class="fas fa-plane-arrival text-xl"></i>
+                    <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600">
+                        <i class="fas fa-map-location-dot text-xl"></i>
                     </div>
-                    <div class="flex-1">
-                        <h2 class="text-xl font-bold text-gray-800 tracking-wide">${meta.title || '旅程概覽'}</h2>
-                        <p class="text-xs text-gray-400 mt-1">${meta.subtitle || '載入完成'}</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-3 gap-3 text-xs text-gray-600 mb-4">
-                    <div class="p-3 rounded-2xl bg-gray-50 border border-gray-100 text-center">
-                        <div class="text-[10px] uppercase text-gray-400 mb-1">天數</div>
-                        <div class="font-bold text-gray-800 text-base">${meta.days}</div>
-                    </div>
-                    <div class="p-3 rounded-2xl bg-gray-50 border border-gray-100 text-center">
-                        <div class="text-[10px] uppercase text-gray-400 mb-1">成員</div>
-                        <div class="font-bold text-gray-800 truncate">${meta.people}</div>
-                    </div>
-                    <div class="p-3 rounded-2xl bg-gray-50 border border-gray-100 text-center">
-                        <div class="text-[10px] uppercase text-gray-400 mb-1">住宿</div>
-                        <div class="font-bold text-gray-800">${meta.nights} 晚</div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-800">${meta.title}</h2>
+                        <p class="text-xs text-gray-400 mt-1">${meta.subtitle}</p>
                     </div>
                 </div>
-
-                <div class="space-y-3 mb-6">
+                <div class="space-y-3">
                     ${schedule.map((day, idx) => `
                         <div class="group p-3 rounded-2xl border border-gray-100 hover:border-blue-200 hover:bg-blue-50/40 transition-all cursor-pointer"
                              onclick="selectDay(${idx})">
@@ -869,17 +687,14 @@
                                 </div>
                                 <div class="flex-1">
                                     <div class="text-xs font-bold text-gray-700">${day.title}</div>
-                                    <div class="text-[10px] text-gray-400 mt-0.5">
-                                        <i class="fas fa-map-marker-alt mr-1"></i>${day.locName}
-                                    </div>
+                                    <div class="text-[10px] text-gray-400 mt-0.5"><i class="fas fa-map-marker-alt mr-1"></i>${day.locName}</div>
                                 </div>
                                 <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                             </div>
                         </div>
                     `).join('')}
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
     function renderDetails(day) {
@@ -887,91 +702,89 @@
             <div class="animate-fade details-wrapper">
                 <div class="flex justify-between items-end mb-6">
                     <div>
-                        <div class="text-sm text-blue-600 font-bold mb-1 tracking-wider uppercase">Day ${day.id}</div>
-                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">${day.title}</h2>
-                        <p class="text-xs text-gray-400 mt-1">${day.week || ''}</p>
+                        <div class="text-sm text-blue-600 font-bold mb-1 uppercase">Day ${day.id}</div>
+                        <h2 class="text-2xl font-bold text-gray-800">${day.title}</h2>
                     </div>
-                    <div class="text-right">
-                        <span class="text-3xl font-bold text-gray-200 font-mono">${day.date.split('/')[1] || day.date}</span>
-                    </div>
+                    <span class="text-3xl font-bold text-gray-200 font-mono">${day.date.split('/')[1] || day.date}</span>
                 </div>
-
-                <div class="info-grid">
-                    <div class="info-box">
-                        <div class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wide">Weather</div>
-                        <div class="text-sm font-bold text-gray-700">
-                            <i class="fas fa-sun text-yellow-500 mr-2"></i>${day.temp || '-'}
-                        </div>
-                    </div>
-                    <div class="info-box">
-                        <div class="text-[10px] text-gray-400 font-bold mb-1 uppercase tracking-wide">Wear</div>
-                        <div class="text-sm font-bold text-gray-700 truncate">
-                            <i class="fas fa-tshirt text-indigo-400 mr-2"></i>${day.wear || ''}
-                        </div>
-                    </div>
-                </div>
-
                 <div class="timeline-container">
                     <div class="timeline-line"></div>
                     ${day.events.map(e => {
                         const loc = e.locKey ? locations[e.locKey] : null;
                         const clickable = !!loc;
                         
-                        // Icon logic
-                        let icon = 'fa-circle';
-                        if(e.title.includes('機') || e.title.includes('Flight')) icon = 'fa-plane';
-                        else if(e.title.includes('車') || e.title.includes('鐵')) icon = 'fa-train';
-                        else if(e.title.includes('飯') || e.title.includes('Hotel')) icon = 'fa-bed';
-                        else if(e.title.includes('餐') || e.title.includes('食')) icon = 'fa-utensils';
+                        // Google Maps URL
+                        const mapQuery = e.maps_query || e.title;
+                        const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+                        const showMapBtn = !!mapQuery;
 
                         return `
-                        <div class="timeline-row ${e.highlight ? 'highlight' : ''}"
-                             ${clickable ? `onclick="focusOnLocation(${loc.lat}, ${loc.lng})"` : ''}>
+                        <div class="timeline-row">
                             <div class="dot-marker"></div>
                             <div class="time-col">${e.time || ''}</div>
-                            <div class="content-col ${clickable ? 'cursor-pointer' : ''}">
+                            <div class="content-col">
+                                <!-- Flex Container: Text (Left) - Action (Right) -->
                                 <div class="flex items-start justify-between">
-                                    <div>
-                                        <div class="text-[15px] font-bold text-gray-800 leading-snug">
-                                            ${e.title}
+                                    
+                                    <!-- Left: Info (Click to Focus) -->
+                                    <div class="flex-1 ${clickable ? 'cursor-pointer' : ''}" 
+                                         ${clickable ? `onclick="focusOnLocation(${loc.lat}, ${loc.lng})"` : ''}>
+                                        <div class="flex items-center">
+                                            <span class="text-[15px] font-bold text-gray-800 leading-snug">${e.title}</span>
+                                            ${clickable ? `<i class="fas fa-map-marker-alt text-gray-300 text-[10px] ml-2"></i>` : ''}
                                         </div>
-                                        ${e.sub ? `<div class="text-xs text-gray-500 mt-1 leading-relaxed">${e.sub}</div>` : ''}
+                                        ${e.sub ? `<div class="text-xs text-gray-500 mt-0.5 leading-relaxed pr-2">${e.sub}</div>` : ''}
                                     </div>
-                                    ${clickable ? `
-                                    <div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 text-[10px] ml-2 flex-shrink-0">
-                                        <i class="fas fa-map-marked-alt"></i>
-                                    </div>` : ''}
+
+                                    <!-- Right: Nav Button -->
+                                    ${showMapBtn ? `
+                                    <a href="${mapUrl}" target="_blank" 
+                                       class="ml-2 flex-shrink-0 flex flex-col items-center justify-center text-blue-500 opacity-80 hover:opacity-100 active:scale-95 transition-all group"
+                                       style="width: 44px;"
+                                       onclick="event.stopPropagation()">
+                                        <div class="w-9 h-9 rounded-full bg-blue-50 flex items-center justify-center mb-0.5 group-hover:bg-blue-100 transition-colors">
+                                            <i class="fas fa-location-arrow text-sm"></i>
+                                        </div>
+                                        <div class="text-[9px] font-bold tracking-tight">導航</div>
+                                    </a>` : ''}
                                 </div>
-                                ${e.highlight ? `
-                                <div class="mt-2 inline-block px-2 py-0.5 bg-red-50 text-red-500 text-[10px] font-bold rounded">
-                                    Highlight
-                                </div>` : ''}
                             </div>
                         </div>`;
                     }).join('')}
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
-    // 修改：非同步載入卡片
+    function selectDay(index) {
+        if (currentActiveIndex === index) { resetView(); return; }
+        currentActiveIndex = index;
+        const day = schedule[index];
+        if (!day) return;
+
+        document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+        const card = document.getElementById(`card-${index}`);
+        if(card) {
+            card.classList.add('active');
+            card.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+        }
+        renderDetails(day);
+        updateMapRoute(day);
+    }
+
     function renderCards() {
         cardsContainer.innerHTML = '';
         if(!schedule) return;
-        
         schedule.forEach((day, index) => {
             const card = document.createElement('div');
             card.className = 'day-card';
             card.id = `card-${index}`;
-            
-            // 建立基本結構，預設背景為灰色
             card.innerHTML = `
                 <div class="card-bg" id="card-bg-${index}" style="background-image: url('https://placehold.co/400x300/e2e8f0/ffffff?text=Loading')"></div>
                 <div class="card-overlay"></div>
                 <div class="card-content">
                     <div class="text-white">
                         <span class="font-bold text-lg leading-none">${day.date}</span>
-                        <div class="text-[10px] font-medium opacity-90 mt-1">${day.week}</div>
+                        <div class="text-[10px] font-medium opacity-90 mt-1">${day.week || ''}</div>
                     </div>
                     <div>
                         <div class="text-[10px] text-white/90 font-medium mb-0.5 truncate">${day.title}</div>
@@ -981,18 +794,10 @@
                     </div>
                 </div>
             `;
-            
             card.onclick = () => selectDay(index);
             cardsContainer.appendChild(card);
-
-            // 動態抓圖
-            // 優先順序：Event 1 的 image 關鍵字 > LocName > Title
-            let keyword = day.locName;
-            if (day.events && day.events.length > 0 && day.events[0].image) {
-                keyword = day.events[0].image;
-            }
-
-            // 呼叫 API
+            
+            let keyword = day.events?.[0]?.image_query || day.locName;
             fetchPexelsImage(keyword).then(url => {
                 const bgEl = document.getElementById(`card-bg-${index}`);
                 if(bgEl) bgEl.style.backgroundImage = `url('${url}')`;
@@ -1000,9 +805,47 @@
         });
     }
 
-    window.onload = initApp;
+    function resetView() {
+        currentActiveIndex = -1;
+        document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+        currentLayerGroup.clearLayers();
+        
+        // Ensure animation stops on reset
+        if (arrowAnimationId) {
+            cancelAnimationFrame(arrowAnimationId);
+            arrowAnimationId = null;
+        }
+        if (arrowMarker) {
+            arrowMarker.remove();
+            arrowMarker = null;
+        }
 
+        const unique = new Set();
+        const bounds = [];
+        schedule.forEach(day => {
+            (day.route || []).forEach(k => {
+                const loc = locations[k];
+                if(loc) {
+                    const key = `${loc.lat},${loc.lng}`;
+                    if(!unique.has(key)) {
+                        unique.add(key);
+                        // Modified: Use 'normal' (Purple) icon instead of 'sub'
+                        L.marker([loc.lat, loc.lng], {
+                            icon: createPinIcon('normal'), 
+                            zIndexOffset: 800
+                        }).addTo(currentLayerGroup);
+                        bounds.push([loc.lat, loc.lng]);
+                    }
+                }
+            });
+        });
+        if(bounds.length) map.flyToBounds(bounds, {padding: [50, 50], duration: 1.0});
+        renderOverviewDetails();
+    }
+
+    window.onload = initApp;
 </script>
 </body>
 </html>
+
 
