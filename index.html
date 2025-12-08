@@ -273,7 +273,7 @@
     // ==========================================
     // CONFIGURATION
     // ==========================================
-    const PEXELS_API_KEY = 'pXteTvWtxlGD6EmKejw4PcrQPBIq2AfT8cDjPEQX1hCufCKu2oNfaxVL'; // 填入您的 Key
+    const PEXELS_API_KEY = 'pXteTvWtxlGD6EmKejw4PcrQPBIq2AfT8cDjPEQX1hCufCKu2oNfaxVL'; // 填入您的 Pexels API Key
 
     // ==========================================
     // DEFAULT DATA
@@ -410,16 +410,27 @@
     L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', { maxZoom: 18 }).addTo(map);
     const currentLayerGroup = L.layerGroup().addTo(map);
 
-    // --- Pexels Logic ---
+    // --- Pexels Logic (Enhanced for Quality) ---
     async function fetchPexelsImage(keyword) {
         if (!PEXELS_API_KEY) return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
+        
+        // 1. Append aesthetic keywords
+        const enhancedQuery = `${keyword} aesthetic travel wallpaper`;
+        
         try {
-            const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(keyword)}&per_page=1&orientation=landscape`, {
+            // 2. Fetch 3 images, per_page=3
+            const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(enhancedQuery)}&per_page=3&orientation=landscape&size=large`, {
                 headers: { Authorization: PEXELS_API_KEY }
             });
             if (!res.ok) throw new Error('API Error');
             const data = await res.json();
-            return data.photos?.[0]?.src?.medium || `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
+            
+            if (data.photos && data.photos.length > 0) {
+                // 3. Randomly pick one from the top 3 results
+                const randomIndex = Math.floor(Math.random() * data.photos.length);
+                return data.photos[randomIndex].src.large; // Use large size for retina
+            }
+            return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         } catch (e) {
             return `https://placehold.co/800x600/e2e8f0/64748b?text=${encodeURIComponent(keyword)}`;
         }
@@ -554,18 +565,15 @@
 
             // --- Arrow Animation Logic ---
             if (routePoints.length > 1) {
-                // Pre-calculate distances
                 const latLngs = routePoints.map(p => L.latLng(p[0], p[1]));
                 const distances = [];
                 let totalDistance = 0;
-                
                 for (let i = 0; i < latLngs.length - 1; i++) {
                     const dist = latLngs[i].distanceTo(latLngs[i+1]);
                     distances.push(dist);
                     totalDistance += dist;
                 }
 
-                // Create Arrow Marker
                 const arrowIcon = L.divIcon({
                     className: 'moving-arrow-div',
                     html: `
@@ -574,32 +582,21 @@
                             <path d="M12 2L4.5 20.29C4.21 21.01 5.14 21.65 5.76 21.12L12 15.75L18.24 21.12C18.86 21.65 19.79 21.01 19.5 20.29L12 2Z" />
                         </svg>
                     </div>`,
-                    iconSize: [24, 24],
-                    iconAnchor: [12, 12]
+                    iconSize: [24, 24], iconAnchor: [12, 12]
                 });
 
-                arrowMarker = L.marker(latLngs[0], { 
-                    icon: arrowIcon,
-                    zIndexOffset: 2000
-                }).addTo(currentLayerGroup);
-
+                arrowMarker = L.marker(latLngs[0], { icon: arrowIcon, zIndexOffset: 2000 }).addTo(currentLayerGroup);
                 let currentTraveled = 0;
                 const baseSpeedConstant = 250; 
                 let isPaused = false;
 
                 function animate() {
-                    if (isPaused) {
-                        arrowAnimationId = requestAnimationFrame(animate);
-                        return;
-                    }
-
+                    if (isPaused) { arrowAnimationId = requestAnimationFrame(animate); return; }
                     const currentZoom = map.getZoom();
                     const zoomFactor = Math.pow(2, currentZoom - 10);
-                    const step = baseSpeedConstant / zoomFactor; // Adjust speed based on zoom
-
+                    const step = baseSpeedConstant / zoomFactor;
                     currentTraveled += step;
 
-                    // Check if reached end
                     if (currentTraveled >= totalDistance) {
                         isPaused = true;
                         currentTraveled = totalDistance; 
@@ -612,21 +609,13 @@
                         }, 500); 
                     }
 
-                    // Calculate current position
                     let distSum = 0;
                     let activeSegmentIndex = 0;
-                    
                     for (let i = 0; i < distances.length; i++) {
-                        if (currentTraveled < distSum + distances[i]) {
-                            activeSegmentIndex = i;
-                            break;
-                        }
+                        if (currentTraveled < distSum + distances[i]) { activeSegmentIndex = i; break; }
                         distSum += distances[i];
                     }
-                    
-                    if (activeSegmentIndex >= latLngs.length - 1) {
-                         activeSegmentIndex = latLngs.length - 2;
-                    }
+                    if (activeSegmentIndex >= latLngs.length - 1) activeSegmentIndex = latLngs.length - 2;
 
                     const segmentDist = distances[activeSegmentIndex];
                     const distInSegment = currentTraveled - distSum;
@@ -634,25 +623,19 @@
 
                     const startLatLng = latLngs[activeSegmentIndex];
                     const endLatLng = latLngs[activeSegmentIndex + 1];
-                    
                     const currentLat = startLatLng.lat + (endLatLng.lat - startLatLng.lat) * ratio;
                     const currentLng = startLatLng.lng + (endLatLng.lng - startLatLng.lng) * ratio;
 
                     arrowMarker.setLatLng([currentLat, currentLng]);
 
-                    // Calculate Rotation
                     const p1 = map.latLngToLayerPoint(startLatLng);
                     const p2 = map.latLngToLayerPoint(endLatLng);
                     const angle = getAngle(p1, p2);
 
                     const iconEl = arrowMarker.getElement()?.querySelector('.minimalist-arrow');
-                    if (iconEl) {
-                        iconEl.style.transform = `rotate(${angle}deg)`; 
-                    }
-
+                    if (iconEl) iconEl.style.transform = `rotate(${angle}deg)`; 
                     arrowAnimationId = requestAnimationFrame(animate);
                 }
-
                 animate();
             }
         }
@@ -713,8 +696,8 @@
                         const loc = e.locKey ? locations[e.locKey] : null;
                         const clickable = !!loc;
                         
-                        // Google Maps URL (Modified Logic: Strictly use maps_query)
-                        const mapQuery = e.maps_query; 
+                        // Strict Map Query Logic
+                        const mapQuery = e.maps_query; // ONLY use maps_query
                         const mapUrl = mapQuery ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}` : '#';
                         const showMapBtn = !!mapQuery;
 
@@ -723,10 +706,8 @@
                             <div class="dot-marker"></div>
                             <div class="time-col">${e.time || ''}</div>
                             <div class="content-col">
-                                <!-- Flex Container: Text (Left) - Action (Right) -->
                                 <div class="flex items-start justify-between">
                                     
-                                    <!-- Left: Info (Click to Focus) -->
                                     <div class="flex-1 ${clickable ? 'cursor-pointer' : ''}" 
                                          ${clickable ? `onclick="focusOnLocation(${loc.lat}, ${loc.lng})"` : ''}>
                                         <div class="flex items-center">
@@ -736,7 +717,6 @@
                                         ${e.sub ? `<div class="text-xs text-gray-500 mt-0.5 leading-relaxed pr-2">${e.sub}</div>` : ''}
                                     </div>
 
-                                    <!-- Right: Nav Button -->
                                     ${showMapBtn ? `
                                     <a href="${mapUrl}" target="_blank" 
                                        class="ml-2 flex-shrink-0 flex flex-col items-center justify-center text-blue-500 opacity-80 hover:opacity-100 active:scale-95 transition-all group"
@@ -768,7 +748,7 @@
             card.scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
         }
         renderDetails(day);
-        detailsContainer.scrollTop = 0; // Fix: Scroll to top
+        detailsContainer.scrollTop = 0; 
         updateMapRoute(day);
     }
 
@@ -811,7 +791,6 @@
         document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
         currentLayerGroup.clearLayers();
         
-        // Ensure animation stops on reset
         if (arrowAnimationId) {
             cancelAnimationFrame(arrowAnimationId);
             arrowAnimationId = null;
@@ -830,7 +809,6 @@
                     const key = `${loc.lat},${loc.lng}`;
                     if(!unique.has(key)) {
                         unique.add(key);
-                        // Modified: Use 'normal' (Purple) icon instead of 'sub'
                         L.marker([loc.lat, loc.lng], {
                             icon: createPinIcon('normal'), 
                             zIndexOffset: 800
@@ -842,12 +820,11 @@
         });
         if(bounds.length) map.flyToBounds(bounds, {padding: [50, 50], duration: 1.0});
         renderOverviewDetails();
-        detailsContainer.scrollTop = 0; // Fix: Scroll to top
+        detailsContainer.scrollTop = 0; 
     }
 
     window.onload = initApp;
 </script>
 </body>
 </html>
-
 
