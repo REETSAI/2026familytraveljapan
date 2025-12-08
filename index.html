@@ -454,7 +454,17 @@
             }
         } catch (error) { tripData = DEFAULT_DATA; }
             
+        // 在 initApp() 讀取完 tripData 後加入：
         meta = tripData.meta || {};
+
+        // 新增：檢查並顯示警告
+        if (meta.warnings && meta.warnings.length > 0) {
+        let warningMsg = meta.warnings.join('\n');
+        alert("⚠️ 行程小提醒：\n" + warningMsg);
+        // 或者您可以用更漂亮的 Modal 取代 alert
+        }
+
+     
         locations = tripData.locations || {};
         schedule = tripData.schedule || [];
 
