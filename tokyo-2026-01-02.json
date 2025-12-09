@@ -1,117 +1,461 @@
 {
   "meta": {
-    "title": "2026 東京親子行",
-    "subtitle": "5天4夜・2大2小｜東京・富士山・迪士尼",
-    "days": 5,
-    "nights": 4,
-    "people": "2大2小 (10 & 8 歲)"
-  },
-  "locations": {
-    "nrt": { "lat": 35.7719, "lng": 140.3929, "title": "成田機場" },
-    "ueno": { "lat": 35.7141, "lng": 139.7741, "title": "上野" },
-    "asakusa": { "lat": 35.7147, "lng": 139.7967, "title": "淺草" },
-    "skytree": { "lat": 35.71, "lng": 139.8107, "title": "晴空塔" },
-    "disney": { "lat": 35.6329, "lng": 139.8804, "title": "迪士尼" },
-    "fuji": { "lat": 35.5011, "lng": 138.7688, "title": "河口湖" },
-    "ropeway": { "lat": 35.5069, "lng": 138.7725, "title": "纜車" },
-    "shinjuku": { "lat": 35.6896, "lng": 139.7005, "title": "新宿" }
+    "title": "東京富士七日親子遊",
+    "subtitle": "迪士尼、富士吟景與晴空塔",
+    "days": 7,
+    "nights": 6,
+    "people": "2大2小",
+    "warnings": []
   },
   "schedule": [
     {
       "id": 1,
-      "date": "1/2",
-      "week": "週五",
-      "title": "抵達 & 上野",
-      "locName": "上野 Ueno",
-      "bg": "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=400&q=80",
-      "route": ["nrt", "ueno"],
-      "temp": "6°C ~ 12°C",
-      "wear": "洋蔥式 | 舒適",
+      "date": "01/01",
+      "week": "週四",
+      "title": "抵達東京",
+      "locName": "上野",
+      "stayHotel": "mimaru_ueno",
+      "temp": "4°C - 10°C",
+      "wear": "厚大衣、圍巾",
+      "route": [
+        "tpe_airport",
+        "nrt_airport",
+        "mimaru_ueno",
+        "ameyoko"
+      ],
       "events": [
-        { "time": "10:40", "title": "起飛 (TPE)", "sub": "MM626 預定", "highlight": true },
-        { "time": "14:55", "title": "抵達成田機場 T1", "sub": "入境手續約 60 分鐘", "locKey": "nrt" },
-        { "time": "16:20", "title": "Skyliner 京成電鐵", "sub": "直達上野 (40分鐘)", "highlight": true },
-        { "time": "17:10", "title": "上野飯店 Check-in", "sub": "MIMARU / 三井花園", "locKey": "ueno" },
-        { "time": "18:00", "title": "阿美橫丁晚餐", "sub": "藥妝 & 零食時間" },
-        { "time": "20:00", "title": "超市採買", "sub": "補齊隔日早餐/飲料" }
+        {
+          "time": "08:00",
+          "title": "桃園起飛",
+          "sub": "CI100 飛往東京",
+          "highlight": false,
+          "locKey": "tpe_airport",
+          "image_query": "Tokyo winter festive street lights illumination",
+          "maps_query": "Taoyuan International Airport"
+        },
+        {
+          "time": "13:30",
+          "title": "抵達東京",
+          "sub": "入境與搭乘Skyliner",
+          "highlight": false,
+          "locKey": "nrt_airport",
+          "image_query": "Keisei Skyliner train interior",
+          "maps_query": "Narita Airport Terminal 2"
+        },
+        {
+          "time": "16:00",
+          "title": "飯店Check-in",
+          "sub": "MIMARU親子公寓",
+          "highlight": false,
+          "locKey": "mimaru_ueno",
+          "image_query": "MIMARU Tokyo Ueno North family room",
+          "maps_query": "MIMARU TOKYO UENO NORTH"
+        },
+        {
+          "time": "17:30",
+          "title": "阿美橫丁",
+          "sub": "新年熱鬧氣氛晚餐",
+          "highlight": true,
+          "locKey": "ameyoko",
+          "image_query": "Ameyoko market street food night",
+          "maps_query": "Ameyoko"
+        }
       ]
     },
     {
       "id": 2,
-      "date": "1/3",
-      "week": "週六",
-      "title": "淺草晴空塔",
-      "locName": "淺草 Asakusa",
-      "bg": "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "asakusa", "skytree"],
-      "temp": "5°C ~ 11°C",
-      "wear": "好走鞋 | 保暖",
+      "date": "01/02",
+      "week": "週五",
+      "title": "迪士尼樂園",
+      "locName": "舞濱",
+      "stayHotel": "mimaru_ueno",
+      "temp": "2°C - 9°C",
+      "wear": "防風外套、暖暖包",
+      "route": [
+        "mimaru_ueno",
+        "disneyland",
+        "mimaru_ueno"
+      ],
       "events": [
-        { "time": "09:00", "title": "前往淺草", "sub": "地鐵銀座線約 5 分鐘", "locKey": "ueno" },
-        { "time": "09:30", "title": "雷門 & 仲見世通", "sub": "人形燒、炸肉餅", "locKey": "asakusa" },
-        { "time": "10:30", "title": "淺草寺參拜", "sub": "抽籤祈福", "highlight": true },
-        { "time": "12:00", "title": "隅田公園散步", "sub": "沿河散步拍照" },
-        { "time": "13:30", "title": "晴空塔 Solamachi", "sub": "水族館 / 寶可夢中心", "locKey": "skytree" },
-        { "time": "18:00", "title": "返回上野晚餐", "sub": "拉麵 / 燒肉", "locKey": "ueno" }
+        {
+          "time": "08:30",
+          "title": "前往舞濱",
+          "sub": "夢幻之旅開始",
+          "highlight": false,
+          "locKey": "disneyland",
+          "image_query": "Tokyo Disneyland Cinderella Castle blue sky",
+          "maps_query": "Maihama Station"
+        },
+        {
+          "time": "09:00",
+          "title": "東京迪士尼",
+          "sub": "全日暢遊/避開週末",
+          "highlight": true,
+          "locKey": "disneyland",
+          "image_query": "Tokyo Disneyland parade characters",
+          "maps_query": "Tokyo Disneyland"
+        },
+        {
+          "time": "13:00",
+          "title": "園區午餐",
+          "sub": "造型漢堡與甜點",
+          "highlight": false,
+          "locKey": "disneyland",
+          "image_query": "Tokyo Disneyland food mickey shaped",
+          "maps_query": "Tokyo Disneyland"
+        },
+        {
+          "time": "19:30",
+          "title": "夜間煙火",
+          "sub": "璀璨閉幕",
+          "highlight": false,
+          "locKey": "disneyland",
+          "image_query": "Tokyo Disneyland fireworks night",
+          "maps_query": "Tokyo Disneyland"
+        }
       ]
     },
     {
       "id": 3,
-      "date": "1/4",
-      "week": "週日",
-      "title": "迪士尼樂園",
-      "locName": "舞濱 Disney",
-      "bg": "https://images.unsplash.com/photo-1597466599360-3b9775841aec?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "disney"],
-      "temp": "3°C ~ 10°C",
-      "wear": "極暖 | 貼暖暖包",
+      "date": "01/03",
+      "week": "週六",
+      "title": "淺草晴空塔",
+      "locName": "淺草/押上",
+      "stayHotel": "mimaru_ueno",
+      "temp": "3°C - 8°C",
+      "wear": "舒適好走的鞋",
+      "route": [
+        "mimaru_ueno",
+        "sensoji",
+        "skytree",
+        "mimaru_ueno"
+      ],
       "events": [
-        { "time": "07:30", "title": "上野出發", "sub": "轉乘 JR 京葉線", "locKey": "ueno" },
-        { "time": "08:30", "title": "舞濱站抵達", "sub": "排隊安檢入園" },
-        { "time": "09:00", "title": "迪士尼入園", "sub": "DPA / PP 規劃", "highlight": true, "locKey": "disney" },
-        { "time": "12:00", "title": "園區午餐", "sub": "避開尖峰時段" },
-        { "time": "14:00", "title": "日間遊行", "locKey": "disney" },
-        { "time": "19:00", "title": "夜間遊行 / 煙火", "sub": "視體力彈性撤退" },
-        { "time": "20:30", "title": "返回上野休息", "locKey": "ueno" }
+        {
+          "time": "09:00",
+          "title": "淺草寺參拜",
+          "sub": "新年參拜人潮體驗",
+          "highlight": true,
+          "locKey": "sensoji",
+          "image_query": "Sensoji Temple red lantern crowd",
+          "maps_query": "Senso-ji"
+        },
+        {
+          "time": "11:00",
+          "title": "甜點推薦",
+          "sub": "淺草絲綢布丁",
+          "highlight": false,
+          "locKey": "asakusa_pudding",
+          "image_query": "Asakusa Silk Pudding jar",
+          "maps_query": "Asakusa Silk Pudding"
+        },
+        {
+          "time": "13:00",
+          "title": "晴空塔",
+          "sub": "高空景觀與購物",
+          "highlight": false,
+          "locKey": "skytree",
+          "image_query": "Tokyo Skytree view from Sumida river",
+          "maps_query": "Tokyo Skytree"
+        },
+        {
+          "time": "15:30",
+          "title": "敘敘苑燒肉",
+          "sub": "晴空塔店高空景觀",
+          "highlight": false,
+          "locKey": "jojoen",
+          "image_query": "Jojoen Yakiniku meat grill",
+          "maps_query": "Jojoen Tokyo Skytree"
+        }
       ]
     },
     {
       "id": 4,
-      "date": "1/5",
-      "week": "週一",
-      "title": "河口湖溫泉",
-      "locName": "富士 Fuji",
-      "bg": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=400&q=80",
-      "route": ["ueno", "shinjuku", "fuji"],
-      "temp": "-3°C ~ 5°C",
-      "wear": "羽絨 | 毛帽手套",
+      "date": "01/04",
+      "week": "週日",
+      "title": "豐洲銀座",
+      "locName": "銀座/豐洲",
+      "stayHotel": "mimaru_ueno",
+      "temp": "3°C - 10°C",
+      "wear": "洋蔥式穿搭",
+      "route": [
+        "mimaru_ueno",
+        "teamlab",
+        "ginza",
+        "mimaru_ueno"
+      ],
       "events": [
-        { "time": "08:00", "title": "行李寄放/寄送", "sub": "輕裝前往河口湖", "locKey": "ueno" },
-        { "time": "09:30", "title": "富士回遊號", "sub": "新宿發車 (需預約)", "highlight": true, "locKey": "shinjuku" },
-        { "time": "11:25", "title": "抵達河口湖站", "locKey": "fuji" },
-        { "time": "12:30", "title": "午餐：餺飥麵", "sub": "當地名物" },
-        { "time": "14:00", "title": "天上山纜車", "sub": "俯瞰河口湖", "locKey": "ropeway" },
-        { "time": "16:00", "title": "飯店 Check-in", "sub": "溫泉旅館放鬆", "locKey": "fuji" },
-        { "time": "18:00", "title": "懷石料理晚餐", "sub": "享受飯店設施" }
+        {
+          "time": "10:00",
+          "title": "TeamLab",
+          "sub": "豐洲 Planets 光影展",
+          "highlight": true,
+          "locKey": "teamlab",
+          "image_query": "TeamLab Planets Tokyo crystal universe",
+          "maps_query": "teamLab Planets TOKYO"
+        },
+        {
+          "time": "13:00",
+          "title": "豐洲市場",
+          "sub": "新鮮壽司午餐",
+          "highlight": false,
+          "locKey": "toyosu",
+          "image_query": "Toyosu market sushi set",
+          "maps_query": "Toyosu Market"
+        },
+        {
+          "time": "15:00",
+          "title": "銀座散策",
+          "sub": "步行者天國購物",
+          "highlight": false,
+          "locKey": "ginza",
+          "image_query": "Ginza Wako clock tower weekend",
+          "maps_query": "Ginza"
+        },
+        {
+          "time": "17:30",
+          "title": "甜點推薦",
+          "sub": "Qu'il Fait Bon 水果塔",
+          "highlight": false,
+          "locKey": "quilfaitbon",
+          "image_query": "Qu'il Fait Bon fruit tart slice",
+          "maps_query": "Qu'il Fait Bon Grand Maison Ginza"
+        }
       ]
     },
     {
       "id": 5,
-      "date": "1/6",
-      "week": "週二",
-      "title": "富士返台",
-      "locName": "成田 Airport",
-      "bg": "https://images.unsplash.com/photo-1542640244-7e672d6cef4e?auto=format&fit=crop&w=400&q=80",
-      "route": ["fuji", "nrt"],
-      "temp": "舒適 | 機上",
-      "wear": "輕鬆 | 好穿脫",
+      "date": "01/05",
+      "week": "週一",
+      "title": "前往富士",
+      "locName": "河口湖",
+      "stayHotel": "fuji_ginkei",
+      "temp": "-2°C - 6°C",
+      "wear": "極保暖、手套毛帽",
+      "route": [
+        "mimaru_ueno",
+        "kawaguchiko",
+        "ropeway",
+        "fuji_ginkei"
+      ],
       "events": [
-        { "time": "07:00", "title": "逆富士時光", "sub": "清晨限定倒影", "highlight": true, "locKey": "fuji" },
-        { "time": "10:00", "title": "河口湖周邊散步", "sub": "依天氣彈性安排" },
-        { "time": "12:00", "title": "搭車前往機場", "sub": "高速巴士直達 NRT", "locKey": "fuji" },
-        { "time": "15:30", "title": "抵達成田 T1", "sub": "最後採買/報到", "locKey": "nrt" },
-        { "time": "17:45", "title": "起飛返台", "sub": "預計晚上抵達 TPE" }
+        {
+          "time": "09:30",
+          "title": "移動日",
+          "sub": "特急富士回遊號",
+          "highlight": false,
+          "locKey": "ueno_st",
+          "image_query": "Mt Fuji Lake Kawaguchiko winter sunny",
+          "maps_query": "Ueno Station"
+        },
+        {
+          "time": "12:00",
+          "title": "不動茶屋",
+          "sub": "名物餺飥麵午餐",
+          "highlight": false,
+          "locKey": "houtou",
+          "image_query": "Hoto Fudo noodle iron pot",
+          "maps_query": "Hoto Fudo Kawaguchiko Station"
+        },
+        {
+          "time": "14:00",
+          "title": "天上山公園",
+          "sub": "纜車眺望富士山",
+          "highlight": true,
+          "locKey": "ropeway",
+          "image_query": "Mt Fuji Panoramic Ropeway view",
+          "maps_query": "Mt. Fuji Panoramic Ropeway"
+        },
+        {
+          "time": "16:00",
+          "title": "入住溫泉",
+          "sub": "湖楽おんやど富士吟景",
+          "highlight": false,
+          "locKey": "fuji_ginkei",
+          "image_query": "Korak Onyado Fuji Ginkei onsen view",
+          "maps_query": "Korak Onyado Fuji Ginkei"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "date": "01/06",
+      "week": "週二",
+      "title": "漫遊成田",
+      "locName": "成田",
+      "stayHotel": "narita_hotel",
+      "temp": "2°C - 9°C",
+      "wear": "舒適便裝",
+      "route": [
+        "fuji_ginkei",
+        "oshino_hakkai",
+        "narita_hotel"
+      ],
+      "events": [
+        {
+          "time": "09:00",
+          "title": "逆富士",
+          "sub": "飯店早餐與晨景",
+          "highlight": true,
+          "locKey": "fuji_ginkei",
+          "image_query": "Mt Fuji reflection in lake morning",
+          "maps_query": "Korak Onyado Fuji Ginkei"
+        },
+        {
+          "time": "11:00",
+          "title": "忍野八海",
+          "sub": "清澈湧泉散步",
+          "highlight": false,
+          "locKey": "oshino_hakkai",
+          "image_query": "Oshino Hakkai village water",
+          "maps_query": "Oshino Hakkai"
+        },
+        {
+          "time": "14:00",
+          "title": "前往成田",
+          "sub": "長途移動至機場區",
+          "highlight": false,
+          "locKey": "narita_city",
+          "image_query": "Naritasan Shinshoji Temple pagoda",
+          "maps_query": "Narita Station"
+        },
+        {
+          "time": "17:30",
+          "title": "入住飯店",
+          "sub": "成田日航或周邊",
+          "highlight": false,
+          "locKey": "narita_hotel",
+          "image_query": "Hotel Nikko Narita exterior",
+          "maps_query": "Hotel Nikko Narita"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "date": "01/07",
+      "week": "週三",
+      "title": "返程",
+      "locName": "成田機場",
+      "stayHotel": "home",
+      "temp": "N/A",
+      "wear": "輕便",
+      "route": [
+        "narita_hotel",
+        "nrt_airport",
+        "tpe_airport"
+      ],
+      "events": [
+        {
+          "time": "06:30",
+          "title": "前往機場",
+          "sub": "飯店接駁車",
+          "highlight": false,
+          "locKey": "narita_hotel",
+          "image_query": "China Airlines plane taking off sunrise",
+          "maps_query": "Hotel Nikko Narita"
+        },
+        {
+          "time": "07:20",
+          "title": "機場報到",
+          "sub": "CI107 辦理登機",
+          "highlight": false,
+          "locKey": "nrt_airport",
+          "image_query": "Narita Airport check in counter",
+          "maps_query": "Narita International Airport Terminal 2"
+        },
+        {
+          "time": "09:20",
+          "title": "起飛返台",
+          "sub": "CI107 飛往桃園",
+          "highlight": true,
+          "locKey": "nrt_airport",
+          "image_query": "Airplane flying above clouds blue sky",
+          "maps_query": "Narita International Airport"
+        },
+        {
+          "time": "12:30",
+          "title": "抵達甜蜜家",
+          "sub": "平安歸來",
+          "highlight": false,
+          "locKey": "tpe_airport",
+          "image_query": "Taoyuan Airport arrival hall",
+          "maps_query": "Taoyuan International Airport"
+        }
       ]
     }
-  ]
+  ],
+  "locations": {
+    "tpe_airport": {
+      "lat": 25.0797,
+      "lng": 121.2342,
+      "title": "桃園國際機場",
+      "address": "桃園市大園區"
+    },
+    "nrt_airport": {
+      "lat": 35.7719,
+      "lng": 140.3929,
+      "title": "成田國際機場",
+      "address": "千葉縣成田市"
+    },
+    "mimaru_ueno": {
+      "lat": 35.7138,
+      "lng": 139.7773,
+      "title": "MIMARU東京 上野",
+      "address": "東京都台東区上野"
+    },
+    "ameyoko": {
+      "lat": 35.7106,
+      "lng": 139.7745,
+      "title": "阿美橫丁",
+      "address": "東京都台東区上野"
+    },
+    "disneyland": {
+      "lat": 35.6329,
+      "lng": 139.8804,
+      "title": "東京迪士尼樂園",
+      "address": "千葉縣浦安市"
+    },
+    "sensoji": {
+      "lat": 35.7148,
+      "lng": 139.7967,
+      "title": "淺草寺",
+      "address": "東京都台東区淺草"
+    },
+    "skytree": {
+      "lat": 35.7101,
+      "lng": 139.8107,
+      "title": "東京晴空塔",
+      "address": "東京都墨田区押上"
+    },
+    "teamlab": {
+      "lat": 35.6473,
+      "lng": 139.7928,
+      "title": "TeamLab Planets",
+      "address": "東京都江東区豐洲"
+    },
+    "fuji_ginkei": {
+      "lat": 35.5043,
+      "lng": 138.7724,
+      "title": "湖楽おんやど富士吟景",
+      "address": "山梨縣南都留郡"
+    },
+    "ropeway": {
+      "lat": 35.5065,
+      "lng": 138.7725,
+      "title": "富士山全景纜車",
+      "address": "山梨縣南都留郡"
+    },
+    "oshino_hakkai": {
+      "lat": 35.4605,
+      "lng": 138.8328,
+      "title": "忍野八海",
+      "address": "山梨縣南都留郡"
+    },
+    "narita_hotel": {
+      "lat": 35.7796,
+      "lng": 140.3991,
+      "title": "成田機場周邊飯店",
+      "address": "千葉縣成田市"
+    }
+  }
 }
